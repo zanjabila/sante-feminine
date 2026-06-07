@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espace Médecin — Santé Féminine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#FAF7F2; --cream-dark:#F0EBE1; --rose:#E8C5BB; --rose-deep:#C9957F;
+  --rose-pale:#F7EDE8; --gold:#C8A96E; --gold-light:#F0E4C0; --gold-pale:#FBF5E6;
+  --text-dark:#2C2420; --text-mid:#6B5B52; --text-light:#A09080; --white:#FFFFFF;
+  --dark:#1A1210; --dark-2:#231815; --dark-3:#2E1F1A;
+  --green:#6B8F71; --green-light:#EBF3EC;
+  --shadow:0 4px 32px rgba(44,36,32,0.08); --shadow-lg:0 16px 64px rgba(44,36,32,0.14);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh;}
+
+/* ─── PASSWORD OVERLAY ─── */
+#passwordOverlay{
+  position:fixed;inset:0;z-index:99999;
+  background:linear-gradient(135deg,#2C2420 0%,#3D2E29 100%);
+  display:flex;align-items:center;justify-content:center;
+}
+.pw-box{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;padding:48px 40px;
+  width:400px;max-width:90vw;text-align:center;
+}
+.pw-icon{font-size:40px;margin-bottom:20px;}
+.pw-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px;font-weight:400;color:white;margin-bottom:6px;
+}
+.pw-sub{font-size:13px;color:rgba(255,255,255,.4);margin-bottom:10px;font-weight:300;}
+.pw-doctor-select{
+  width:100%;padding:12px 16px;
+  background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(255,255,255,.15);
+  border-radius:12px;font-size:14px;
+  font-family:'DM Sans',sans-serif;
+  color:white;outline:none;margin-bottom:12px;
+  cursor:pointer;
+}
+.pw-doctor-select option{background:var(--dark-2);color:white;}
+.pw-input{
+  width:100%;padding:14px 18px;
+  background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(255,255,255,.15);
+  border-radius:12px;font-size:15px;
+  font-family:'DM Sans',sans-serif;
+  color:white;outline:none;margin-bottom:12px;
+  text-align:center;letter-spacing:.1em;
+}
+.pw-error{font-size:12px;color:#E57373;margin-bottom:12px;display:none;}
+.pw-btn{
+  width:100%;padding:14px;
+  background:var(--rose-deep);color:white;
+  border:none;border-radius:12px;
+  font-size:14px;font-weight:500;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;transition:all .2s;
+}
+.pw-btn:hover{background:#B8856F;}
+.pw-footer{font-size:11px;color:rgba(255,255,255,.2);margin-top:20px;font-weight:300;}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:62px;background:rgba(250,247,242,.96);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--cream-dark);
+  display:flex;align-items:center;padding:0 36px;gap:16px;
+}
+.nav-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:19px;font-weight:500;color:var(--text-dark);text-decoration:none;
+}
+.nav-logo span{color:var(--rose-deep);}
+.nav-doctor-badge{
+  display:flex;align-items:center;gap:10px;margin-left:16px;
+}
+.nav-doctor-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--rose-deep),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:white;font-weight:600;flex-shrink:0;
+}
+.nav-doctor-name{font-size:13.5px;font-weight:500;color:var(--text-dark);}
+.nav-doctor-role{font-size:11px;color:var(--rose-deep);}
+.nav-logout{
+  margin-left:auto;
+  padding:7px 16px;border-radius:20px;
+  border:1px solid var(--cream-dark);
+  background:none;font-size:13px;color:var(--text-light);
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+}
+.nav-logout:hover{border-color:var(--rose-deep);color:var(--rose-deep);}
+
+/* ─── LAYOUT ─── */
+.page{padding:82px 0 60px;}
+.page-inner{max-width:900px;margin:0 auto;padding:0 24px;}
+
+/* ─── TABS ─── */
+.tabs{
+  display:flex;gap:4px;
+  background:var(--cream-dark);
+  border-radius:14px;padding:4px;
+  margin-bottom:32px;width:fit-content;
+}
+.tab{
+  padding:10px 24px;border-radius:10px;
+  border:none;font-size:14px;font-weight:400;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;transition:all .2s;
+  background:transparent;color:var(--text-light);
+}
+.tab.active{
+  background:var(--white);color:var(--text-dark);
+  font-weight:500;box-shadow:0 2px 8px rgba(44,36,32,.08);
+}
+
+/* ─── SECTION TITLE ─── */
+.section-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px;font-weight:400;color:var(--text-dark);
+  margin-bottom:6px;
+}
+.section-sub{font-size:14px;color:var(--text-light);font-weight:300;margin-bottom:28px;}
+
+/* ─── FORM ─── */
+.form-card{
+  background:var(--white);border:1px solid var(--cream-dark);
+  border-radius:20px;padding:32px;margin-bottom:20px;
+}
+.form-card-title{
+  font-size:13px;font-weight:600;color:var(--text-light);
+  text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:20px;padding-bottom:14px;
+  border-bottom:1px solid var(--cream-dark);
+}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.form-group{margin-bottom:0;}
+.form-group.full{grid-column:1/-1;}
+.form-label{
+  display:block;font-size:12px;font-weight:600;
+  color:var(--text-mid);margin-bottom:7px;letter-spacing:.03em;
+}
+.form-input, .form-textarea, .form-select{
+  width:100%;padding:12px 16px;
+  border:1.5px solid var(--cream-dark);
+  border-radius:12px;font-size:14px;
+  font-family:'DM Sans',sans-serif;
+  color:var(--text-dark);background:var(--cream);
+  outline:none;transition:all .2s;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus{
+  border-color:var(--rose-deep);
+  background:var(--white);
+  box-shadow:0 0 0 3px rgba(201,149,127,.10);
+}
+.form-textarea{resize:vertical;min-height:100px;line-height:1.6;}
+.form-hint{font-size:11.5px;color:var(--text-light);margin-top:5px;font-weight:300;}
+
+/* Avatar upload */
+.avatar-section{
+  display:flex;align-items:center;gap:24px;
+  padding:20px;background:var(--cream);
+  border-radius:14px;border:1px solid var(--cream-dark);
+  margin-bottom:20px;
+}
+.avatar-preview{
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--rose-deep),var(--gold));
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;color:white;font-weight:300;
+  flex-shrink:0;overflow:hidden;border:3px solid var(--white);
+  box-shadow:0 4px 16px rgba(201,149,127,.25);
+}
+.avatar-preview img{width:100%;height:100%;object-fit:cover;}
+.avatar-info{}
+.avatar-title{font-size:14px;font-weight:500;color:var(--text-dark);margin-bottom:4px;}
+.avatar-sub{font-size:12px;color:var(--text-light);font-weight:300;margin-bottom:10px;}
+.btn-avatar{
+  padding:8px 16px;border-radius:10px;
+  border:1.5px solid var(--cream-dark);
+  background:var(--white);font-size:13px;
+  font-family:'DM Sans',sans-serif;color:var(--text-mid);
+  cursor:pointer;transition:all .2s;
+}
+.btn-avatar:hover{border-color:var(--rose-deep);color:var(--rose-deep);}
+
+/* ─── ARTICLES SECTION ─── */
+.articles-list{display:flex;flex-direction:column;gap:14px;}
+.article-item{
+  background:var(--white);border:1px solid var(--cream-dark);
+  border-radius:16px;padding:20px 22px;
+  transition:all .2s;
+}
+.article-item:hover{border-color:var(--rose);}
+.article-item-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.article-item-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px;font-weight:500;color:var(--text-dark);
+}
+.article-item-actions{display:flex;gap:8px;}
+.btn-edit-article{
+  padding:6px 14px;border-radius:8px;
+  border:1.5px solid var(--cream-dark);
+  background:none;font-size:12.5px;color:var(--text-mid);
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+}
+.btn-edit-article:hover{border-color:var(--rose-deep);color:var(--rose-deep);}
+.article-item-preview{
+  font-size:13px;color:var(--text-light);
+  line-height:1.6;font-weight:300;
+  max-height:48px;overflow:hidden;
+}
+
+/* Editor modal */
+.editor-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(44,36,32,.5);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.editor-overlay.open{opacity:1;pointer-events:all;}
+.editor-modal{
+  background:var(--white);border-radius:24px;
+  width:720px;max-width:100%;max-height:88vh;
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:var(--shadow-lg);
+  transform:scale(.96);transition:transform .3s;
+}
+.editor-overlay.open .editor-modal{transform:scale(1);}
+.editor-modal-header{
+  padding:24px 28px 20px;
+  border-bottom:1px solid var(--cream-dark);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.editor-modal-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:24px;font-weight:400;color:var(--text-dark);
+}
+.editor-modal-close{
+  background:var(--cream);border:none;border-radius:10px;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-mid);font-size:16px;
+}
+.editor-modal-close:hover{background:var(--rose);}
+.editor-modal-body{flex:1;overflow-y:auto;padding:24px 28px;}
+.editor-modal-footer{
+  padding:16px 28px;border-top:1px solid var(--cream-dark);
+  display:flex;gap:10px;
+}
+
+/* ─── BUTTONS ─── */
+.btn-save{
+  padding:12px 28px;
+  background:var(--text-dark);color:white;
+  border:none;border-radius:12px;
+  font-size:14px;font-weight:500;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:8px;
+}
+.btn-save:hover{background:var(--rose-deep);}
+.btn-cancel{
+  padding:12px 20px;
+  background:transparent;color:var(--text-mid);
+  border:1.5px solid var(--cream-dark);border-radius:12px;
+  font-size:14px;font-family:'DM Sans',sans-serif;
+  cursor:pointer;transition:all .2s;
+}
+.btn-cancel:hover{color:var(--text-dark);}
+.btn-primary-full{
+  width:100%;padding:14px;
+  background:var(--text-dark);color:white;
+  border:none;border-radius:14px;
+  font-size:15px;font-weight:500;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:8px;
+}
+.btn-primary-full:hover{background:var(--rose-deep);}
+
+/* ─── TOAST ─── */
+.toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);
+  background:var(--text-dark);color:white;
+  padding:12px 24px;border-radius:30px;
+  font-size:13.5px;box-shadow:var(--shadow-lg);
+  transition:transform .3s;z-index:9999;
+  display:flex;align-items:center;gap:8px;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ─── QR SECTION ─── */
+.qr-card{
+  background:var(--white);border:1px solid var(--cream-dark);
+  border-radius:20px;padding:28px;
+  display:flex;align-items:center;gap:24px;
+  margin-bottom:20px;
+}
+.qr-placeholder{
+  width:120px;height:120px;border-radius:14px;
+  background:var(--cream-dark);
+  display:flex;align-items:center;justify-content:center;
+  font-size:40px;flex-shrink:0;
+}
+.qr-info{}
+.qr-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:400;color:var(--text-dark);margin-bottom:6px;
+}
+.qr-desc{font-size:13.5px;color:var(--text-mid);font-weight:300;line-height:1.6;margin-bottom:14px;}
+.qr-url{
+  font-size:12px;color:var(--rose-deep);
+  background:var(--rose-pale);padding:6px 12px;
+  border-radius:8px;font-family:monospace;
+  display:inline-block;margin-bottom:14px;
+}
+.btn-qr-generate{
+  padding:10px 20px;border-radius:10px;
+  background:var(--text-dark);color:white;
+  border:none;font-size:13px;font-weight:500;
+  font-family:'DM Sans',sans-serif;cursor:pointer;
+  transition:all .2s;display:inline-flex;align-items:center;gap:6px;
+}
+.btn-qr-generate:hover{background:var(--rose-deep);}
+
+/* Responsive */
+@media(max-width:700px){
+  .form-grid{grid-template-columns:1fr;}
+  nav{padding:0 20px;}
+  .page-inner{padding:0 16px;}
+  .qr-card{flex-direction:column;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── MOT DE PASSE ─── -->
+<div id="passwordOverlay">
+  <div class="pw-box">
+    <div class="pw-icon">🩺</div>
+    <div class="pw-title">Espace médecin</div>
+    <p class="pw-sub">Connectez-vous à votre espace personnel</p>
+
+    <select class="pw-doctor-select" id="doctorSelect">
+      <option value="">— Sélectionnez votre profil —</option>
+      <option value="doc1">Dr. [Prénom Nom] — Gynécologue</option>
+      <option value="doc2">Dr. [Associée] — Sage-femme</option>
+    </select>
+
+    <input type="password" class="pw-input" id="doctorPassword"
+      placeholder="Mot de passe" onkeydown="if(event.key==='Enter') checkDoctorPassword()">
+    <div class="pw-error" id="pwError">Identifiants incorrects. Réessayez.</div>
+    <button class="pw-btn" onclick="checkDoctorPassword()">Accéder à mon espace →</button>
+    <div class="pw-footer">Santé Féminine · Espace praticien</div>
+  </div>
+</div>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a href="index.html" class="nav-logo">Santé <span>Féminine</span></a>
+  <div class="nav-doctor-badge">
+    <div class="nav-doctor-avatar" id="navAvatar">Dr</div>
+    <div>
+      <div class="nav-doctor-name" id="navName">Dr. [Nom]</div>
+      <div class="nav-doctor-role">Espace praticien</div>
+    </div>
+  </div>
+  <button class="nav-logout" onclick="logout()">Se déconnecter</button>
+</nav>
+
+<!-- ─── PAGE ─── -->
+<div class="page">
+  <div class="page-inner">
+
+    <!-- TABS -->
+    <div style="padding-top:16px;margin-bottom:28px;">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('profil')">👤 Mon profil</button>
+        <button class="tab" onclick="switchTab('infos')">📋 Mes informations pratiques</button>
+        <button class="tab" onclick="switchTab('qr')">📱 Mon QR code</button>
+      </div>
+    </div>
+
+    <!-- ══════ ONGLET PROFIL ══════ -->
+    <div id="tab-profil">
+      <div class="section-title">Mon profil</div>
+      <p class="section-sub">Ces informations sont affichées sur votre page médecin visible par vos patientes.</p>
+
+      <!-- Photo -->
+      <div class="avatar-section">
+        <div class="avatar-preview" id="avatarPreview">Dr</div>
+        <div class="avatar-info">
+          <div class="avatar-title">Photo de profil</div>
+          <div class="avatar-sub">Format recommandé : photo professionnelle carrée, fond neutre.</div>
+          <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+          <button class="btn-avatar" onclick="document.getElementById('photoInput').click()">📷 Choisir une photo</button>
+        </div>
+      </div>
+
+      <!-- Infos personnelles -->
+      <div class="form-card">
+        <div class="form-card-title">Informations personnelles</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Prénom</label>
+            <input class="form-input" type="text" id="firstName" placeholder="ex : Marie">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nom</label>
+            <input class="form-input" type="text" id="lastName" placeholder="ex : Dupont">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Titre / Spécialité</label>
+            <input class="form-input" type="text" id="specialty" placeholder="ex : Gynécologue-obstétricienne">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Numéro INAMI</label>
+            <input class="form-input" type="text" id="inami" placeholder="ex : 1-23456-78-901">
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Lien prise de rendez-vous</label>
+            <input class="form-input" type="url" id="rdvLink" placeholder="ex : https://www.doctorlib.be/medecin/...">
+            <div class="form-hint">Ce lien sera utilisé pour le bouton "Prise de RDV" visible par vos patientes. Indiquez votre agenda en ligne ou votre site personnel.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coordonnées -->
+      <div class="form-card">
+        <div class="form-card-title">Coordonnées du cabinet</div>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label class="form-label">Adresse</label>
+            <input class="form-input" type="text" id="address" placeholder="ex : 75 rue Alfred Pichon">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Code postal</label>
+            <input class="form-input" type="text" id="zip" placeholder="ex : 57160">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ville</label>
+            <input class="form-input" type="text" id="city" placeholder="ex : Scy-Chazelles">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Téléphone</label>
+            <input class="form-input" type="tel" id="phone" placeholder="ex : 06.82.56.14.29">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" type="email" id="email" placeholder="ex : dr.martin@gyneco.fr">
+          </div>
+        </div>
+      </div>
+
+      <!-- Horaires -->
+      <div class="form-card">
+        <div class="form-card-title">Horaires d'ouverture</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Lundi — Vendredi</label>
+            <input class="form-input" type="text" id="hoursWeek" placeholder="ex : 08h — 19h">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Samedi</label>
+            <input class="form-input" type="text" id="hoursSat" placeholder="ex : 08h — 12h">
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Informations complémentaires</label>
+            <input class="form-input" type="text" id="hoursExtra" placeholder="ex : Fermé les jours fériés · Urgences sur rendez-vous">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary-full" onclick="saveProfil()">✓ Enregistrer mon profil</button>
+    </div>
+
+    <!-- ══════ ONGLET INFOS PRATIQUES ══════ -->
+    <div id="tab-infos" style="display:none">
+      <div class="section-title">Mes informations pratiques</div>
+      <p class="section-sub">Personnalisez les informations pratiques spécifiques à votre cabinet. Ces articles seront visibles uniquement par vos patientes.</p>
+
+      <div class="articles-list" id="articlesList"></div>
+
+      <button class="btn-primary-full" onclick="saveArticles()" style="margin-top:20px">✓ Enregistrer mes articles</button>
+    </div>
+
+    <!-- ══════ ONGLET QR CODE ══════ -->
+    <div id="tab-qr" style="display:none">
+      <div class="section-title">Mon QR code</div>
+      <p class="section-sub">Partagez ce QR code avec vos patientes pour qu'elles créent leur compte et soient automatiquement liées à votre profil.</p>
+
+      <div class="qr-card">
+        <div class="qr-placeholder" id="qrDisplay">📱</div>
+        <div class="qr-info">
+          <div class="qr-title">QR code d'inscription</div>
+          <p class="qr-desc">Vos patientes scannent ce code avec leur téléphone. Elles arrivent directement sur la page d'inscription pré-remplie avec votre identifiant médecin.</p>
+          <div class="qr-url" id="qrUrl">Générez votre QR code →</div>
+          <button class="btn-qr-generate" onclick="generateQR()">
+            ⬡ Générer mon QR code
+          </button>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-title">Partager le lien d'inscription</div>
+        <div class="form-group">
+          <label class="form-label">Lien direct à envoyer par SMS ou email</label>
+          <div style="display:flex;gap:10px;">
+            <input class="form-input" type="text" id="shareLinkInput" readonly style="background:var(--cream-dark);cursor:default;">
+            <button onclick="copyLink()" style="padding:0 20px;border-radius:12px;background:var(--text-dark);color:white;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;white-space:nowrap;transition:all .2s;" onmouseover="this.style.background='var(--rose-deep)'" onmouseout="this.style.background='var(--text-dark)'">
+              🔗 Copier
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── EDITOR MODAL ─── -->
+<div class="editor-overlay" id="editorOverlay" onclick="closeEditorBg(event)">
+  <div class="editor-modal">
+    <div class="editor-modal-header">
+      <div class="editor-modal-title" id="editorModalTitle">Modifier l'article</div>
+      <button class="editor-modal-close" onclick="closeEditor()">✕</button>
+    </div>
+    <div class="editor-modal-body">
+      <input type="hidden" id="editingArticleId">
+      <div class="form-group" style="margin-bottom:18px;">
+        <label class="form-label">Titre de l'article</label>
+        <input class="form-input" type="text" id="editTitle">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contenu</label>
+        <textarea class="form-textarea" id="editContent" style="min-height:200px;"></textarea>
+        <div class="form-hint">Rédigez le contenu spécifique à votre cabinet. Ex : votre numéro de téléphone pour les urgences, vos consignes spécifiques avant une intervention, etc.</div>
+      </div>
+    </div>
+    <div class="editor-modal-footer">
+      <button class="btn-cancel" onclick="closeEditor()">Annuler</button>
+      <button class="btn-save" onclick="saveArticle()">✓ Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+
+// ═══════════════════════════════
+// SUPABASE CONFIG
+// ═══════════════════════════════
+const SUPABASE_URL = 'https://kiavvxomyyvwuexjupdf.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpYXZ2eG9teXl2d3VleGp1cGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTEzOTQsImV4cCI6MjA5NjQyNzM5NH0.d1919fG_0HMdKPcNSbrQTvQK4YyYLQSWvw7vYsMYMnU';
+const SB = {
+  'Content-Type': 'application/json',
+  'apikey': SUPABASE_KEY,
+  'Authorization': `Bearer ${SUPABASE_KEY}`
+};
+
+async function sbGet(table, filter='') {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}&select=*`, { headers: SB });
+  return await res.json();
+}
+async function sbPatch(table, filter, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}`, {
+    method: 'PATCH', headers: { ...SB, 'Prefer': 'return=representation' },
+    body: JSON.stringify(body)
+  });
+  return await res.json();
+}
+async function sbPost(table, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+    method: 'POST', headers: { ...SB, 'Prefer': 'return=representation' },
+    body: JSON.stringify(body)
+  });
+  return await res.json();
+}
+
+// ═══════════════════════════════
+// MÉDECINS
+// ═══════════════════════════════
+const DOCTORS_MAP = {
+  'doc1': 'DOC-A1B2C',
+  'doc2': 'DOC-D3E4F',
+};
+
+let currentDoctor = null;
+
+async function checkDoctorPassword() {
+  const select = document.getElementById('doctorSelect').value;
+  const password = document.getElementById('doctorPassword').value;
+  const error = document.getElementById('pwError');
+  if (!select) { error.style.display='block'; error.textContent='Veuillez sélectionner votre profil.'; return; }
+  const code = DOCTORS_MAP[select];
+  const data = await sbGet('medecins', `code=eq.${code}&mot_de_passe=eq.${encodeURIComponent(password)}`);
+  if (!data || data.length === 0) {
+    error.style.display='block'; error.textContent='Identifiants incorrects.';
+    document.getElementById('doctorPassword').value=''; return;
+  }
+  currentDoctor = data[0];
+  sessionStorage.setItem('doctorAuth', JSON.stringify(currentDoctor));
+  document.getElementById('passwordOverlay').style.display='none';
+  initPage();
+}
+
+function logout() { sessionStorage.removeItem('doctorAuth'); location.reload(); }
+
+function initPage() {
+  const fullName = `Dr. ${currentDoctor.prenom||''} ${currentDoctor.nom||''}`.trim();
+  document.getElementById('navName').textContent = fullName !== 'Dr.' ? fullName : 'Dr. [Nom]';
+  document.getElementById('navAvatar').textContent = (currentDoctor.prenom?.[0]||'D') + (currentDoctor.nom?.[0]||'r');
+  document.getElementById('firstName').value = currentDoctor.prenom||'';
+  document.getElementById('lastName').value = currentDoctor.nom||'';
+  document.getElementById('specialty').value = currentDoctor.specialite||'';
+  document.getElementById('welcomeMsg').value = currentDoctor.message_bienvenue||'';
+  document.getElementById('rdvLink').value = currentDoctor.rdv_link||'';
+  document.getElementById('address').value = currentDoctor.adresse||'';
+  document.getElementById('zip').value = currentDoctor.code_postal||'';
+  document.getElementById('city').value = currentDoctor.ville||'';
+  document.getElementById('phone').value = currentDoctor.telephone||'';
+  document.getElementById('email').value = currentDoctor.email||'';
+  document.getElementById('hoursWeek').value = currentDoctor.horaires_semaine||'';
+  document.getElementById('hoursSat').value = currentDoctor.horaires_samedi||'';
+  document.getElementById('hoursExtra').value = currentDoctor.horaires_extra||'';
+  const link = `https://zanjabila.github.io/sante-feminine/auth-connexion.html?ref=${currentDoctor.code}&mode=signup`;
+  document.getElementById('shareLinkInput').value = link;
+  renderArticles();
+}
+
+window.addEventListener('load', () => {
+  const saved = sessionStorage.getItem('doctorAuth');
+  if (saved) { currentDoctor = JSON.parse(saved); document.getElementById('passwordOverlay').style.display='none'; initPage(); }
+  else document.getElementById('doctorPassword').focus();
+});
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((b,i) => b.classList.toggle('active', ['profil','infos','qr'][i]===tab));
+  document.getElementById('tab-profil').style.display = tab==='profil'?'block':'none';
+  document.getElementById('tab-infos').style.display = tab==='infos'?'block':'none';
+  document.getElementById('tab-qr').style.display = tab==='qr'?'block':'none';
+}
+
+function previewPhoto(input) {
+  if (input.files&&input.files[0]) {
+    const r=new FileReader(); r.onload=e=>{document.getElementById('avatarPreview').innerHTML=`<img src="${e.target.result}" alt="Photo">`;}; r.readAsDataURL(input.files[0]);
+  }
+}
+
+async function saveProfil() {
+  const profil = {
+    prenom:document.getElementById('firstName').value, nom:document.getElementById('lastName').value,
+    specialite:document.getElementById('specialty').value, message_bienvenue:document.getElementById('welcomeMsg').value,
+    rdv_link:document.getElementById('rdvLink').value, adresse:document.getElementById('address').value,
+    code_postal:document.getElementById('zip').value, ville:document.getElementById('city').value,
+    telephone:document.getElementById('phone').value, email:document.getElementById('email').value,
+    horaires_semaine:document.getElementById('hoursWeek').value, horaires_samedi:document.getElementById('hoursSat').value,
+    horaires_extra:document.getElementById('hoursExtra').value,
+  };
+  await sbPatch('medecins', `id=eq.${currentDoctor.id}`, profil);
+  currentDoctor = { ...currentDoctor, ...profil };
+  sessionStorage.setItem('doctorAuth', JSON.stringify(currentDoctor));
+  showToast('✓ Profil enregistré');
+}
+
+const DEFAULT_ARTICLES = [
+  { titre:'Comment prendre rendez-vous', contenu:'Décrivez ici comment vos patientes peuvent prendre rendez-vous.', categorie:'infos-generales' },
+  { titre:'Documents à apporter', contenu:'Listez les documents nécessaires pour chaque consultation.', categorie:'infos-generales' },
+  { titre:"Résultats d'examens", contenu:"Expliquez comment vos patientes reçoivent leurs résultats.", categorie:'infos-generales' },
+  { titre:'Urgences gynécologiques et obstétricales', contenu:"Précisez vos consignes en cas d'urgence.", categorie:'infos-generales' },
+  { titre:'Informations pré-opératoires', contenu:'Détaillez vos consignes avant une intervention.', categorie:'infos-preop' },
+  { titre:"Accouchement à l'étranger", contenu:"Informations pour vos patientes accouchant à l'étranger.", categorie:'infos-etranger' },
+];
+
+let doctorArticles = [];
+
+async function renderArticles() {
+  const data = await sbGet('articles', `medecin_id=eq.${currentDoctor.id}`);
+  if (!data||data.length===0) {
+    for (const a of DEFAULT_ARTICLES) await sbPost('articles', {...a, medecin_id:currentDoctor.id, actif_ia:true});
+    doctorArticles = await sbGet('articles', `medecin_id=eq.${currentDoctor.id}`);
+  } else { doctorArticles = data; }
+  document.getElementById('articlesList').innerHTML = doctorArticles.map(a=>`
+    <div class="article-item">
+      <div class="article-item-header">
+        <div class="article-item-title">${a.titre}</div>
+        <div class="article-item-actions"><button class="btn-edit-article" onclick="editArticle('${a.id}')">✎ Modifier</button></div>
+      </div>
+      <div class="article-item-preview">${a.contenu}</div>
+    </div>`).join('');
+}
+
+function editArticle(id) {
+  const a = doctorArticles.find(x=>x.id===id); if(!a) return;
+  document.getElementById('editingArticleId').value=id;
+  document.getElementById('editorModalTitle').textContent=a.titre;
+  document.getElementById('editTitle').value=a.titre;
+  document.getElementById('editContent').value=a.contenu;
+  document.getElementById('editorOverlay').classList.add('open');
+}
+
+async function saveArticle() {
+  const id=document.getElementById('editingArticleId').value;
+  await sbPatch('articles',`id=eq.${id}`,{titre:document.getElementById('editTitle').value,contenu:document.getElementById('editContent').value,updated_at:new Date().toISOString()});
+  await renderArticles(); closeEditor(); showToast('✓ Article mis à jour');
+}
+
+function closeEditor(){document.getElementById('editorOverlay').classList.remove('open');}
+function closeEditorBg(e){if(e.target===document.getElementById('editorOverlay'))closeEditor();}
+
+let qrGenerated=false;
+function generateQR(){
+  if(!currentDoctor) return;
+  const link=`https://zanjabila.github.io/sante-feminine/auth-connexion.html?ref=${currentDoctor.code}&mode=signup`;
+  document.getElementById('qrUrl').textContent=link;
+  const d=document.getElementById('qrDisplay'); d.innerHTML='';
+  new QRCode(d,{text:link,width:120,height:120,colorDark:'#2C2420',colorLight:'#FFFFFF',correctLevel:QRCode.CorrectLevel.H});
+  showToast('✓ QR code généré !');
+}
+
+function copyLink(){
+  navigator.clipboard.writeText(document.getElementById('shareLinkInput').value).then(()=>showToast('🔗 Lien copié !'));
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeEditor();});
+</script>
+</body>
+</html>
