@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. — Santé Féminine & Maternité</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2;
+    --cream-dark: #F0EBE1;
+    --rose: #E8C5BB;
+    --rose-deep: #C9957F;
+    --gold: #C8A96E;
+    --gold-light: #E8D5A8;
+    --sage: #A8B5A0;
+    --text-dark: #2C2420;
+    --text-mid: #6B5B52;
+    --text-light: #A09080;
+    --white: #FFFFFF;
+    --shadow: 0 4px 40px rgba(44,36,32,0.08);
+    --shadow-lg: 0 12px 60px rgba(44,36,32,0.14);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(250,247,242,0.94);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--cream-dark);
+    padding: 0 40px;
+    height: 68px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: var(--shadow); }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text-dark);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--rose-deep); }
+
+  .nav-links {
+    display: flex; align-items: center; gap: 6px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--text-mid);
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: all .2s;
+    letter-spacing: 0.01em;
+  }
+  .nav-links a:hover { color: var(--text-dark); background: var(--cream-dark); }
+
+  .nav-search-btn {
+    background: none; border: 1.5px solid var(--cream-dark);
+    border-radius: 24px; padding: 7px 16px 7px 12px;
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer; color: var(--text-light);
+    font-size: 13px; font-family: 'DM Sans', sans-serif;
+    transition: all .2s;
+  }
+  .nav-search-btn:hover { border-color: var(--rose-deep); color: var(--text-mid); }
+  .nav-search-btn svg { width: 14px; height: 14px; }
+
+  /* ─── SEARCH OVERLAY ─── */
+  .search-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(44,36,32,0.5);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: flex-start; justify-content: center;
+    padding-top: 120px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s;
+  }
+  .search-overlay.open { opacity: 1; pointer-events: all; }
+
+  .search-box {
+    background: var(--white);
+    border-radius: 20px;
+    width: 640px; max-width: 90vw;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    transform: translateY(-20px);
+    transition: transform .3s;
+  }
+  .search-overlay.open .search-box { transform: translateY(0); }
+
+  .search-input-wrap {
+    display: flex; align-items: center; gap: 12px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .search-input-wrap svg { width: 20px; height: 20px; color: var(--rose-deep); flex-shrink: 0; }
+  .search-input-wrap input {
+    flex: 1; border: none; outline: none;
+    font-size: 17px; font-family: 'DM Sans', sans-serif;
+    color: var(--text-dark); background: transparent;
+  }
+  .search-input-wrap input::placeholder { color: var(--text-light); }
+  .search-close { background: none; border: none; cursor: pointer; color: var(--text-light); font-size: 20px; }
+
+  .search-suggestions { padding: 12px 16px 16px; }
+  .search-suggestion-label { font-size: 11px; font-weight: 500; color: var(--text-light); text-transform: uppercase; letter-spacing: .08em; padding: 4px 8px 10px; }
+  .search-tag {
+    display: inline-block; background: var(--cream); border: 1px solid var(--cream-dark);
+    border-radius: 20px; padding: 6px 14px; margin: 4px;
+    font-size: 13px; color: var(--text-mid); cursor: pointer;
+    transition: all .15s;
+  }
+  .search-tag:hover { background: var(--rose); border-color: var(--rose); color: var(--text-dark); }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 68px 0 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Doctor presentation — full width */
+  .hero-doctor {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    padding: 80px 100px;
+    background: linear-gradient(135deg, var(--cream) 0%, var(--cream-dark) 60%, var(--gold-light) 100%);
+    position: relative;
+  }
+  .hero-doctor::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9957F' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .doctor-photo-wrap {
+    flex-shrink: 0;
+    position: relative; z-index: 1;
+  }
+
+  .doctor-avatar {
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--rose-deep), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px; font-weight: 300; color: white;
+    border: 5px solid white;
+    box-shadow: 0 12px 48px rgba(201,149,127,.35);
+    overflow: hidden;
+  }
+  .doctor-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  .doctor-info {
+    flex: 1;
+    position: relative; z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold-light); border-radius: 20px;
+    padding: 6px 16px; margin-bottom: 20px;
+    width: fit-content;
+  }
+  .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+  .hero-badge span { font-size: 12px; font-weight: 500; color: var(--text-mid); letter-spacing: .06em; text-transform: uppercase; }
+
+  .doctor-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4vw, 54px);
+    font-weight: 400; line-height: 1.1;
+    color: var(--text-dark); margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .doctor-name em { font-style: italic; color: var(--rose-deep); }
+
+  .doctor-title {
+    font-size: 14px; color: var(--rose-deep);
+    font-weight: 500; text-transform: uppercase; letter-spacing: .07em;
+    margin-bottom: 20px;
+  }
+  .doctor-bio {
+    font-size: 16px; color: var(--text-mid);
+    line-height: 1.7; font-weight: 300;
+    max-width: 580px; margin-bottom: 28px;
+  }
+
+  .doctor-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+  .doctor-badge-item {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--cream-dark);
+    border-radius: 14px; padding: 5px 14px;
+    font-size: 12px; color: var(--text-mid);
+    backdrop-filter: blur(4px);
+  }
+
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--text-dark);
+    color: var(--white);
+    border: none; border-radius: 30px;
+    padding: 14px 28px;
+    font-size: 14px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all .25s;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--rose-deep); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(201,149,127,.35); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-dark);
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 30px;
+    padding: 14px 28px;
+    font-size: 14px; font-weight: 400;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all .25s;
+    text-decoration: none;
+  }
+  .btn-secondary:hover { border-color: var(--rose-deep); color: var(--rose-deep); }
+
+  /* ─── INFOS GÉNÉRALES STRIP ─── */
+  .general-info-strip {
+    background: var(--white);
+    border-top: 1px solid var(--cream-dark);
+    border-bottom: 1px solid var(--cream-dark);
+    padding: 56px 100px;
+  }
+
+  .general-info-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 40px;
+  }
+  .general-info-header-left {}
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .info-tile {
+    background: var(--cream);
+    border: 1px solid var(--cream-dark);
+    border-radius: 20px;
+    padding: 28px 28px 24px;
+    cursor: pointer;
+    transition: all .25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .info-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+    border-color: var(--rose);
+  }
+  .info-tile-icon {
+    font-size: 28px; margin-bottom: 16px;
+    display: block;
+  }
+  .info-tile-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 500;
+    color: var(--text-dark); margin-bottom: 8px;
+  }
+  .info-tile-desc {
+    font-size: 13.5px; color: var(--text-mid);
+    line-height: 1.6; font-weight: 300;
+  }
+  .info-tile-arrow {
+    position: absolute; bottom: 20px; right: 20px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--cream-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--text-mid);
+    transition: all .2s;
+  }
+  .info-tile:hover .info-tile-arrow {
+    background: var(--rose-deep); color: white;
+  }
+
+  /* ─── SECTION COMMONS ─── */
+  section { padding: 100px 80px; }
+  .section-label {
+    font-size: 11px; font-weight: 500; color: var(--rose-deep);
+    text-transform: uppercase; letter-spacing: .1em;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(34px, 4vw, 50px);
+    font-weight: 400; color: var(--text-dark);
+    line-height: 1.15; letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 16px; color: var(--text-mid);
+    max-width: 560px; line-height: 1.7; font-weight: 300;
+  }
+
+  /* ─── CATEGORIES ─── */
+  .categories-section { background: var(--cream); }
+  .categories-header { margin-bottom: 64px; }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .cat-card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 40px;
+    border: 1px solid var(--cream-dark);
+    cursor: pointer;
+    transition: all .3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
+  }
+  .cat-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px;
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .cat-card:hover::after { opacity: 1; }
+
+  .cat-card-1::after { background: linear-gradient(90deg, #E8C5BB, #C9957F); }
+  .cat-card-2::after { background: linear-gradient(90deg, #C8A96E, #E8D5A8); }
+  .cat-card-3::after { background: linear-gradient(90deg, #A8B5A0, #C8D5C0); }
+  .cat-card-4::after { background: linear-gradient(90deg, #B5A8C0, #D5C8E8); }
+
+  .cat-icon {
+    width: 52px; height: 52px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 24px;
+  }
+  .cat-icon-1 { background: linear-gradient(135deg, #F5DDD6, #E8C5BB); }
+  .cat-icon-2 { background: linear-gradient(135deg, #F5EDD6, #E8D5A8); }
+  .cat-icon-3 { background: linear-gradient(135deg, #DDE5DB, #A8B5A0); }
+  .cat-icon-4 { background: linear-gradient(135deg, #DDD6E5, #B5A8C0); }
+
+  .cat-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 500;
+    color: var(--text-dark); margin-bottom: 12px;
+  }
+  .cat-desc {
+    font-size: 14px; color: var(--text-mid);
+    line-height: 1.65; font-weight: 300; margin-bottom: 28px;
+  }
+
+  .subcat-group { margin-bottom:14px; }
+  .subcat-group:last-of-type { margin-bottom:20px; }
+  .subcat-group-label {
+    font-size:10px; font-weight:600; color:var(--text-light);
+    text-transform:uppercase; letter-spacing:.09em;
+    margin-bottom:7px; padding-left:2px;
+  }
+  .subcats { display: flex; flex-wrap: wrap; gap: 8px; }
+  .subcat-tag {
+    background: var(--cream); border: 1px solid var(--cream-dark);
+    border-radius: 20px; padding: 5px 14px;
+    font-size: 12.5px; color: var(--text-mid);
+    cursor: pointer; transition: all .2s;
+  }
+  .subcat-tag:hover { background: var(--rose); border-color: var(--rose); color: var(--text-dark); }
+
+  .cat-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13.5px; font-weight: 500;
+    color: var(--text-dark); text-decoration: none;
+    transition: gap .2s;
+  }
+  .cat-link:hover { gap: 10px; color: var(--rose-deep); }
+
+  /* ─── CONTENT MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 3000;
+    background: rgba(44,36,32,0.55);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--white);
+    border-radius: 24px;
+    width: 900px; max-width: 100%;
+    max-height: 85vh;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: var(--shadow-lg);
+    transform: scale(.96);
+    transition: transform .3s;
+  }
+  .modal-overlay.open .modal { transform: scale(1); }
+
+  .modal-header {
+    padding: 32px 40px 24px;
+    border-bottom: 1px solid var(--cream-dark);
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 24px;
+  }
+  .modal-header-left {}
+  .modal-header-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--cream); border-radius: 12px;
+    padding: 4px 12px; margin-bottom: 12px;
+    font-size: 11px; font-weight: 500; color: var(--rose-deep);
+    text-transform: uppercase; letter-spacing: .07em;
+  }
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 400; color: var(--text-dark);
+  }
+  .modal-close {
+    background: var(--cream); border: none; border-radius: 12px;
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text-mid);
+    flex-shrink: 0; transition: all .2s;
+  }
+  .modal-close:hover { background: var(--rose); }
+
+  .modal-sidebar-nav {
+    display: flex; flex: 1; overflow: hidden;
+  }
+  .modal-nav {
+    width: 220px; flex-shrink: 0;
+    border-right: 1px solid var(--cream-dark);
+    padding: 20px 16px;
+    overflow-y: auto;
+  }
+  .modal-nav-section { margin-bottom: 20px; }
+  .modal-nav-section-title {
+    font-size: 10px; font-weight: 500; color: var(--text-light);
+    text-transform: uppercase; letter-spacing: .1em;
+    padding: 0 12px 8px;
+  }
+  .modal-nav-item {
+    display: block; width: 100%;
+    text-align: left; background: none; border: none;
+    padding: 9px 12px; border-radius: 10px;
+    font-size: 13px; color: var(--text-mid);
+    cursor: pointer; transition: all .15s;
+    font-family: 'DM Sans', sans-serif;
+    margin-bottom: 2px;
+  }
+  .modal-nav-item:hover, .modal-nav-item.active {
+    background: var(--cream); color: var(--text-dark);
+  }
+  .modal-nav-item.active { font-weight: 500; }
+
+  .modal-content-area {
+    flex: 1; padding: 32px 40px;
+    overflow-y: auto;
+  }
+  .modal-content-area h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 500; color: var(--text-dark);
+    margin-bottom: 16px; margin-top: 28px;
+  }
+  .modal-content-area h3:first-child { margin-top: 0; }
+  .modal-content-area p {
+    font-size: 14.5px; color: var(--text-mid);
+    line-height: 1.75; font-weight: 300; margin-bottom: 16px;
+  }
+  .modal-content-area ul {
+    list-style: none; margin-bottom: 20px;
+  }
+  .modal-content-area ul li {
+    font-size: 14px; color: var(--text-mid);
+    line-height: 1.65; font-weight: 300;
+    padding: 6px 0 6px 20px; position: relative;
+  }
+  .modal-content-area ul li::before {
+    content: ''; position: absolute; left: 0; top: 14px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--rose-deep);
+  }
+
+  .info-card {
+    background: var(--cream); border-left: 3px solid var(--rose-deep);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px; margin: 20px 0;
+  }
+  .info-card-title { font-size: 12px; font-weight: 500; color: var(--rose-deep); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .info-card p { font-size: 13.5px; margin-bottom: 0; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--text-dark);
+    padding: 64px 80px 40px;
+    color: var(--text-light);
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 60px; margin-bottom: 60px;
+  }
+  .footer-brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 400;
+    color: var(--white); margin-bottom: 12px;
+  }
+  .footer-brand-desc {
+    font-size: 13px; line-height: 1.7; font-weight: 300; max-width: 260px;
+    margin-bottom: 24px;
+  }
+  .footer-col-title {
+    font-size: 11px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: .1em; color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 10px; }
+  .footer-links a {
+    text-decoration: none; font-size: 13.5px; color: var(--text-light);
+    transition: color .2s;
+  }
+  .footer-links a:hover { color: var(--rose); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12.5px;
+  }
+  .footer-disclaimer { max-width: 480px; line-height: 1.6; }
+  .footer-disclaimer strong { color: var(--rose-deep); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-left > * { animation: fadeUp .7s ease both; }
+  .hero-badge { animation-delay: .1s; }
+  .hero h1 { animation-delay: .22s; }
+  .hero-desc { animation-delay: .34s; }
+  .hero-actions { animation-delay: .46s; }
+  .hero-stats { animation-delay: .58s; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 960px) {
+    .hero-doctor { flex-direction: column; padding: 60px 40px; gap: 32px; text-align: center; }
+    .doctor-badges { justify-content: center; }
+    .hero-actions { justify-content: center; }
+    .general-info-strip { padding: 48px 40px; }
+    .general-info-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .info-grid { grid-template-columns: 1fr; }
+    .categories-grid { grid-template-columns: 1fr; }
+    section { padding: 70px 40px; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    footer { padding: 60px 40px 32px; }
+    .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Santé <span>Féminine</span></a>
+  <ul class="nav-links">
+    <li><a href="grossesse.html">Grossesse</a></li>
+    <li><a href="postpartum.html">Postpartum</a></li>
+    <li><a href="gynecologie.html">Gynécologie</a></li>
+    <li><a href="infos-generales.html">Infos pratiques</a></li>
+  </ul>
+  <button class="nav-search-btn" onclick="openSearch()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    Rechercher…
+  </button>
+</nav>
+
+<!-- ─── SEARCH OVERLAY ─── -->
+<div class="search-overlay" id="searchOverlay" onclick="closeSearchOnBg(event)">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Rechercher un sujet, symptôme, pathologie…" oninput="handleSearch(this.value)">
+      <button class="search-close" onclick="closeSearch()">✕</button>
+    </div>
+    <div class="search-suggestions">
+      <div class="search-suggestion-label">Recherches fréquentes</div>
+      <div id="searchTags">
+        <span class="search-tag" onclick="openModal('diabete')">Diabète gestationnel</span>
+        <span class="search-tag" onclick="openModal('preeclampsie')">Prééclampsie</span>
+        <span class="search-tag" onclick="openModal('allaitement')">Allaitement</span>
+        <span class="search-tag" onclick="openModal('endometriose')">Endométriose</span>
+        <span class="search-tag" onclick="openModal('hpv')">HPV & dépistage</span>
+        <span class="search-tag" onclick="openModal('contraception')">Contraception</span>
+        <span class="search-tag" onclick="openModal('map')">Menace d'accouchement prématuré</span>
+        <span class="search-tag" onclick="openModal('mycose')">Mycose vaginale</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── HERO ─── -->
+<div class="hero" id="top">
+
+  <!-- Présentation du médecin -->
+  <div class="hero-doctor">
+    <div class="doctor-photo-wrap">
+      <div class="doctor-avatar">Dr</div>
+    </div>
+    <div class="doctor-info">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        <span>Contenu médical validé par une professionnelle</span>
+      </div>
+      <div class="doctor-name">Dr. <em>[Prénom Nom]</em></div>
+      <div class="doctor-title">Sage-femme · Gynécologue-obstétricienne</div>
+      <p class="doctor-bio">Professionnelle de santé spécialisée en obstétrique et gynécologie, je mets mon expertise au service de votre compréhension. Mon objectif : vous offrir des informations médicales fiables, accessibles et bienveillantes pour des soins éclairés à chaque étape de votre vie.</p>
+      <div class="doctor-badges">
+        <span class="doctor-badge-item">🏥 Obstétrique</span>
+        <span class="doctor-badge-item">🌸 Gynécologie</span>
+        <span class="doctor-badge-item">👶 Postpartum</span>
+        <span class="doctor-badge-item">🤱 Périnatalité</span>
+        <span class="doctor-badge-item">📍 [Ville]</span>
+      </div>
+      <div class="hero-actions">
+        <a href="#categories" class="btn-primary">Explorer les thèmes →</a>
+        <button class="btn-secondary" onclick="openSearch()">Rechercher un sujet</button>
+        <a id="rdvBtn" href="#" class="btn-secondary" target="_blank" style="display:none">📅 Prise de RDV →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Informations générales — juste sous la présentation -->
+  <div class="general-info-strip" id="infos-pratiques">
+    <div class="general-info-header">
+      <div class="general-info-header-left">
+        <div class="section-label">Informations pratiques</div>
+        <h2 class="section-title" style="font-size:32px; margin-bottom:4px;">Ressources & informations utiles</h2>
+        <p class="section-sub" style="font-size:14px;">Tout ce dont vous avez besoin avant, pendant et après votre parcours de soins.</p>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-tile" onclick="window.location.href='infos-generales.html#infos-gen'">
+        <span class="info-tile-icon">📋</span>
+        <div class="info-tile-title">Informations générales</div>
+        <p class="info-tile-desc">Rendez-vous, documents à apporter, résultats d'examens et urgences gynécologiques.</p>
+        <div class="info-tile-arrow">→</div>
+      </div>
+      <div class="info-tile" onclick="window.location.href='infos-generales.html#preop'">
+        <span class="info-tile-icon">🏥</span>
+        <div class="info-tile-title">Informations pré-opératoires</div>
+        <p class="info-tile-desc">Consignes avant intervention, jeûne, médicaments et retour à domicile.</p>
+        <div class="info-tile-arrow">→</div>
+      </div>
+      <div class="info-tile" onclick="window.location.href='infos-generales.html#etranger'">
+        <span class="info-tile-icon">✈️</span>
+        <div class="info-tile-title">Accouchement à l'étranger</div>
+        <p class="info-tile-desc">Dossier médical, assurances, documents nécessaires et suivi au retour.</p>
+        <div class="info-tile-arrow">→</div>
+      </div>
+      <div class="info-tile" onclick="window.location.href='roulette-grossesse.html'" style="border-color:var(--gold-light)">
+        <span class="info-tile-icon">🤰</span>
+        <div class="info-tile-title">Roulette de grossesse</div>
+        <p class="info-tile-desc">Calculez votre terme, visualisez votre avancement et retrouvez les informations clés semaine par semaine.</p>
+        <div class="info-tile-arrow" style="background:var(--gold-light);color:var(--gold)">→</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── CATEGORIES ─── -->
+<section class="categories-section" id="categories">
+  <div class="categories-header">
+    <div class="section-label">Nos thématiques</div>
+    <h2 class="section-title">Explorez par catégorie</h2>
+    <p class="section-sub">Chaque section est conçue pour vous accompagner avec des informations médicales claires, à chaque étape de votre parcours.</p>
+  </div>
+
+  <div class="categories-grid">
+
+    <!-- Grossesse -->
+    <div class="cat-card cat-card-1" id="grossesse">
+      <div class="cat-icon cat-icon-1">🤰</div>
+      <div class="cat-title">Grossesse</div>
+      <p class="cat-desc">Suivi trimestre par trimestre et pathologies de grossesse — pour une maternité sereine et bien informée.</p>
+
+      <div class="subcat-group">
+        <div class="subcat-group-label">Trimestres</div>
+        <div class="subcats">
+          <span class="subcat-tag" onclick="openModal('t1')">1er trimestre</span>
+          <span class="subcat-tag" onclick="openModal('t2')">2e trimestre</span>
+          <span class="subcat-tag" onclick="openModal('t3')">3e trimestre</span>
+        </div>
+      </div>
+
+      <div class="subcat-group">
+        <div class="subcat-group-label">Pathologies de la grossesse</div>
+        <div class="subcats">
+          <span class="subcat-tag" onclick="openModal('diabete')">Diabète gestationnel</span>
+          <span class="subcat-tag" onclick="openModal('preeclampsie')">Prééclampsie</span>
+          <span class="subcat-tag" onclick="openModal('map')">Menace d'accouchement prématuré</span>
+          <span class="subcat-tag" onclick="openModal('fausses-couches')">Fausses couches</span>
+          <span class="subcat-tag">Cholestase gravidique</span>
+          <span class="subcat-tag">Hyperémèse gravidique</span>
+          <span class="subcat-tag">Décollements du sac gestationnel</span>
+          <span class="subcat-tag">Infections urinaires</span>
+          <span class="subcat-tag">Œdèmes des jambes</span>
+          <span class="subcat-tag">Douleurs abdominales</span>
+          <span class="subcat-tag">Anémie</span>
+          <span class="subcat-tag">Streptocoque B</span>
+          <span class="subcat-tag">Grossesse extra-utérine</span>
+          <span class="subcat-tag">Syndrome du canal carpien</span>
+        </div>
+      </div>
+
+      <a href="grossesse.html" class="cat-link">Voir tous les articles →</a>
+    </div>
+
+    <!-- Post-partum -->
+    <div class="cat-card cat-card-2" id="postpartum">
+      <div class="cat-icon cat-icon-2">👶</div>
+      <div class="cat-title">Post-partum</div>
+      <p class="cat-desc">Récupération après l'accouchement, allaitement, bien-être émotionnel et rééducation — tout ce dont vous avez besoin après la naissance.</p>
+
+      <div class="subcat-group">
+        <div class="subcats">
+          <span class="subcat-tag" onclick="openModal('postpartum-gen')">Informations générales</span>
+          <span class="subcat-tag" onclick="openModal('allaitement')">Allaitement</span>
+          <span class="subcat-tag" onclick="openModal('babyblues')">Baby blues</span>
+          <span class="subcat-tag" onclick="openModal('contraception-pp')">Contraception post-partum</span>
+          <span class="subcat-tag" onclick="openModal('reeducation')">Rééducation périnéale</span>
+        </div>
+      </div>
+
+      <a href="postpartum.html" class="cat-link">Voir tous les articles →</a>
+    </div>
+
+    <!-- Gynécologie -->
+    <div class="cat-card cat-card-3" id="gyneco">
+      <div class="cat-icon cat-icon-3">🌸</div>
+      <div class="cat-title">Gynécologie</div>
+      <p class="cat-desc">Contraception, pathologies, HPV, infections vaginales et urinaires — votre santé gynécologique expliquée clairement.</p>
+
+      <div class="subcat-group">
+        <div class="subcat-group-label">Contraception</div>
+        <div class="subcats">
+          <span class="subcat-tag" onclick="openModal('contraception')">Les différentes méthodes</span>
+          <span class="subcat-tag">Pilule œstroprogestative</span>
+        </div>
+      </div>
+
+      <div class="subcat-group">
+        <div class="subcat-group-label">Pathologies</div>
+        <div class="subcats">
+          <span class="subcat-tag">Fibromes</span>
+          <span class="subcat-tag">Polypes</span>
+          <span class="subcat-tag" onclick="openModal('kystes')">Kystes ovariens</span>
+          <span class="subcat-tag">Malformations utérines</span>
+          <span class="subcat-tag" onclick="openModal('endometriose')">Endométriose</span>
+          <span class="subcat-tag">Adénomyose</span>
+        </div>
+      </div>
+
+      <div class="subcat-group">
+        <div class="subcat-group-label">HPV</div>
+        <div class="subcats">
+          <span class="subcat-tag" onclick="openModal('hpv')">HPV</span>
+          <span class="subcat-tag">Dépistage</span>
+          <span class="subcat-tag">Lésions du col</span>
+        </div>
+      </div>
+
+      <div class="subcat-group">
+        <div class="subcat-group-label">Infections vaginales</div>
+        <div class="subcats">
+          <span class="subcat-tag" onclick="openModal('mycose')">Mycoses</span>
+          <span class="subcat-tag">Vaginoses</span>
+          <span class="subcat-tag">MST / IST</span>
+          <span class="subcat-tag">Uréaplasma / Mycoplasma</span>
+        </div>
+      </div>
+
+      <div class="subcat-group">
+        <div class="subcat-group-label">Infections urinaires</div>
+        <div class="subcats">
+          <span class="subcat-tag">Infections urinaires</span>
+        </div>
+      </div>
+
+      <a href="gynecologie.html" class="cat-link">Voir tous les articles →</a>
+    </div>
+
+    <!-- Informations générales -->
+    <div class="cat-card cat-card-4" id="pratique">
+      <div class="cat-icon cat-icon-4">📋</div>
+      <div class="cat-title">Informations générales</div>
+      <p class="cat-desc">Informations pratiques, préparation aux interventions et ressources pour les patientes accouchant à l'étranger.</p>
+
+      <div class="subcat-group">
+        <div class="subcats">
+          <span class="subcat-tag" onclick="openModal('infos-gen')">Informations générales</span>
+          <span class="subcat-tag" onclick="openModal('preop')">Informatif pré-opératoire</span>
+          <span class="subcat-tag" onclick="openModal('etranger')">Accouchement à l'étranger</span>
+        </div>
+      </div>
+
+      <a href="infos-generales.html" class="cat-link">Voir tous les articles →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">Santé Féminine</div>
+      <p class="footer-brand-desc">Une plateforme de vulgarisation médicale en obstétrique et gynécologie, créée par une professionnelle de santé pour vous accompagner avec bienveillance.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Grossesse</div>
+      <ul class="footer-links">
+        <li><a href="#">1er trimestre</a></li>
+        <li><a href="#">2e trimestre</a></li>
+        <li><a href="#">3e trimestre</a></li>
+        <li><a href="#">Pathologies</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Gynécologie</div>
+      <ul class="footer-links">
+        <li><a href="#">Contraception</a></li>
+        <li><a href="#">HPV & dépistage</a></li>
+        <li><a href="#">Infections vaginales</a></li>
+        <li><a href="#">Endométriose</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Postpartum</div>
+      <ul class="footer-links">
+        <li><a href="#">Allaitement</a></li>
+        <li><a href="#">Baby blues</a></li>
+        <li><a href="#">Rééducation périnéale</a></li>
+        <li><a href="#">Contraception post-partum</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-disclaimer">⚠️ <strong>Avertissement médical :</strong> Les informations présentées sur cette plateforme sont à titre informatif uniquement et ne remplacent pas une consultation médicale personnalisée. Consultez toujours votre professionnel de santé.</p>
+    <p>© 2025 Santé Féminine. Tous droits réservés.</p>
+  </div>
+</footer>
+
+<!-- ─── MODAL ─── -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-header-badge" id="modalBadge">Grossesse</div>
+        <div class="modal-title" id="modalTitle">Titre</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-sidebar-nav">
+      <div class="modal-nav" id="modalNav"></div>
+      <div class="modal-content-area" id="modalContent"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── CHARGER LE PROFIL MÉDECIN ───
+window.addEventListener('DOMContentLoaded', () => {
+  // Cherche le profil du médecin dans tous les docs stockés
+  const params = new URLSearchParams(window.location.search);
+  const docRef = params.get('ref');
+
+  // Mapping code médecin → id local
+  const codeMap = { 'DOC-A1B2C': 'doc1', 'DOC-D3E4F': 'doc2' };
+  const docId = docRef ? codeMap[docRef] : null;
+  const storageKey = docId ? `profil_${docId}` : null;
+
+  // Essaie de charger depuis localStorage (rempli par l'espace médecin)
+  let profil = null;
+  if (storageKey) {
+    try { profil = JSON.parse(localStorage.getItem(storageKey)); } catch(e) {}
+  }
+
+  if (profil) {
+    // Nom du médecin
+    const fullName = `Dr. ${profil.firstName || ''} ${profil.lastName || ''}`.trim();
+    const nameEl = document.querySelector('.doctor-name');
+    if (nameEl && fullName !== 'Dr.') nameEl.innerHTML = fullName;
+
+    // Spécialité
+    const titleEl = document.querySelector('.doctor-title');
+    if (titleEl && profil.specialty) titleEl.textContent = profil.specialty;
+
+    // Bio
+    const bioEl = document.querySelector('.doctor-bio');
+    if (bioEl && profil.welcomeMsg) bioEl.textContent = profil.welcomeMsg;
+
+    // Ville
+    const villeEl = document.querySelector('.doctor-badge-item:last-child');
+    if (villeEl && profil.city) villeEl.textContent = `📍 ${profil.city}`;
+
+    // Lien RDV
+    if (profil.rdvLink) {
+      const btn = document.getElementById('rdvBtn');
+      if (btn) { btn.href = profil.rdvLink; btn.style.display = 'inline-flex'; }
+    }
+  }
+});
+
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// ─── SEARCH ───
+function openSearch() {
+  document.getElementById('searchOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('searchInput').focus(), 300);
+}
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('open');
+  document.getElementById('searchInput').value = '';
+}
+function closeSearchOnBg(e) {
+  if (e.target === document.getElementById('searchOverlay')) closeSearch();
+}
+function handleSearch(val) {
+  // Simple filter of tags
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeSearch(); closeModal(); } });
+
+// ─── MODAL DATA ───
+const modalData = {
+  't1': {
+    badge: '🤰 Grossesse',
+    title: '1er Trimestre',
+    nav: [
+      { label: 'Suivi médical', section: 's1' },
+      { label: 'Toxoplasmose', section: 's2' },
+      { label: 'CMV', section: 's3' },
+      { label: 'Listériose', section: 's4' },
+      { label: 'Symptômes & désagréments', section: 's5' },
+      { label: 'Risques & précautions', section: 's6' },
+      { label: 'Mode de garde', section: 's7' },
+    ],
+    content: `
+      <h3 id="s1">Suivi médical et premiers examens</h3>
+      <p>Le premier trimestre est une période cruciale. La première consultation prénatale doit avoir lieu avant 10 semaines d'aménorrhée (SA). Elle comprend un bilan sanguin complet, une sérologie infectieuse et une échographie de datation.</p>
+      <p>L'échographie du 1er trimestre (entre 11 et 13 SA + 6 jours) permet de vérifier la vitalité de la grossesse, le nombre d'embryons, la clarté nucale et de réaliser un dépistage de la trisomie 21.</p>
+      <div class="info-card"><div class="info-card-title">À retenir</div><p>Pensez à déclarer votre grossesse à la CPAM avant la fin du 3e mois pour bénéficier de tous vos droits.</p></div>
+      <h3 id="s2">Toxoplasmose</h3>
+      <p>La toxoplasmose est une infection parasitaire transmise principalement par la consommation de viande crue ou mal cuite, de légumes et fruits mal lavés, ou par contact avec des selles de chat infecté.</p>
+      <p>Si vous n'êtes pas immunisée, des précautions simples s'imposent : évitez la viande crue, lavez soigneusement fruits et légumes, portez des gants pour jardiner et évitez le contact avec la litière du chat.</p>
+      <ul>
+        <li>Sérologie toxoplasmose mensuelle si non immunisée</li>
+        <li>Cuire la viande à cœur (plus de 65°C)</li>
+        <li>Laver les fruits et légumes abondamment</li>
+        <li>Éviter de toucher les yeux, nez ou bouche lors du jardinage</li>
+      </ul>
+      <h3 id="s3">CMV (Cytomégalovirus)</h3>
+      <p>Le CMV est le virus le plus fréquemment responsable d'infections congénitales graves. Il se transmet principalement par contact avec la salive ou les urines des jeunes enfants.</p>
+      <div class="info-card"><div class="info-card-title">Mesures préventives clés</div><p>Lavez-vous les mains soigneusement après avoir changé des couches, après le repas des enfants et évitez de partager couverts, verres ou baisers sur la bouche avec de jeunes enfants.</p></div>
+      <h3 id="s4">Listériose</h3>
+      <p>La listériose est une infection alimentaire rare mais potentiellement grave pendant la grossesse. Elle peut entraîner une fausse couche, un accouchement prématuré ou une infection du nouveau-né.</p>
+      <ul>
+        <li>Éviter charcuteries, fromages à pâte molle au lait cru</li>
+        <li>Éviter les poissons fumés et coquillages crus</li>
+        <li>Nettoyer régulièrement le réfrigérateur</li>
+        <li>Consommer rapidement les aliments réfrigérés</li>
+      </ul>
+      <h3 id="s5">Symptômes et désagréments fréquents</h3>
+      <p>Le premier trimestre est souvent marqué par des nausées (parfois des vomissements), une fatigue intense, une tension mammaire, des envies fréquentes d'uriner et des variations d'humeur. Ces symptômes sont liés à l'augmentation des hormones de grossesse.</p>
+      <h3 id="s6">Risques et précautions</h3>
+      <p>Le risque de fausse couche est plus élevé au 1er trimestre. Il est recommandé d'éviter les médicaments sans avis médical, l'alcool, le tabac et les sports à risque de chute ou de contact.</p>
+      <h3 id="s7">Démarches pour le mode de garde</h3>
+      <p>Il est conseillé de commencer les démarches dès le début de grossesse car les listes d'attente peuvent être longues. Renseignez-vous auprès de la crèche municipale, des assistantes maternelles agréées et de la CAF pour les aides disponibles.</p>
+    `
+  },
+  'diabete': {
+    badge: '🤰 Pathologie de grossesse',
+    title: 'Diabète gestationnel',
+    nav: [
+      { label: 'Qu\'est-ce que c\'est ?', section: 's1' },
+      { label: 'Facteurs de risque', section: 's2' },
+      { label: 'Dépistage', section: 's3' },
+      { label: 'Prise en charge', section: 's4' },
+      { label: 'Après l\'accouchement', section: 's5' },
+    ],
+    content: `
+      <h3 id="s1">Qu'est-ce que le diabète gestationnel ?</h3>
+      <p>Le diabète gestationnel est une intolérance au glucose apparaissant ou diagnostiquée pour la première fois pendant la grossesse. Il résulte d'une résistance accrue à l'insuline liée aux hormones placentaires.</p>
+      <p>Il touche environ 8 à 10% des grossesses en France et peut avoir des conséquences pour la mère et l'enfant s'il n'est pas pris en charge.</p>
+      <div class="info-card"><div class="info-card-title">Important</div><p>Un diabète gestationnel bien contrôlé permet de mener une grossesse à terme dans de bonnes conditions.</p></div>
+      <h3 id="s2">Facteurs de risque</h3>
+      <ul>
+        <li>Indice de masse corporelle (IMC) supérieur à 25 avant la grossesse</li>
+        <li>Antécédents familiaux de diabète de type 2</li>
+        <li>Antécédents personnels de diabète gestationnel</li>
+        <li>Âge supérieur à 35 ans</li>
+        <li>Antécédents de macrosomie fœtale (bébé de plus de 4 kg)</li>
+        <li>Origine ethnique à risque (Asie du Sud, Afrique subsaharienne)</li>
+      </ul>
+      <h3 id="s3">Dépistage</h3>
+      <p>Le dépistage est réalisé entre 24 et 28 semaines d'aménorrhée chez les femmes à risque par un test HGPO (Hyperglycémie Provoquée par voie Orale) avec 75g de glucose.</p>
+      <p>Le diagnostic est posé si la glycémie à jeun est ≥ 0,92 g/L, à 1h est ≥ 1,80 g/L ou à 2h est ≥ 1,53 g/L.</p>
+      <h3 id="s4">Prise en charge</h3>
+      <p>La prise en charge repose d'abord sur des mesures hygiéno-diététiques : alimentation équilibrée avec contrôle des glucides, activité physique adaptée, surveillance glycémique pluriquotidienne.</p>
+      <p>Si les objectifs glycémiques ne sont pas atteints après 1 à 2 semaines, un traitement par insuline peut être instauré. Les antidiabétiques oraux ne sont généralement pas utilisés en France pendant la grossesse.</p>
+      <h3 id="s5">Après l'accouchement</h3>
+      <p>Le diabète gestationnel disparaît habituellement après l'accouchement. Un dépistage du diabète de type 2 par HGPO doit être réalisé entre 6 semaines et 6 mois après la naissance.</p>
+    `
+  },
+  'allaitement': {
+    badge: '👶 Postpartum',
+    title: 'Allaitement maternel',
+    nav: [
+      { label: 'Mise en route', section: 's1' },
+      { label: 'Problèmes fréquents', section: 's2' },
+      { label: 'Positions d\'allaitement', section: 's3' },
+      { label: 'Durée & sevrage', section: 's4' },
+    ],
+    content: `
+      <h3 id="s1">Mise en route de l'allaitement</h3>
+      <p>L'allaitement maternel est la meilleure alimentation pour le nouveau-né. Il est recommandé de le mettre en place dès la première heure après la naissance. Le contact peau à peau favorise l'instinct de fouissement du bébé.</p>
+      <p>La montée de lait survient habituellement entre le 2e et le 4e jour après l'accouchement. Dans les premiers jours, le sein produit le colostrum, un liquide jaune et épais, extrêmement riche en anticorps et en facteurs de croissance.</p>
+      <div class="info-card"><div class="info-card-title">Le saviez-vous ?</div><p>Le colostrum est souvent appelé "l'or liquide" — quelques millilitres suffisent à couvrir les besoins du nouveau-né dans les premiers jours.</p></div>
+      <h3 id="s2">Problèmes fréquents</h3>
+      <p><strong>Crevasses :</strong> souvent dues à une mauvaise prise du sein. Vérifiez que le bébé prend bien l'aréole entière dans sa bouche. Des soins locaux à base de lanoline peuvent aider.</p>
+      <p><strong>Engorgement :</strong> les seins sont tendus et douloureux. Allaitez fréquemment, appliquez de la chaleur avant la tétée et du froid après.</p>
+      <p><strong>Mastite :</strong> inflammation du sein avec parfois de la fièvre. Il ne faut pas arrêter l'allaitement. Consultez rapidement si fièvre > 38.5°C.</p>
+      <p><strong>Candidose mammaire :</strong> douleurs vives, brûlures. Un traitement antifongique adapté est nécessaire pour la mère et l'enfant.</p>
+      <h3 id="s3">Positions d'allaitement</h3>
+      <p>Plusieurs positions sont possibles — l'important est que vous et votre bébé soyez confortables :</p>
+      <ul>
+        <li><strong>Berceau classique :</strong> bébé dans vos bras, ventre contre ventre</li>
+        <li><strong>Football :</strong> bébé sous votre bras, utile après une césarienne</li>
+        <li><strong>Allongée sur le côté :</strong> idéale pour les tétées de nuit</li>
+        <li><strong>Biologique :</strong> mère semi-inclinée, bébé sur le ventre — favorise les réflexes naturels</li>
+      </ul>
+      <div class="info-card"><div class="info-card-title">Note</div><p>Des illustrations de positions seront prochainement disponibles dans cette section.</p></div>
+      <h3 id="s4">Durée et sevrage</h3>
+      <p>L'OMS recommande un allaitement exclusif pendant 6 mois, puis avec diversification alimentaire jusqu'à 2 ans et plus si souhaité. En France, la durée médiane d'allaitement est d'environ 3 mois.</p>
+      <p>Le sevrage peut être progressif (recommandé) ou brutal si nécessaire médicalement. La diminution progressive réduit le risque d'engorgement et d'engorgement douloureux.</p>
+    `
+  },
+  'endometriose': {
+    badge: '🌸 Gynécologie',
+    title: 'Endométriose',
+    nav: [
+      { label: 'Définition', section: 's1' },
+      { label: 'Symptômes', section: 's2' },
+      { label: 'Diagnostic', section: 's3' },
+      { label: 'Traitements', section: 's4' },
+      { label: 'Fertilité', section: 's5' },
+    ],
+    content: `
+      <h3 id="s1">Qu'est-ce que l'endométriose ?</h3>
+      <p>L'endométriose est une maladie gynécologique chronique caractérisée par la présence de tissu semblable à la muqueuse utérine (endomètre) en dehors de la cavité utérine — sur les ovaires, les trompes, le péritoine, la vessie ou l'intestin.</p>
+      <p>Elle touche environ 1 femme sur 10 en âge de procréer, soit près de 2,5 millions de femmes en France.</p>
+      <h3 id="s2">Symptômes</h3>
+      <ul>
+        <li>Règles douloureuses (dysménorrhée), souvent invalidantes</li>
+        <li>Douleurs pelviennes chroniques en dehors des règles</li>
+        <li>Douleurs lors des rapports sexuels (dyspareunie)</li>
+        <li>Douleurs à la défécation ou à la miction pendant les règles</li>
+        <li>Fatigue chronique</li>
+        <li>Troubles digestifs (ballonnements, diarrhées pendant les règles)</li>
+      </ul>
+      <div class="info-card"><div class="info-card-title">Important</div><p>Les douleurs menstruelles ne sont pas normales lorsqu'elles empêchent de mener une vie normale. Consultez.</p></div>
+      <h3 id="s3">Diagnostic</h3>
+      <p>Le diagnostic est souvent long (7 à 10 ans en moyenne). Il repose sur l'examen clinique, l'échographie pelvienne (idéalement par voie endovaginale) et l'IRM pelvienne. La cœlioscopie reste l'examen de référence pour confirmer le diagnostic histologique.</p>
+      <h3 id="s4">Traitements</h3>
+      <p>Il n'existe pas de guérison définitive, mais les traitements permettent de contrôler les symptômes. Le traitement hormonal (pilule en continu, progestatifs, DIU hormonal) est la première ligne de traitement.</p>
+      <p>La chirurgie peut être envisagée en cas d'endométriose sévère, d'échec du traitement médical ou d'infertilité. Elle est réalisée idéalement dans un centre spécialisé.</p>
+      <h3 id="s5">Endométriose et fertilité</h3>
+      <p>L'endométriose peut altérer la fertilité, mais une grossesse est possible. Une prise en charge précoce et adaptée permet d'optimiser les chances de conception. N'hésitez pas à consulter un centre spécialisé en fertilité.</p>
+    `
+  },
+  'hpv': {
+    badge: '🌸 Gynécologie',
+    title: 'HPV & Dépistage',
+    nav: [
+      { label: 'Le virus HPV', section: 's1' },
+      { label: 'Dépistage', section: 's2' },
+      { label: 'Lésions du col', section: 's3' },
+      { label: 'Vaccination', section: 's4' },
+    ],
+    content: `
+      <h3 id="s1">Le virus HPV</h3>
+      <p>Le papillomavirus humain (HPV) est une infection virale très fréquente, transmise par contact sexuel. Il existe plus de 200 types de HPV. La plupart des infections sont transitoires et guérissent spontanément.</p>
+      <p>Certains types dits "à haut risque" (HPV 16 et 18 notamment) peuvent, en cas de persistance, entraîner des lésions précancéreuses puis un cancer du col de l'utérus.</p>
+      <h3 id="s2">Dépistage</h3>
+      <p>Le dépistage du cancer du col de l'utérus repose sur le frottis cervico-utérin (FCU). Depuis 2020, les recommandations en France préconisent :</p>
+      <ul>
+        <li>Frottis conventionnel à 25 et 26 ans</li>
+        <li>Test HPV tous les 5 ans de 30 à 65 ans (si résultats normaux)</li>
+        <li>En cas d'anomalie, des examens complémentaires (colposcopie) sont réalisés</li>
+      </ul>
+      <div class="info-card"><div class="info-card-title">Rappel</div><p>Le dépistage régulier est essentiel même si vous êtes vaccinée contre le HPV.</p></div>
+      <h3 id="s3">Lésions du col</h3>
+      <p>Les lésions précancéreuses du col (CIN 1, 2, 3) sont classées selon leur degré. Les CIN 1 régressent souvent spontanément. Les CIN 2 et 3 nécessitent généralement un traitement par conisation pour prévenir l'évolution vers un cancer.</p>
+      <h3 id="s4">Vaccination</h3>
+      <p>La vaccination HPV est recommandée pour les filles et les garçons entre 11 et 14 ans, avec un rattrapage jusqu'à 19 ans. Elle est prise en charge à 100% par l'Assurance maladie. Elle protège contre les principaux types de HPV responsables de cancers.</p>
+    `
+  },
+  'contraception': {
+    badge: '🌸 Gynécologie',
+    title: 'Contraception',
+    nav: [
+      { label: 'Les différentes méthodes', section: 's1' },
+      { label: 'Pilule œstroprogestative', section: 's2' },
+      { label: 'DIU (stérilet)', section: 's3' },
+      { label: 'Méthodes barrières', section: 's4' },
+      { label: 'Implant contraceptif', section: 's5' },
+    ],
+    content: `
+      <h3 id="s1">Les différentes méthodes contraceptives</h3>
+      <p>Il n'existe pas de méthode contraceptive parfaite pour toutes — le choix dépend de votre âge, votre état de santé, vos préférences et votre projet de vie. Voici un aperçu des principales méthodes disponibles.</p>
+      <h3 id="s2">Pilule œstroprogestative — Conseils</h3>
+      <p>La pilule combinée contient deux hormones : un œstrogène et un progestatif. Elle est très efficace (> 99% si bien prise) et régule les cycles, réduit les douleurs menstruelles et l'acné.</p>
+      <ul>
+        <li>Prendre à heure fixe chaque jour</li>
+        <li>Si oubli de moins de 12h : prendre le comprimé dès que possible</li>
+        <li>Si oubli de plus de 12h : risque de grossesse, utiliser une contraception complémentaire</li>
+        <li>Certains médicaments peuvent diminuer son efficacité (antibiotiques, antiépileptiques)</li>
+      </ul>
+      <div class="info-card"><div class="info-card-title">Contre-indications</div><p>La pilule œstroprogestative est contre-indiquée en cas de tabagisme après 35 ans, migraine avec aura, antécédents thromboemboliques ou certaines maladies cardiovasculaires.</p></div>
+      <h3 id="s3">DIU (stérilet)</h3>
+      <p>Le dispositif intra-utérin peut être en cuivre (non hormonal, efficace 5 à 10 ans) ou hormonal (diffuse un progestatif localement, efficace 3 à 8 ans selon le type). C'est une contraception très efficace et réversible, adaptée aux femmes ayant ou non eu des enfants.</p>
+      <h3 id="s4">Méthodes barrières</h3>
+      <p>Le préservatif masculin est la seule méthode protégeant à la fois des grossesses et des IST. Les autres méthodes barrières (préservatif féminin, diaphragme, cape cervicale) nécessitent un spermicide pour optimiser l'efficacité.</p>
+      <h3 id="s5">Implant contraceptif</h3>
+      <p>L'implant sous-cutané (Nexplanon®) est un petit bâtonnet progestatif inséré sous la peau du bras, efficace 3 ans. C'est la méthode la plus efficace disponible. Il convient particulièrement aux femmes qui oublient souvent leur pilule.</p>
+    `
+  },
+  'preeclampsie': {
+    badge: '🤰 Pathologie de grossesse',
+    title: 'Prééclampsie',
+    nav: [
+      { label: 'Définition', section: 's1' },
+      { label: 'Symptômes', section: 's2' },
+      { label: 'Surveillance', section: 's3' },
+      { label: 'Prise en charge', section: 's4' },
+    ],
+    content: `
+      <h3 id="s1">Qu'est-ce que la prééclampsie ?</h3>
+      <p>La prééclampsie est une complication grave de la grossesse associant une hypertension artérielle (≥ 140/90 mmHg) et une protéinurie (présence de protéines dans les urines), survenant après 20 semaines de grossesse.</p>
+      <p>Elle touche environ 2 à 8% des grossesses. Non traitée, elle peut évoluer vers l'éclampsie (convulsions) ou le syndrome HELLP, mettant en jeu la vie de la mère et de l'enfant.</p>
+      <h3 id="s2">Symptômes d'alerte</h3>
+      <ul>
+        <li>Maux de tête intenses et persistants</li>
+        <li>Troubles visuels (phosphènes, scotomes)</li>
+        <li>Acouphènes, bourdonnements d'oreilles</li>
+        <li>Douleur en barre sous les côtes (épigastrique)</li>
+        <li>Œdèmes importants et soudains du visage, des mains</li>
+        <li>Prise de poids rapide (> 1 kg en 1 semaine)</li>
+      </ul>
+      <div class="info-card"><div class="info-card-title">URGENCE</div><p>Tout signe neurologique (maux de tête intenses, troubles visuels) associé à une tension élevée nécessite une consultation aux urgences obstétricales immédiatement.</p></div>
+      <h3 id="s3">Surveillance</h3>
+      <p>La surveillance repose sur la mesure régulière de la tension artérielle, les bandelettes urinaires, la surveillance du poids et des signes fonctionnels. En cas de facteurs de risque, une surveillance renforcée est mise en place dès le début de la grossesse.</p>
+      <h3 id="s4">Prise en charge</h3>
+      <p>Le seul traitement curatif est l'accouchement. En attendant, un traitement antihypertenseur est instauré et une hospitalisation peut être nécessaire. La décision d'accouchement prématuré dépend de la sévérité et du terme de la grossesse.</p>
+    `
+  },
+  'mycose': {
+    badge: '🌸 Gynécologie',
+    title: 'Infections vaginales',
+    nav: [
+      { label: 'Mycose vaginale', section: 's1' },
+      { label: 'Vaginose bactérienne', section: 's2' },
+      { label: 'MST / IST', section: 's3' },
+      { label: 'Uréaplasma / Mycoplasma', section: 's4' },
+    ],
+    content: `
+      <h3 id="s1">Mycose vaginale</h3>
+      <p>La mycose vaginale (candidose vulvo-vaginale) est une infection fongique très fréquente causée le plus souvent par Candida albicans. Elle n'est pas une IST mais peut être favorisée par la prise d'antibiotiques, la grossesse, le diabète ou le port de sous-vêtements synthétiques.</p>
+      <p>Symptômes typiques : pertes blanches épaisses, caillouteuses et inodores, démangeaisons intenses, brûlures vulvaires, parfois douleurs lors des rapports.</p>
+      <p>Traitement : ovule et/ou crème antifongique en application locale, parfois traitement oral par fluconazole sur prescription médicale.</p>
+      <h3 id="s2">Vaginose bactérienne</h3>
+      <p>La vaginose est un déséquilibre de la flore vaginale (diminution des lactobacilles, prolifération d'autres bactéries). Elle se manifeste par des pertes grises ou blanches avec une odeur de poisson, surtout après les rapports.</p>
+      <p>Elle n'est pas une IST mais peut favoriser les IST et, pendant la grossesse, le risque d'accouchement prématuré. Traitement par métronidazole.</p>
+      <h3 id="s3">MST / IST</h3>
+      <p>Les infections sexuellement transmissibles les plus fréquentes incluent : Chlamydia, gonorrhée, syphilis, herpès génital, HPV. Beaucoup sont asymptomatiques, d'où l'importance d'un dépistage régulier si vous avez des partenaires multiples.</p>
+      <div class="info-card"><div class="info-card-title">Conseil</div><p>Le préservatif est la seule contraception protégeant contre les IST. Un dépistage annuel est recommandé si vous changez de partenaire.</p></div>
+      <h3 id="s4">Uréaplasma / Mycoplasma hominis</h3>
+      <p>Ces bactéries font partie de la flore habituelle de nombreuses femmes. Leur présence n'est problématique que dans certains contextes (grossesse, infertilité, symptômes persistants). Un traitement antibiotique ciblé est parfois nécessaire.</p>
+    `
+  },
+  'infos-gen': {
+    badge: '📋 Infos pratiques',
+    title: 'Informations générales',
+    nav: [
+      { label: 'Vos droits', section: 's1' },
+      { label: 'Remboursements', section: 's2' },
+      { label: 'Congé maternité', section: 's3' },
+    ],
+    content: `
+      <h3 id="s1">Vos droits en tant que patiente</h3>
+      <p>En France, toute patiente a droit à une information claire et loyale sur son état de santé, les soins proposés et les alternatives disponibles. Vous pouvez poser toutes les questions nécessaires à votre praticien.</p>
+      <h3 id="s2">Remboursements et prise en charge</h3>
+      <p>La grossesse est prise en charge à 100% par l'Assurance Maladie à partir du 6e mois. Les consultations prénatales obligatoires, les échographies et les examens biologiques prescrits sont remboursés.</p>
+      <h3 id="s3">Congé maternité</h3>
+      <p>Le congé maternité est de 16 semaines pour un premier ou deuxième enfant (6 semaines avant et 10 semaines après). Il est prolongé à 26 semaines pour un 3e enfant ou en cas de grossesse pathologique.</p>
+    `
+  },
+  'preop': {
+    badge: '📋 Infos pratiques',
+    title: 'Informations pré-opératoires',
+    nav: [
+      { label: 'Avant l\'intervention', section: 's1' },
+      { label: 'Le jour J', section: 's2' },
+      { label: 'Après l\'opération', section: 's3' },
+    ],
+    content: `
+      <h3 id="s1">Avant l'intervention</h3>
+      <p>Une consultation pré-anesthésique est obligatoire avant toute intervention sous anesthésie. Elle doit avoir lieu au moins 48h avant l'opération. Un bilan biologique et parfois un électrocardiogramme sont demandés.</p>
+      <p>Il est nécessaire d'être à jeun (aucun aliment solide ni liquide) pendant au moins 6 heures avant l'intervention.</p>
+      <h3 id="s2">Le jour J</h3>
+      <p>Apportez votre carte vitale, mutuelle, ordonnances et résultats d'examens. Portez des vêtements amples et confortables. N'oubliez pas de retirer vernis, bijoux et lentilles de contact.</p>
+      <h3 id="s3">Après l'opération</h3>
+      <p>La durée d'hospitalisation varie selon l'intervention. Des instructions de sortie vous seront remises. Respectez les prescriptions médicales et n'hésitez pas à contacter votre praticien en cas de doute.</p>
+    `
+  },
+  'etranger': {
+    badge: '📋 Infos pratiques',
+    title: 'Accouchement à l\'étranger',
+    nav: [
+      { label: 'Préparation', section: 's1' },
+      { label: 'Documents essentiels', section: 's2' },
+      { label: 'Retour en France', section: 's3' },
+    ],
+    content: `
+      <h3 id="s1">Préparation avant le départ</h3>
+      <p>Si vous envisagez d'accoucher à l'étranger, une préparation rigoureuse est indispensable. Renseignez-vous sur le système de santé du pays de destination, les conditions d'accès aux soins obstétricaux et les coûts potentiels.</p>
+      <p>Contactez votre mutuelle et l'Assurance Maladie pour connaître les modalités de prise en charge à l'étranger.</p>
+      <h3 id="s2">Documents essentiels à emporter</h3>
+      <ul>
+        <li>Carnet de maternité complet et à jour</li>
+        <li>Résultats de toutes vos échographies et examens biologiques</li>
+        <li>Carte européenne d'assurance maladie (si pays européen)</li>
+        <li>Attestation de votre assurance maternité ou mutuelle</li>
+        <li>Groupe sanguin et résultats de la RAI</li>
+        <li>Ordonnances de vos traitements en cours</li>
+      </ul>
+      <h3 id="s3">Retour en France</h3>
+      <p>Après un accouchement à l'étranger, il est nécessaire de déclarer la naissance à la mairie du lieu de naissance puis de la transcrire à l'état civil français (via le consulat ou le Service central d'état civil de Nantes).</p>
+    `
+  },
+  'map': {
+    badge: '🤰 Pathologie de grossesse',
+    title: 'Menace d\'accouchement prématuré',
+    nav: [
+      { label: 'Définition', section: 's1' },
+      { label: 'Signes d\'alarme', section: 's2' },
+      { label: 'Prise en charge', section: 's3' },
+    ],
+    content: `
+      <h3 id="s1">Qu'est-ce que la MAP ?</h3>
+      <p>La menace d'accouchement prématuré (MAP) désigne la survenue de contractions utérines régulières et douloureuses associées à des modifications du col utérin, avant 37 semaines d'aménorrhée.</p>
+      <p>Elle représente la première cause d'hospitalisation pendant la grossesse et concerne environ 5 à 10% des grossesses.</p>
+      <h3 id="s2">Signes d'alarme</h3>
+      <ul>
+        <li>Contractions régulières (plus de 4 par heure) avant 37 SA</li>
+        <li>Sensation de pression pelvienne ou pubienne intense</li>
+        <li>Pertes vaginales anormales (liquide, sang)</li>
+        <li>Douleurs lombaires basses persistantes</li>
+        <li>Sensation que "quelque chose descend"</li>
+      </ul>
+      <div class="info-card"><div class="info-card-title">À faire immédiatement</div><p>En cas de doute, appelez votre maternité ou le 15. Ne conduisez pas vous-même aux urgences si les contractions sont rapprochées.</p></div>
+      <h3 id="s3">Prise en charge</h3>
+      <p>La prise en charge comprend le repos strict, une tocolyse (médicaments pour arrêter les contractions) si nécessaire, et une corticothérapie pour accélérer la maturité pulmonaire fœtale si l'accouchement avant 34 SA est probable. Une hospitalisation est souvent nécessaire.</p>
+    `
+  },
+};
+
+// ─── MODAL ───
+let currentModal = null;
+let currentSection = null;
+
+function openModal(id) {
+  const data = modalData[id];
+  if (!data) return;
+  closeSearch();
+  currentModal = id;
+
+  document.getElementById('modalBadge').textContent = data.badge;
+  document.getElementById('modalTitle').textContent = data.title;
+
+  // Nav
+  const nav = document.getElementById('modalNav');
+  nav.innerHTML = data.nav.map((item, i) =>
+    `<button class="modal-nav-item ${i === 0 ? 'active' : ''}" onclick="scrollToSection('${item.section}', this)">${item.label}</button>`
+  ).join('');
+
+  // Content
+  document.getElementById('modalContent').innerHTML = data.content;
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function scrollToSection(id, btn) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.modal-nav-item').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+</script>
+</body>
+</html>
