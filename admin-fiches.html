@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administration — Fiches médicales</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FAF7F2;
+  --cream-dark: #F0EBE1;
+  --rose: #E8C5BB;
+  --rose-deep: #C9957F;
+  --gold: #C8A96E;
+  --gold-light: #F0E4C0;
+  --text-dark: #2C2420;
+  --text-mid: #6B5B52;
+  --text-light: #A09080;
+  --white: #FFFFFF;
+  --dark: #1A1210;
+  --dark-2: #231815;
+  --dark-3: #2E1F1A;
+  --green: #6B8F71;
+  --green-light: #EBF3EC;
+  --red: #C0392B;
+  --red-light: #FDECEA;
+  --shadow: 0 4px 32px rgba(44,36,32,0.10);
+  --shadow-lg: 0 16px 64px rgba(44,36,32,0.18);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; }
+body {
+  font-family:'DM Sans',sans-serif;
+  background:var(--dark);
+  color:var(--white);
+  display:flex; height:100vh; overflow:hidden;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width:260px; flex-shrink:0;
+  background:var(--dark-2);
+  border-right:1px solid rgba(255,255,255,.06);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+}
+.sidebar-logo {
+  padding:24px 20px 20px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.logo-text {
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px; font-weight:400; color:var(--white);
+}
+.logo-text span { color:var(--rose-deep); }
+.logo-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  background:rgba(201,149,127,.12);
+  border:1px solid rgba(201,149,127,.2);
+  border-radius:7px; padding:3px 10px;
+  font-size:10px; color:var(--rose-deep);
+  font-weight:600; text-transform:uppercase; letter-spacing:.06em;
+  margin-top:8px;
+}
+
+.sidebar-nav { flex:1; overflow-y:auto; padding:12px; }
+.nav-section-label {
+  font-size:9.5px; font-weight:600; color:rgba(255,255,255,.2);
+  text-transform:uppercase; letter-spacing:.1em;
+  padding:12px 8px 5px;
+}
+.nav-item {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 10px; border-radius:9px;
+  cursor:pointer; transition:all .15s;
+  margin-bottom:2px;
+  border:none; background:none; width:100%;
+  text-align:left; font-family:'DM Sans',sans-serif;
+  color:rgba(255,255,255,.4); font-size:13px;
+}
+.nav-item:hover { background:rgba(255,255,255,.05); color:rgba(255,255,255,.75); }
+.nav-item.active { background:rgba(201,149,127,.1); color:var(--rose-deep); }
+.nav-item-ico { font-size:15px; width:22px; text-align:center; flex-shrink:0; }
+.nav-item-count {
+  margin-left:auto;
+  background:rgba(255,255,255,.08);
+  border-radius:10px; padding:1px 7px;
+  font-size:10px; color:rgba(255,255,255,.3);
+}
+.nav-item.active .nav-item-count { background:rgba(201,149,127,.2); color:var(--rose-deep); }
+
+.sidebar-footer {
+  padding:16px 20px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.ai-status {
+  display:flex; align-items:center; gap:8px;
+  font-size:12px; color:rgba(255,255,255,.35);
+}
+.ai-status-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px var(--green);
+  flex-shrink:0;
+  animation:pulse 2s ease infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.5} }
+.ai-count {
+  font-size:11px; color:rgba(255,255,255,.25);
+  margin-top:4px;
+}
+
+/* ─── MAIN ─── */
+.main {
+  flex:1; display:flex; flex-direction:column; overflow:hidden;
+}
+
+/* Topbar */
+.topbar {
+  height:62px; flex-shrink:0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex; align-items:center; padding:0 28px; gap:16px;
+  background:var(--dark-3);
+}
+.topbar-title { font-size:15px; font-weight:500; color:rgba(255,255,255,.85); }
+.topbar-sub { font-size:11.5px; color:rgba(255,255,255,.3); margin-top:1px; }
+.topbar-actions { margin-left:auto; display:flex; gap:10px; }
+
+.btn-primary {
+  display:flex; align-items:center; gap:7px;
+  padding:9px 18px; border-radius:10px;
+  background:var(--rose-deep); color:white;
+  border:none; font-size:13px; font-weight:500;
+  font-family:'DM Sans',sans-serif; cursor:pointer;
+  transition:all .2s;
+}
+.btn-primary:hover { background:#B8856F; transform:translateY(-1px); }
+
+.btn-ghost {
+  display:flex; align-items:center; gap:7px;
+  padding:9px 18px; border-radius:10px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.6); font-size:13px;
+  font-family:'DM Sans',sans-serif; cursor:pointer;
+  transition:all .2s;
+}
+.btn-ghost:hover { background:rgba(255,255,255,.08); color:rgba(255,255,255,.9); }
+
+/* ─── CONTENT AREA ─── */
+.content {
+  flex:1; overflow:hidden;
+  display:flex;
+}
+
+/* ─── LIST VIEW ─── */
+.list-panel {
+  flex:1; overflow-y:auto; padding:24px 28px;
+}
+.list-panel::-webkit-scrollbar { width:3px; }
+.list-panel::-webkit-scrollbar-thumb { background:rgba(255,255,255,.08); }
+
+/* Search + filter bar */
+.filter-bar {
+  display:flex; align-items:center; gap:12px;
+  margin-bottom:20px;
+}
+.search-wrap {
+  flex:1; position:relative;
+}
+.search-wrap svg {
+  position:absolute; left:12px; top:50%; transform:translateY(-50%);
+  width:14px; height:14px; color:rgba(255,255,255,.25);
+}
+.search-input {
+  width:100%; padding:10px 14px 10px 36px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px; font-size:13.5px;
+  font-family:'DM Sans',sans-serif;
+  color:rgba(255,255,255,.8); outline:none;
+  transition:all .2s;
+}
+.search-input::placeholder { color:rgba(255,255,255,.2); }
+.search-input:focus { border-color:rgba(201,149,127,.4); background:rgba(255,255,255,.07); }
+
+.filter-btn {
+  padding:9px 14px; border-radius:10px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  color:rgba(255,255,255,.4); font-size:12.5px;
+  font-family:'DM Sans',sans-serif; cursor:pointer;
+  transition:all .2s; white-space:nowrap;
+}
+.filter-btn.active { background:rgba(201,149,127,.1); border-color:rgba(201,149,127,.25); color:var(--rose-deep); }
+.filter-btn:hover { color:rgba(255,255,255,.7); }
+
+/* Stats row */
+.stats-row {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:12px;
+  margin-bottom:24px;
+}
+.stat-card {
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:12px; padding:16px;
+}
+.stat-card-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px; font-weight:400; line-height:1;
+  margin-bottom:4px;
+}
+.stat-card-num.rose { color:var(--rose-deep); }
+.stat-card-num.green { color:var(--green); }
+.stat-card-num.gold { color:var(--gold); }
+.stat-card-num.white { color:rgba(255,255,255,.7); }
+.stat-card-label { font-size:11px; color:rgba(255,255,255,.3); font-weight:300; }
+
+/* Fiches list */
+.fiches-list { display:flex; flex-direction:column; gap:8px; }
+
+.fiche-row {
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:12px; padding:14px 16px;
+  display:flex; align-items:center; gap:14px;
+  cursor:pointer; transition:all .2s;
+  position:relative; overflow:hidden;
+}
+.fiche-row:hover {
+  background:rgba(255,255,255,.05);
+  border-color:rgba(255,255,255,.1);
+}
+.fiche-row.selected {
+  background:rgba(201,149,127,.07);
+  border-color:rgba(201,149,127,.25);
+}
+.fiche-row::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:3px; border-radius:2px 0 0 2px;
+}
+.fiche-row.active-ai::before { background:var(--green); }
+.fiche-row.inactive-ai::before { background:rgba(255,255,255,.1); }
+
+.fiche-row-cat {
+  width:32px; height:32px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; flex-shrink:0;
+}
+.fiche-row-info { flex:1; min-width:0; }
+.fiche-row-title {
+  font-size:13.5px; font-weight:500;
+  color:rgba(255,255,255,.8);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  margin-bottom:3px;
+}
+.fiche-row-meta {
+  display:flex; align-items:center; gap:10px;
+  font-size:11px; color:rgba(255,255,255,.3);
+}
+.fiche-row-cat-label {
+  display:flex; align-items:center; gap:4px;
+}
+.fiche-row-words { color:rgba(255,255,255,.2); }
+.fiche-row-date { color:rgba(255,255,255,.2); }
+
+.fiche-ai-badge {
+  display:flex; align-items:center; gap:5px;
+  padding:3px 10px; border-radius:7px;
+  font-size:10.5px; font-weight:600;
+  flex-shrink:0;
+}
+.fiche-ai-badge.on {
+  background:rgba(107,143,113,.15);
+  border:1px solid rgba(107,143,113,.25);
+  color:var(--green);
+}
+.fiche-ai-badge.off {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  color:rgba(255,255,255,.25);
+}
+.fiche-ai-dot { width:5px; height:5px; border-radius:50%; background:currentColor; }
+
+.fiche-row-actions {
+  display:flex; gap:6px; flex-shrink:0;
+}
+.fiche-action-btn {
+  width:28px; height:28px; border-radius:7px;
+  border:none; cursor:pointer; transition:all .15s;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px;
+}
+.fiche-action-btn.edit {
+  background:rgba(255,255,255,.05); color:rgba(255,255,255,.4);
+}
+.fiche-action-btn.edit:hover { background:rgba(201,149,127,.15); color:var(--rose-deep); }
+.fiche-action-btn.delete {
+  background:rgba(255,255,255,.04); color:rgba(255,255,255,.25);
+}
+.fiche-action-btn.delete:hover { background:rgba(192,57,43,.15); color:#E57373; }
+
+/* ─── EDITOR PANEL ─── */
+.editor-panel {
+  width:520px; flex-shrink:0;
+  border-left:1px solid rgba(255,255,255,.06);
+  background:var(--dark-2);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  animation:slideIn .25s ease;
+}
+@keyframes slideIn {
+  from { transform:translateX(30px); opacity:0; }
+  to { transform:translateX(0); opacity:1; }
+}
+.editor-panel.hidden { display:none; }
+
+.editor-topbar {
+  padding:18px 20px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex; align-items:center; gap:12px;
+}
+.editor-topbar-title { font-size:14px; font-weight:500; color:rgba(255,255,255,.8); flex:1; }
+.editor-close {
+  width:28px; height:28px; border-radius:8px;
+  background:rgba(255,255,255,.05); border:none;
+  color:rgba(255,255,255,.4); cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; transition:all .15s;
+}
+.editor-close:hover { background:rgba(255,255,255,.1); color:rgba(255,255,255,.8); }
+
+.editor-body { flex:1; overflow-y:auto; padding:20px; }
+.editor-body::-webkit-scrollbar { width:3px; }
+.editor-body::-webkit-scrollbar-thumb { background:rgba(255,255,255,.08); }
+
+.form-group { margin-bottom:20px; }
+.form-label {
+  display:block; font-size:11px; font-weight:600;
+  color:rgba(255,255,255,.3); text-transform:uppercase;
+  letter-spacing:.08em; margin-bottom:8px;
+}
+.form-input, .form-select, .form-textarea {
+  width:100%;
+  background:rgba(255,255,255,.05);
+  border:1.5px solid rgba(255,255,255,.08);
+  border-radius:10px; padding:11px 14px;
+  font-size:13.5px; font-family:'DM Sans',sans-serif;
+  color:rgba(255,255,255,.8); outline:none;
+  transition:all .2s;
+}
+.form-input::placeholder, .form-textarea::placeholder { color:rgba(255,255,255,.2); }
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color:rgba(201,149,127,.4);
+  background:rgba(255,255,255,.07);
+}
+.form-select { cursor:pointer; }
+.form-select option { background:var(--dark-2); }
+
+.form-textarea {
+  resize:vertical; min-height:260px; line-height:1.7;
+  font-size:13px;
+}
+
+.ai-toggle-row {
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:10px; padding:12px 16px;
+}
+.ai-toggle-info {}
+.ai-toggle-label { font-size:13px; color:rgba(255,255,255,.7); font-weight:500; }
+.ai-toggle-sub { font-size:11.5px; color:rgba(255,255,255,.3); margin-top:2px; font-weight:300; }
+
+.toggle {
+  position:relative; width:40px; height:22px; flex-shrink:0;
+}
+.toggle input { opacity:0; width:0; height:0; }
+.toggle-slider {
+  position:absolute; inset:0; border-radius:11px;
+  background:rgba(255,255,255,.1); cursor:pointer;
+  transition:.3s;
+}
+.toggle-slider::before {
+  content:''; position:absolute;
+  width:16px; height:16px; border-radius:50%;
+  background:rgba(255,255,255,.4);
+  left:3px; bottom:3px;
+  transition:.3s;
+}
+.toggle input:checked + .toggle-slider { background:var(--green); }
+.toggle input:checked + .toggle-slider::before {
+  transform:translateX(18px);
+  background:white;
+}
+
+.word-count-bar {
+  margin-top:6px;
+  display:flex; align-items:center; gap:10px;
+}
+.wc-bar { flex:1; height:4px; background:rgba(255,255,255,.06); border-radius:2px; overflow:hidden; }
+.wc-fill { height:100%; border-radius:2px; background:var(--rose-deep); transition:width .3s; }
+.wc-text { font-size:11px; color:rgba(255,255,255,.25); white-space:nowrap; }
+.wc-text.good { color:var(--green); }
+
+/* Preview card */
+.preview-card {
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:12px; padding:16px;
+  margin-bottom:20px;
+}
+.preview-card-title {
+  font-size:11px; font-weight:600; color:rgba(255,255,255,.25);
+  text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px;
+  display:flex; align-items:center; gap:6px;
+}
+.preview-text {
+  font-size:12.5px; color:rgba(255,255,255,.4);
+  line-height:1.65; font-weight:300;
+  max-height:80px; overflow:hidden;
+  position:relative;
+}
+.preview-text::after {
+  content:'';
+  position:absolute; bottom:0; left:0; right:0; height:24px;
+  background:linear-gradient(transparent, var(--dark-2));
+}
+
+.editor-footer {
+  padding:16px 20px;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex; gap:10px;
+}
+.btn-save {
+  flex:1; padding:11px;
+  background:var(--rose-deep); color:white;
+  border:none; border-radius:10px;
+  font-size:13.5px; font-weight:500;
+  font-family:'DM Sans',sans-serif; cursor:pointer;
+  transition:all .2s; display:flex; align-items:center; justify-content:center; gap:7px;
+}
+.btn-save:hover { background:#B8856F; }
+.btn-cancel {
+  padding:11px 18px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.4); border-radius:10px;
+  font-size:13.5px; font-family:'DM Sans',sans-serif;
+  cursor:pointer; transition:all .2s;
+}
+.btn-cancel:hover { color:rgba(255,255,255,.7); }
+
+/* ─── TOAST ─── */
+.toast {
+  position:fixed; bottom:24px; right:24px; z-index:9999;
+  background:var(--dark); border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.85);
+  padding:12px 20px; border-radius:12px;
+  font-size:13px; box-shadow:0 8px 32px rgba(0,0,0,.3);
+  transform:translateY(70px); opacity:0;
+  transition:all .3s; display:flex; align-items:center; gap:8px;
+}
+.toast.show { transform:translateY(0); opacity:1; }
+
+/* ─── EMPTY STATE ─── */
+.empty-state {
+  height:100%; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  color:rgba(255,255,255,.2); text-align:center; gap:12px;
+  padding:40px;
+}
+.empty-icon { font-size:44px; opacity:.35; }
+.empty-title { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:400; }
+.empty-sub { font-size:13px; font-weight:300; max-width:300px; line-height:1.5; }
+
+/* ─── AI PREVIEW BOX ─── */
+.ai-preview-section {
+  padding:24px 28px;
+  border-top:1px solid rgba(255,255,255,.06);
+  background:rgba(0,0,0,.15);
+  flex-shrink:0;
+}
+.ai-preview-label {
+  font-size:10px; font-weight:600; color:rgba(255,255,255,.2);
+  text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px;
+  display:flex; align-items:center; gap:8px;
+}
+.ai-preview-label::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.05); }
+.ai-preview-chips {
+  display:flex; flex-wrap:wrap; gap:6px;
+}
+.ai-chip {
+  display:flex; align-items:center; gap:5px;
+  background:rgba(107,143,113,.1);
+  border:1px solid rgba(107,143,113,.2);
+  border-radius:8px; padding:4px 10px;
+  font-size:11px; color:rgba(107,143,113,.8);
+}
+.ai-chip-off {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  color:rgba(255,255,255,.2);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width:1100px) {
+  .editor-panel { width:420px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── PROTECTION MOT DE PASSE ─── -->
+<div id="passwordOverlay" style="
+  position:fixed;inset:0;z-index:99999;
+  background:linear-gradient(135deg,#2C2420 0%,#3D2E29 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Sans',sans-serif;
+">
+  <div style="
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:24px;padding:48px 40px;
+    width:380px;max-width:90vw;text-align:center;
+  ">
+    <div style="font-size:40px;margin-bottom:20px">🔒</div>
+    <div style="
+      font-family:'Cormorant Garamond',serif;
+      font-size:28px;font-weight:400;color:white;
+      margin-bottom:8px;
+    ">Espace administration</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.4);margin-bottom:32px;font-weight:300;">
+      Accès réservé au praticien
+    </div>
+    <input
+      type="password"
+      id="adminPassword"
+      placeholder="Mot de passe"
+      onkeydown="if(event.key==='Enter') checkPassword()"
+      style="
+        width:100%;padding:14px 18px;
+        background:rgba(255,255,255,.08);
+        border:1.5px solid rgba(255,255,255,.15);
+        border-radius:12px;
+        font-size:15px;font-family:'DM Sans',sans-serif;
+        color:white;outline:none;
+        margin-bottom:12px;
+        text-align:center;letter-spacing:.1em;
+      "
+    >
+    <div id="passwordError" style="
+      font-size:12px;color:#E57373;
+      margin-bottom:12px;display:none;
+    ">Mot de passe incorrect. Réessayez.</div>
+    <button onclick="checkPassword()" style="
+      width:100%;padding:14px;
+      background:#C9957F;color:white;
+      border:none;border-radius:12px;
+      font-size:14px;font-weight:500;
+      font-family:'DM Sans',sans-serif;
+      cursor:pointer;transition:all .2s;
+    " onmouseover="this.style.background='#B8856F'"
+       onmouseout="this.style.background='#C9957F'">
+      Accéder →
+    </button>
+    <div style="font-size:11px;color:rgba(255,255,255,.2);margin-top:20px;font-weight:300;">
+      Santé Féminine · Panneau d'administration
+    </div>
+  </div>
+</div>
+
+<script>
+// Mot de passe admin — changez-le ici
+const ADMIN_PASSWORD = 'eylacare2025';
+
+function checkPassword() {
+  const input = document.getElementById('adminPassword').value;
+  const error = document.getElementById('passwordError');
+  if (input === ADMIN_PASSWORD) {
+    document.getElementById('passwordOverlay').style.display = 'none';
+    sessionStorage.setItem('adminAuth', 'true');
+  } else {
+    error.style.display = 'block';
+    document.getElementById('adminPassword').value = '';
+    document.getElementById('adminPassword').focus();
+    document.getElementById('adminPassword').style.borderColor = '#E57373';
+    setTimeout(() => {
+      document.getElementById('adminPassword').style.borderColor = 'rgba(255,255,255,.15)';
+    }, 2000);
+  }
+}
+
+// Vérifier si déjà authentifié dans cette session
+if (sessionStorage.getItem('adminAuth') === 'true') {
+  document.getElementById('passwordOverlay').style.display = 'none';
+}
+
+// Focus automatique sur le champ
+window.addEventListener('load', () => {
+  document.getElementById('adminPassword').focus();
+});
+</script>
+
+<!-- ─── SIDEBAR ─── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">Santé <span>Féminine</span></div>
+    <div class="logo-badge">⚙️ Administration</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Fiches médicales</div>
+    <button class="nav-item active" onclick="filterCat('all')">
+      <span class="nav-item-ico">📚</span>
+      Toutes les fiches
+      <span class="nav-item-count" id="countAll">0</span>
+    </button>
+
+    <div class="nav-section-label">Grossesse</div>
+    <button class="nav-item" onclick="filterCat('grossesse-t1')">
+      <span class="nav-item-ico">🌱</span>
+      1er trimestre
+      <span class="nav-item-count" id="countT1">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('grossesse-t2')">
+      <span class="nav-item-ico">🌸</span>
+      2e trimestre
+      <span class="nav-item-count" id="countT2">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('grossesse-t3')">
+      <span class="nav-item-ico">⭐</span>
+      3e trimestre
+      <span class="nav-item-count" id="countT3">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('grossesse-patho')">
+      <span class="nav-item-ico">🩺</span>
+      Pathologies
+      <span class="nav-item-count" id="countPatho">0</span>
+    </button>
+
+    <div class="nav-section-label">Post-partum</div>
+    <button class="nav-item" onclick="filterCat('postpartum-gen')">
+      <span class="nav-item-ico">👶</span>
+      Infos générales
+      <span class="nav-item-count" id="countPPgen">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('postpartum-allaitement')">
+      <span class="nav-item-ico">🤱</span>
+      Allaitement
+      <span class="nav-item-count" id="countAllaitement">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('postpartum-babyblues')">
+      <span class="nav-item-ico">💛</span>
+      Baby blues
+      <span class="nav-item-count" id="countBabyblues">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('postpartum-contraception')">
+      <span class="nav-item-ico">💊</span>
+      Contraception post-partum
+      <span class="nav-item-count" id="countPPcontra">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('postpartum-reeducation')">
+      <span class="nav-item-ico">🧘</span>
+      Rééducation périnéale
+      <span class="nav-item-count" id="countReeeduc">0</span>
+    </button>
+
+    <div class="nav-section-label">Gynécologie</div>
+    <button class="nav-item" onclick="filterCat('gyneco-contraception')">
+      <span class="nav-item-ico">💊</span>
+      Contraception
+      <span class="nav-item-count" id="countGyneContra">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('gyneco-patho')">
+      <span class="nav-item-ico">🔬</span>
+      Pathologies
+      <span class="nav-item-count" id="countGynePatho">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('gyneco-hpv')">
+      <span class="nav-item-ico">🔍</span>
+      HPV
+      <span class="nav-item-count" id="countHpv">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('gyneco-infections-vaginales')">
+      <span class="nav-item-ico">🧬</span>
+      Infections vaginales
+      <span class="nav-item-count" id="countInfVag">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('gyneco-infections-urinaires')">
+      <span class="nav-item-ico">💧</span>
+      Infections urinaires
+      <span class="nav-item-count" id="countInfUri">0</span>
+    </button>
+
+    <div class="nav-section-label">Infos générales</div>
+    <button class="nav-item" onclick="filterCat('infos-generales')">
+      <span class="nav-item-ico">📋</span>
+      Informations générales
+      <span class="nav-item-count" id="countInfosGen">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('infos-preop')">
+      <span class="nav-item-ico">🏥</span>
+      Informatif pré-opératoire
+      <span class="nav-item-count" id="countPreop">0</span>
+    </button>
+    <button class="nav-item" onclick="filterCat('infos-etranger')">
+      <span class="nav-item-ico">✈️</span>
+      Accouchement à l'étranger
+      <span class="nav-item-count" id="countEtranger">0</span>
+    </button>
+
+    <div class="nav-section-label" style="margin-top:8px">Navigation</div>
+    <button class="nav-item" onclick="window.open('plateforme-medicale.html','_blank')">
+      <span class="nav-item-ico">🌐</span>
+      Voir le site
+    </button>
+    <button class="nav-item" onclick="window.open('chat-ia-supervision.html','_blank')">
+      <span class="nav-item-ico">🤖</span>
+      Chat IA + supervision
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="ai-status">
+      <div class="ai-status-dot"></div>
+      IA active — utilise vos fiches
+    </div>
+    <div class="ai-count" id="aiActiveCount">0 fiche(s) chargée(s)</div>
+  </div>
+</aside>
+
+<!-- ─── MAIN ─── -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="topbarTitle">Toutes les fiches médicales</div>
+      <div class="topbar-sub" id="topbarSub">Gérez le contenu utilisé par l'IA pour répondre aux patientes</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn-ghost" onclick="exportKnowledge()">⬇ Exporter la base IA</button>
+      <button class="btn-primary" onclick="openNewFiche()">+ Nouvelle fiche</button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- List panel -->
+    <div class="list-panel" id="listPanel">
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-card-num rose" id="totalFiches">0</div>
+          <div class="stat-card-label">Fiches au total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-num green" id="totalActive">0</div>
+          <div class="stat-card-label">Actives pour l'IA</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-num gold" id="totalWords">0</div>
+          <div class="stat-card-label">Mots dans la base</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-num white" id="totalCats">4</div>
+          <div class="stat-card-label">Catégories</div>
+        </div>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="filter-bar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" type="text" placeholder="Rechercher une fiche…" oninput="filterSearch(this.value)" id="searchInput">
+        </div>
+        <button class="filter-btn active" onclick="filterAI('all', this)">Toutes</button>
+        <button class="filter-btn" onclick="filterAI('active', this)">✓ Actives IA</button>
+        <button class="filter-btn" onclick="filterAI('inactive', this)">Inactives</button>
+      </div>
+
+      <!-- Fiches list -->
+      <div class="fiches-list" id="fichesList"></div>
+
+      <!-- AI Preview -->
+      <div class="ai-preview-section" id="aiPreviewSection">
+        <div class="ai-preview-label">Fiches chargées dans l'IA</div>
+        <div class="ai-preview-chips" id="aiPreviewChips"></div>
+      </div>
+
+    </div>
+
+    <!-- Editor panel -->
+    <div class="editor-panel hidden" id="editorPanel">
+      <div class="editor-topbar">
+        <div class="editor-topbar-title" id="editorTitle">Nouvelle fiche</div>
+        <button class="editor-close" onclick="closeEditor()">✕</button>
+      </div>
+
+      <div class="editor-body">
+        <input type="hidden" id="editingId">
+
+        <div class="form-group">
+          <label class="form-label">Titre de la fiche *</label>
+          <input class="form-input" type="text" id="ficheTitle" placeholder="Ex : Toxoplasmose pendant la grossesse" oninput="updatePreview()">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Catégorie *</label>
+          <select class="form-select" id="ficheCategory" onchange="updatePreview()">
+            <option value="">— Choisir une sous-catégorie —</option>
+            <optgroup label="🤰 Grossesse">
+              <option value="grossesse-t1">1er trimestre</option>
+              <option value="grossesse-t2">2e trimestre</option>
+              <option value="grossesse-t3">3e trimestre</option>
+              <option value="grossesse-patho">Pathologies de la grossesse</option>
+            </optgroup>
+            <optgroup label="👶 Post-partum">
+              <option value="postpartum-gen">Informations générales</option>
+              <option value="postpartum-allaitement">Allaitement</option>
+              <option value="postpartum-babyblues">Baby blues</option>
+              <option value="postpartum-contraception">Contraception post-partum</option>
+              <option value="postpartum-reeducation">Rééducation périnéale</option>
+            </optgroup>
+            <optgroup label="🌸 Gynécologie">
+              <option value="gyneco-contraception">Contraception</option>
+              <option value="gyneco-patho">Pathologies</option>
+              <option value="gyneco-hpv">HPV</option>
+              <option value="gyneco-infections-vaginales">Infections vaginales</option>
+              <option value="gyneco-infections-urinaires">Infections urinaires</option>
+            </optgroup>
+            <optgroup label="📋 Informations générales">
+              <option value="infos-generales">Informations générales</option>
+              <option value="infos-preop">Informatif pré-opératoire</option>
+              <option value="infos-etranger">Accouchement à l'étranger</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mots-clés (séparés par des virgules)</label>
+          <input class="form-input" type="text" id="ficheKeywords" placeholder="Ex : toxoplasmose, chat, viande crue, grossesse" oninput="updatePreview()">
+          <div style="font-size:11px;color:rgba(255,255,255,.2);margin-top:5px;font-weight:300">L'IA utilise ces mots-clés pour trouver la bonne fiche selon la question de la patiente.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Contenu médical *</label>
+          <textarea class="form-textarea" id="ficheContent" placeholder="Rédigez ici le contenu médical de la fiche. Soyez claire et structurée — l'IA s'appuiera sur ce texte pour répondre aux patientes.
+
+Exemple de structure :
+Définition : ...
+Causes / Facteurs de risque : ...
+Symptômes : ...
+Diagnostic : ...
+Traitement : ...
+Conseils pratiques : ..." oninput="updateWordCount(); updatePreview()"></textarea>
+          <div class="word-count-bar">
+            <div class="wc-bar"><div class="wc-fill" id="wcFill" style="width:0%"></div></div>
+            <span class="wc-text" id="wcText">0 mots</span>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-card" id="previewCard" style="display:none">
+          <div class="preview-card-title">👁 Aperçu — Ce que l'IA verra</div>
+          <div class="preview-text" id="previewText"></div>
+        </div>
+
+        <!-- AI Toggle -->
+        <div class="form-group">
+          <div class="ai-toggle-row">
+            <div class="ai-toggle-info">
+              <div class="ai-toggle-label">🤖 Activer pour l'IA</div>
+              <div class="ai-toggle-sub">L'IA utilisera cette fiche pour répondre aux patientes</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="ficheAiActive" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="editor-footer">
+        <button class="btn-cancel" onclick="closeEditor()">Annuler</button>
+        <button class="btn-save" onclick="saveFiche()">✓ Enregistrer la fiche</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════
+// STATE & STORAGE
+// ═══════════════════════════════════
+const STORAGE_KEY = 'sf_fiches_v1';
+
+const CAT_META = {
+  'grossesse-t1':                { label:'1er trimestre',            icon:'🌱', bg:'rgba(232,197,187,.15)', parent:'Grossesse' },
+  'grossesse-t2':                { label:'2e trimestre',             icon:'🌸', bg:'rgba(232,197,187,.15)', parent:'Grossesse' },
+  'grossesse-t3':                { label:'3e trimestre',             icon:'⭐', bg:'rgba(232,197,187,.15)', parent:'Grossesse' },
+  'grossesse-patho':             { label:'Pathologies grossesse',    icon:'🩺', bg:'rgba(232,197,187,.15)', parent:'Grossesse' },
+  'postpartum-gen':              { label:'Post-partum général',      icon:'👶', bg:'rgba(232,213,168,.15)', parent:'Post-partum' },
+  'postpartum-allaitement':      { label:'Allaitement',              icon:'🤱', bg:'rgba(232,213,168,.15)', parent:'Post-partum' },
+  'postpartum-babyblues':        { label:'Baby blues',               icon:'💛', bg:'rgba(232,213,168,.15)', parent:'Post-partum' },
+  'postpartum-contraception':    { label:'Contraception post-partum',icon:'💊', bg:'rgba(232,213,168,.15)', parent:'Post-partum' },
+  'postpartum-reeducation':      { label:'Rééducation périnéale',    icon:'🧘', bg:'rgba(232,213,168,.15)', parent:'Post-partum' },
+  'gyneco-contraception':        { label:'Contraception',            icon:'💊', bg:'rgba(168,181,160,.15)', parent:'Gynécologie' },
+  'gyneco-patho':                { label:'Pathologies',              icon:'🔬', bg:'rgba(168,181,160,.15)', parent:'Gynécologie' },
+  'gyneco-hpv':                  { label:'HPV',                      icon:'🔍', bg:'rgba(168,181,160,.15)', parent:'Gynécologie' },
+  'gyneco-infections-vaginales': { label:'Infections vaginales',     icon:'🧬', bg:'rgba(168,181,160,.15)', parent:'Gynécologie' },
+  'gyneco-infections-urinaires': { label:'Infections urinaires',     icon:'💧', bg:'rgba(168,181,160,.15)', parent:'Gynécologie' },
+  'infos-generales':             { label:'Informations générales',   icon:'📋', bg:'rgba(181,168,192,.15)', parent:'Infos générales' },
+  'infos-preop':                 { label:'Pré-opératoire',           icon:'🏥', bg:'rgba(181,168,192,.15)', parent:'Infos générales' },
+  'infos-etranger':              { label:'Accouchement à l\'étranger',icon:'✈️', bg:'rgba(181,168,192,.15)', parent:'Infos générales' },
+};
+
+// ─── DEFAULT FICHES (pre-loaded from platform content) ───
+const DEFAULT_FICHES = [
+  { id:1,  title:'1er trimestre de grossesse',         category:'grossesse-t1',                keywords:'1er trimestre, toxoplasmose, cmv, listériose, nausées, vomissements', content:`Suivi médical : La première consultation prénatale doit avoir lieu avant 10 SA. Bilan sanguin complet, sérologies infectieuses, échographie de datation. Déclarer la grossesse à la mutuelle avant la fin du 3e mois.\n\nToxoplasmose : Infection parasitaire transmise par viande crue ou selles de chat. Si non immunisée : sérologie mensuelle, cuire la viande à cœur, laver fruits et légumes.\n\nCMV : Transmis par salive/urines des jeunes enfants. Lavage des mains après changes, ne pas partager couverts.\n\nListériose : Éviter charcuteries, fromages à pâte molle au lait cru, poissons fumés, coquillages crus.\n\nSymptômes fréquents : Nausées, fatigue intense, tension mammaire, envies fréquentes d'uriner.`, aiActive:true, createdAt:new Date('2025-01-10').toISOString() },
+  { id:2,  title:'2e trimestre de grossesse',           category:'grossesse-t2',                keywords:'2e trimestre, échographie morphologique, mouvements fœtaux, diabète gestationnel', content:`Suivi médical : Consultations mensuelles. Échographie morphologique entre 20-25 SA. Dépistage diabète gestationnel 24-28 SA.\n\nChangements physiques : Ventre qui s'arrondit, mouvements fœtaux perçus vers 18-22 SA, douleurs ligamentaires, reflux gastrique.\n\nPréparation : Inscription à la maternité avant 28 SA, cours de préparation à la naissance.`, aiActive:true, createdAt:new Date('2025-01-11').toISOString() },
+  { id:3,  title:'3e trimestre de grossesse',           category:'grossesse-t3',                keywords:'3e trimestre, valise maternité, streptocoque b, contractions braxton hicks', content:`Suivi médical : Consultations toutes les 3-4 semaines. Échographie 3e trimestre entre 30-35 SA. Prélèvement streptocoque B entre 34-38 SA.\n\nValise maternité : À préparer dès 36 SA. Documents, vêtements confortables, articles de toilette, siège auto.\n\nConsulter si : Contractions régulières avant 37 SA, pertes de sang ou de liquide, diminution des mouvements fœtaux.`, aiActive:true, createdAt:new Date('2025-01-12').toISOString() },
+  { id:4,  title:'Diabète gestationnel',                category:'grossesse-patho',             keywords:'diabète gestationnel, hgpo, glycémie, insuline', content:`Définition : Intolérance au glucose pendant la grossesse. Touche 8-10% des grossesses.\n\nFacteurs de risque : IMC > 25, antécédents familiaux de diabète, âge > 35 ans, macrosomie fœtale antérieure.\n\nDépistage : Test HGPO 75g entre 24-28 SA.\n\nPrise en charge : Alimentation équilibrée, activité physique, surveillance glycémique. Insuline si objectifs non atteints.`, aiActive:true, createdAt:new Date('2025-01-13').toISOString() },
+  { id:5,  title:'Prééclampsie',                        category:'grossesse-patho',             keywords:'prééclampsie, hypertension, tension grossesse, protéinurie', content:`Définition : HTA (≥ 140/90 mmHg) + protéinurie après 20 SA. Touche 2-8% des grossesses.\n\nSignes URGENTS : Maux de tête intenses, troubles visuels, acouphènes, douleur épigastrique, œdèmes soudains du visage. → Appeler le 112 immédiatement.\n\nPrise en charge : Traitement antihypertenseur. Le seul traitement curatif est l'accouchement.`, aiActive:true, createdAt:new Date('2025-01-14').toISOString() },
+  { id:6,  title:"Menace d'accouchement prématuré",     category:'grossesse-patho',             keywords:'map, accouchement prématuré, contractions avant terme, tocolyse', content:`Définition : Contractions régulières avec modifications du col avant 37 SA.\n\nSignes d'alarme : Contractions > 4/heure avant 37 SA, pression pelvienne, pertes anormales, douleurs lombaires. → Appeler la maternité. Ne pas conduire seule.\n\nPrise en charge : Repos strict, tocolyse si nécessaire, corticothérapie si accouchement avant 34 SA probable.`, aiActive:true, createdAt:new Date('2025-01-15').toISOString() },
+  { id:7,  title:'Post-partum — Informations générales',category:'postpartum-gen',              keywords:'post-partum, récupération accouchement, lochies, cicatrice périnée, césarienne', content:`Définition : Période qui suit l'accouchement, jusqu'à 1 an après la naissance.\n\nSuivi : Consultation postnatale obligatoire entre 6-8 semaines. Surveillance des lochies, cicatrice de périnée ou de césarienne.\n\nRécupération : Repos indispensable, alimentation équilibrée, hydratation. Éviter les efforts importants pendant 6 semaines après une césarienne.`, aiActive:true, createdAt:new Date('2025-01-16').toISOString() },
+  { id:8,  title:'Allaitement maternel',                category:'postpartum-allaitement',      keywords:'allaitement, sein, colostrum, tétée, crevasse, engorgement, mastite', content:`Mise en route : Mettre le bébé au sein dès la 1ère heure. Montée de lait entre J2 et J4. Le colostrum est très riche en anticorps.\n\nProblèmes fréquents :\n- Crevasses : mauvaise prise du sein. Bébé doit prendre l'aréole entière.\n- Engorgement : allaiter fréquemment, chaleur avant tétée, froid après.\n- Mastite : ne pas arrêter l'allaitement. Consulter si fièvre > 38,5°C.\n\nPositions : Berceau classique, football, allongée sur le côté.`, aiActive:true, createdAt:new Date('2025-01-17').toISOString() },
+  { id:9,  title:'Baby blues & dépression post-partum', category:'postpartum-babyblues',        keywords:'baby blues, dépression post-partum, pleurs, irritabilité après accouchement', content:`Baby blues : Touche 50-80% des femmes dans les 3-5 jours post-accouchement. Pleurs, irritabilité, anxiété, fatigue. Dure quelques jours. Normal et transitoire.\n\nDépression post-partum : Plus sévère et prolongée (> 2 semaines). Tristesse profonde, difficultés à s'occuper du bébé. Consulter son médecin ou sage-femme sans attendre.`, aiActive:true, createdAt:new Date('2025-01-18').toISOString() },
+  { id:10, title:'Contraception post-partum',           category:'postpartum-contraception',    keywords:'contraception post-partum, pilule allaitement, stérilet après accouchement', content:`Ovulation possible dès 25 jours post-accouchement chez les femmes qui n'allaitent pas.\n\nMéthodes recommandées : DIU cuivre ou hormonal, implant, microprogestatifs, préservatif.\n\nPilule combinée : Déconseillée avant 6 semaines post-partum et pendant l'allaitement.`, aiActive:true, createdAt:new Date('2025-01-19').toISOString() },
+  { id:11, title:'Rééducation périnéale',               category:'postpartum-reeducation',      keywords:'rééducation périnéale, plancher pelvien, incontinence, périnée, fuites urinaires', content:`Quand commencer : Entre 6-8 semaines après l'accouchement, sur prescription médicale.\n\nObjectifs : Renforcer le plancher pelvien, prévenir l'incontinence urinaire, améliorer la vie sexuelle.\n\nMéthodes : Rééducation manuelle, biofeedback, électrostimulation. 10 à 20 séances. Recommandée après tout accouchement.`, aiActive:true, createdAt:new Date('2025-01-20').toISOString() },
+  { id:12, title:'Contraception',                       category:'gyneco-contraception',        keywords:'contraception, pilule, stérilet, diu, implant, préservatif', content:`Pilule œstroprogestative : Efficace > 99% si bien prise. Oubli > 12h : risque de grossesse. Contre-indiquée si tabac après 35 ans, migraine avec aura.\n\nDIU : Cuivre (5-10 ans) ou hormonal (3-8 ans). Très efficace et réversible.\n\nImplant (Nexplanon®) : Sous la peau du bras, efficace 3 ans. Méthode la plus efficace.\n\nPréservatif : Seule méthode protégeant aussi des IST.`, aiActive:true, createdAt:new Date('2025-01-21').toISOString() },
+  { id:13, title:'Endométriose',                        category:'gyneco-patho',                keywords:'endométriose, règles douloureuses, dysménorrhée, dyspareunie, douleurs pelviennes', content:`Définition : Présence de tissu similaire à l'endomètre en dehors de la cavité utérine. Touche 1 femme sur 10. Délai diagnostic moyen : 7-10 ans.\n\nSymptômes : Règles très douloureuses (invalidantes), douleurs pelviennes chroniques, dyspareunie, fatigue. Des règles invalidantes NE SONT PAS normales.\n\nTraitements : Pilule en continu, progestatifs, DIU hormonal. Chirurgie si endométriose sévère.`, aiActive:true, createdAt:new Date('2025-01-22').toISOString() },
+  { id:14, title:'HPV & Dépistage du col',              category:'gyneco-hpv',                  keywords:'hpv, papillomavirus, frottis, col utérin, dépistage, vaccination hpv, cin', content:`HPV : Infection virale fréquente transmise sexuellement. Certains types (16 et 18) peuvent causer un cancer du col utérin.\n\nDépistage : Frottis à 25 ans, puis tous les 3 ans. Essentiel même vaccinée.\n\nVaccination : Recommandée pour filles et garçons entre 11-14 ans. Remboursée par la mutuelle.`, aiActive:true, createdAt:new Date('2025-01-23').toISOString() },
+  { id:15, title:'Infections vaginales',                category:'gyneco-infections-vaginales', keywords:'mycose, candidose, vaginose, ist, mst, pertes vaginales, ureaplasma, mycoplasma', content:`Mycose : Pertes blanches épaisses, démangeaisons, brûlures. Traitement : ovule/crème antifongique.\n\nVaginose : Pertes grises avec odeur de poisson. Traitement : métronidazole.\n\nIST : Chlamydia, gonorrhée, syphilis, herpès. Souvent asymptomatiques. Dépistage régulier recommandé. Préservatif = seule protection.`, aiActive:true, createdAt:new Date('2025-01-24').toISOString() },
+  { id:16, title:'Infections urinaires',                category:'gyneco-infections-urinaires', keywords:'infection urinaire, cystite, brûlures miction, pyélonéphrite, urines', content:`Signes : Brûlures mictionnelles, pollakiurie, urines troubles ou malodorantes.\n\nPendant la grossesse : Peuvent évoluer vers une pyélonéphrite si non traitées. La bactériurie asymptomatique doit aussi être traitée.\n\nTraitement : Antibiothérapie adaptée à l'antibiogramme. Boire abondamment.`, aiActive:true, createdAt:new Date('2025-01-25').toISOString() },
+  { id:17, title:'Informations générales',              category:'infos-generales',             keywords:'rendez-vous, documents, résultats examens, urgences gynécologiques, urgences obstétricales', content:`Comment prendre rendez-vous : Coordonnées du cabinet disponibles sur la page d'accueil. Types de consultations : suivi de grossesse, gynécologique, postnatale, urgente.
+
+Documents à apporter : Carte d'identité, carte de mutuelle, carnet de maternité si applicable, liste des médicaments en cours, résultats des derniers examens.
+
+Résultats d'examens : Les résultats d'analyses sont transmis au cabinet et communiqués lors de la consultation suivante ou en cas de résultat urgent. Ne pas interpréter seule un résultat inquiétant.
+
+Urgences gynécologiques et obstétricales : Appelez le 112 ou allez aux urgences si : saignements abondants, douleurs intenses, perte de liquide, absence de mouvements fœtaux, fièvre élevée + douleurs, contractions avant 37 SA, maux de tête intenses + troubles visuels.`, aiActive:true, createdAt:new Date('2025-01-26').toISOString() },
+  { id:18, title:'Informations pré-opératoires',          category:'infos-preop',                 keywords:'opération, chirurgie, anesthésie, jeûne, médicaments, retour domicile, pré-opératoire, consignes', content:`Consignes avant intervention : Consultation pré-anesthésique obligatoire au moins 48h avant. Ne pas porter de vernis à ongles. Retirer bijoux et lentilles le jour J. Prévoir un accompagnant.
+
+Jeûne pré-opératoire : Solides et lait : arrêt 6 heures avant. Liquides clairs (eau, thé sans lait) : arrêt 2 heures avant. Chewing-gum et tabac : arrêt 2 heures avant. Suivre les consignes spécifiques de l'anesthésiste.
+
+Médicaments : Signalez TOUS vos médicaments lors de la consultation pré-anesthésique. Généralement à arrêter : anticoagulants, anti-inflammatoires, certains antidépresseurs. Généralement à continuer : traitements tensionnels, asthme, thyroïde. Ne jamais modifier un traitement sans avis médical.
+
+Retour à domicile : Prévoir un accompagnant adulte. Ne pas conduire 24-48h après anesthésie générale. Respecter les prescriptions. Consulter si fièvre > 38°C, douleurs importantes, saignements inhabituels ou signes d'infection de la cicatrice.`, aiActive:true, createdAt:new Date('2025-01-27').toISOString() },
+  { id:19, title:"Informations pour les patientes accouchant à l'étranger", category:'infos-etranger', keywords:'accouchement étranger, dossier médical, assurance, documents nécessaires, retour belgique, suivi retour', content:`Dossier médical : Emporter le carnet de maternité complet, résultats échographies, prises de sang, groupe sanguin et RAI, streptocoque B, ordonnances, carnet de vaccination. Demander une lettre de liaison à votre praticien.
+
+Assurances : Contacter la mutuelle avant le départ. Carte européenne d'assurance maladie si pays UE. Assurance voyage avec couverture maternité recommandée (vérifier la limite de terme couverte).
+
+Documents nécessaires : Passeport valide, carte de mutuelle et attestation de droits, carte européenne d'assurance maladie, attestation d'assurance voyage, carnet de maternité, résultats médicaux, lettre de liaison.
+
+Suivi au retour : Déclarer la naissance à la commune. Transcrire l'acte de naissance étranger à l'état civil belge. Inscrire l'enfant à la mutuelle. Demander les allocations familiales. Consultation postnatale entre 6 et 8 semaines. Apporter le compte-rendu d'accouchement étranger à votre praticien belge.`, aiActive:true, createdAt:new Date('2025-01-28').toISOString() },
+];
+
+// ═══════════════════════════════════
+// LOAD / SAVE
+// ═══════════════════════════════════
+function loadFiches() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch(e) {}
+  // First load: save defaults
+  saveFichesToStorage(DEFAULT_FICHES);
+  return DEFAULT_FICHES;
+}
+
+function saveFichesToStorage(fiches) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(fiches)); } catch(e) {}
+}
+
+let fiches = loadFiches();
+let currentFilter = 'all';
+let currentAIFilter = 'all';
+let currentSearch = '';
+let editingId = null;
+
+// ═══════════════════════════════════
+// RENDER
+// ═══════════════════════════════════
+function getNextId() {
+  return fiches.length ? Math.max(...fiches.map(f => f.id)) + 1 : 1;
+}
+
+function getFiltered() {
+  return fiches.filter(f => {
+    const catOk = currentFilter === 'all' || f.category === currentFilter;
+    const aiOk = currentAIFilter === 'all' ||
+      (currentAIFilter === 'active' && f.aiActive) ||
+      (currentAIFilter === 'inactive' && !f.aiActive);
+    const searchOk = !currentSearch ||
+      f.title.toLowerCase().includes(currentSearch) ||
+      f.content.toLowerCase().includes(currentSearch) ||
+      (f.keywords || '').toLowerCase().includes(currentSearch);
+    return catOk && aiOk && searchOk;
+  });
+}
+
+function render() {
+  const filtered = getFiltered();
+  const list = document.getElementById('fichesList');
+
+  // Stats
+  const allActive = fiches.filter(f => f.aiActive);
+  const totalWords = fiches.filter(f => f.aiActive)
+    .reduce((acc, f) => acc + f.content.split(/\s+/).length, 0);
+
+  document.getElementById('totalFiches').textContent = fiches.length;
+  document.getElementById('totalActive').textContent = allActive.length;
+  document.getElementById('totalWords').textContent = totalWords.toLocaleString('fr-FR');
+
+  // Counts per subcategory
+  const countMap = {
+    'countAll':         fiches.length,
+    'countT1':          fiches.filter(f=>f.category==='grossesse-t1').length,
+    'countT2':          fiches.filter(f=>f.category==='grossesse-t2').length,
+    'countT3':          fiches.filter(f=>f.category==='grossesse-t3').length,
+    'countPatho':       fiches.filter(f=>f.category==='grossesse-patho').length,
+    'countPPgen':       fiches.filter(f=>f.category==='postpartum-gen').length,
+    'countAllaitement': fiches.filter(f=>f.category==='postpartum-allaitement').length,
+    'countBabyblues':   fiches.filter(f=>f.category==='postpartum-babyblues').length,
+    'countPPcontra':    fiches.filter(f=>f.category==='postpartum-contraception').length,
+    'countReeeduc':     fiches.filter(f=>f.category==='postpartum-reeducation').length,
+    'countGyneContra':  fiches.filter(f=>f.category==='gyneco-contraception').length,
+    'countGynePatho':   fiches.filter(f=>f.category==='gyneco-patho').length,
+    'countHpv':         fiches.filter(f=>f.category==='gyneco-hpv').length,
+    'countInfVag':      fiches.filter(f=>f.category==='gyneco-infections-vaginales').length,
+    'countInfUri':      fiches.filter(f=>f.category==='gyneco-infections-urinaires').length,
+    'countInfosGen':    fiches.filter(f=>f.category==='infos-generales').length,
+    'countPreop':       fiches.filter(f=>f.category==='infos-preop').length,
+    'countEtranger':    fiches.filter(f=>f.category==='infos-etranger').length,
+  };
+  Object.entries(countMap).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  });
+
+  document.getElementById('aiActiveCount').textContent = `${allActive.length} fiche(s) chargée(s)`;
+
+  // AI preview chips
+  const chips = document.getElementById('aiPreviewChips');
+  chips.innerHTML = allActive.map(f =>
+    `<span class="ai-chip">✓ ${f.title}</span>`
+  ).join('') || '<span style="font-size:12px;color:rgba(255,255,255,.2)">Aucune fiche active pour l\'IA.</span>';
+
+  // List
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <div class="empty-title">Aucune fiche trouvée</div>
+      <p class="empty-sub">Essayez de modifier vos filtres ou créez une nouvelle fiche.</p>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = '';
+  filtered.forEach(fiche => {
+    const cat = CAT_META[fiche.category] || {};
+    const wordCount = fiche.content.split(/\s+/).length;
+    const date = new Date(fiche.createdAt).toLocaleDateString('fr-FR');
+
+    const row = document.createElement('div');
+    row.className = `fiche-row ${fiche.aiActive ? 'active-ai' : 'inactive-ai'} ${editingId === fiche.id ? 'selected' : ''}`;
+    row.onclick = () => editFiche(fiche.id);
+
+    row.innerHTML = `
+      <div class="fiche-row-cat" style="background:${cat.bg || 'rgba(255,255,255,.06)'}">
+        ${cat.icon || '📄'}
+      </div>
+      <div class="fiche-row-info">
+        <div class="fiche-row-title">${fiche.title}</div>
+        <div class="fiche-row-meta">
+          <span class="fiche-row-cat-label">${cat.icon || ''} ${cat.label || fiche.category}</span>
+          <span class="fiche-row-words">· ${wordCount} mots</span>
+          <span class="fiche-row-date">· ${date}</span>
+        </div>
+      </div>
+      <div class="fiche-ai-badge ${fiche.aiActive ? 'on' : 'off'}">
+        <div class="fiche-ai-dot"></div>
+        ${fiche.aiActive ? 'IA active' : 'IA off'}
+      </div>
+      <div class="fiche-row-actions" onclick="event.stopPropagation()">
+        <button class="fiche-action-btn edit" onclick="editFiche(${fiche.id})" title="Modifier">✎</button>
+        <button class="fiche-action-btn delete" onclick="deleteFiche(${fiche.id})" title="Supprimer">🗑</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+// ═══════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════
+function filterCat(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const labels = {
+    'all':'Toutes les fiches médicales',
+    'grossesse-t1':'Grossesse — 1er trimestre',
+    'grossesse-t2':'Grossesse — 2e trimestre',
+    'grossesse-t3':'Grossesse — 3e trimestre',
+    'grossesse-patho':'Grossesse — Pathologies',
+    'postpartum-gen':'Post-partum — Informations générales',
+    'postpartum-allaitement':'Post-partum — Allaitement',
+    'postpartum-babyblues':'Post-partum — Baby blues',
+    'postpartum-contraception':'Post-partum — Contraception',
+    'postpartum-reeducation':'Post-partum — Rééducation périnéale',
+    'gyneco-contraception':'Gynécologie — Contraception',
+    'gyneco-patho':'Gynécologie — Pathologies',
+    'gyneco-hpv':'Gynécologie — HPV',
+    'gyneco-infections-vaginales':'Gynécologie — Infections vaginales',
+    'gyneco-infections-urinaires':'Gynécologie — Infections urinaires',
+    'infos-generales':'Informations générales',
+    'infos-preop':'Informatif pré-opératoire',
+    'infos-etranger':'Accouchement à l\'étranger',
+  };
+  document.getElementById('topbarTitle').textContent = labels[cat] || 'Fiches';
+  render();
+}
+
+function filterAI(type, btn) {
+  currentAIFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function filterSearch(val) {
+  currentSearch = val.toLowerCase();
+  render();
+}
+
+// ═══════════════════════════════════
+// EDITOR
+// ═══════════════════════════════════
+function openNewFiche() {
+  editingId = null;
+  document.getElementById('editingId').value = '';
+  document.getElementById('ficheTitle').value = '';
+  document.getElementById('ficheCategory').value = '';
+  document.getElementById('ficheKeywords').value = '';
+  document.getElementById('ficheContent').value = '';
+  document.getElementById('ficheAiActive').checked = true;
+  document.getElementById('editorTitle').textContent = 'Nouvelle fiche';
+  document.getElementById('previewCard').style.display = 'none';
+  updateWordCount();
+  document.getElementById('editorPanel').classList.remove('hidden');
+  document.getElementById('ficheTitle').focus();
+}
+
+function editFiche(id) {
+  const f = fiches.find(f => f.id === id);
+  if (!f) return;
+  editingId = id;
+  document.getElementById('editingId').value = id;
+  document.getElementById('ficheTitle').value = f.title;
+  document.getElementById('ficheCategory').value = f.category;
+  document.getElementById('ficheKeywords').value = f.keywords || '';
+  document.getElementById('ficheContent').value = f.content;
+  document.getElementById('ficheAiActive').checked = f.aiActive;
+  document.getElementById('editorTitle').textContent = 'Modifier la fiche';
+  document.getElementById('editorPanel').classList.remove('hidden');
+  updateWordCount();
+  updatePreview();
+  render();
+}
+
+function closeEditor() {
+  editingId = null;
+  document.getElementById('editorPanel').classList.add('hidden');
+  render();
+}
+
+function saveFiche() {
+  const title = document.getElementById('ficheTitle').value.trim();
+  const category = document.getElementById('ficheCategory').value;
+  const keywords = document.getElementById('ficheKeywords').value.trim();
+  const content = document.getElementById('ficheContent').value.trim();
+  const aiActive = document.getElementById('ficheAiActive').checked;
+
+  if (!title) { showToast('⚠️ Le titre est obligatoire'); document.getElementById('ficheTitle').focus(); return; }
+  if (!category) { showToast('⚠️ Choisissez une catégorie'); return; }
+  if (!content || content.split(/\s+/).length < 10) { showToast('⚠️ Le contenu est trop court (minimum 10 mots)'); return; }
+
+  const idVal = document.getElementById('editingId').value;
+  if (idVal) {
+    // Update
+    const idx = fiches.findIndex(f => f.id === parseInt(idVal));
+    if (idx >= 0) {
+      fiches[idx] = { ...fiches[idx], title, category, keywords, content, aiActive, updatedAt: new Date().toISOString() };
+      showToast('✓ Fiche mise à jour avec succès');
+    }
+  } else {
+    // New
+    fiches.push({ id: getNextId(), title, category, keywords, content, aiActive, createdAt: new Date().toISOString() });
+    showToast('✓ Nouvelle fiche créée et ajoutée à la base IA');
+  }
+
+  saveFichesToStorage(fiches);
+  closeEditor();
+  render();
+
+  // Also update the exported knowledge base for the chat
+  exportKnowledgeToChat();
+}
+
+function deleteFiche(id) {
+  if (!confirm('Supprimer cette fiche ? Elle ne sera plus utilisée par l\'IA.')) return;
+  fiches = fiches.filter(f => f.id !== id);
+  saveFichesToStorage(fiches);
+  if (editingId === id) closeEditor();
+  render();
+  showToast('🗑 Fiche supprimée');
+}
+
+// ═══════════════════════════════════
+// WORD COUNT & PREVIEW
+// ═══════════════════════════════════
+function updateWordCount() {
+  const content = document.getElementById('ficheContent').value;
+  const words = content.trim() ? content.trim().split(/\s+/).length : 0;
+  const target = 150;
+  const pct = Math.min(100, (words / target) * 100);
+  document.getElementById('wcFill').style.width = pct + '%';
+  const el = document.getElementById('wcText');
+  el.textContent = `${words} mot${words > 1 ? 's' : ''}${words >= target ? ' ✓ Idéal' : ` (idéal : ${target}+)`}`;
+  el.className = 'wc-text' + (words >= target ? ' good' : '');
+}
+
+function updatePreview() {
+  const title = document.getElementById('ficheTitle').value.trim();
+  const content = document.getElementById('ficheContent').value.trim();
+  const category = document.getElementById('ficheCategory').value;
+  const keywords = document.getElementById('ficheKeywords').value.trim();
+
+  if (!title && !content) { document.getElementById('previewCard').style.display = 'none'; return; }
+
+  const cat = CAT_META[category] || {};
+  const preview = `=== FICHE : ${title.toUpperCase()} ===\n${keywords ? `Mots-clés : ${keywords}\n` : ''}${content.substring(0, 200)}${content.length > 200 ? '…' : ''}`;
+  document.getElementById('previewText').textContent = preview;
+  document.getElementById('previewCard').style.display = 'block';
+}
+
+// ═══════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════
+function buildKnowledgeBase() {
+  const active = fiches.filter(f => f.aiActive);
+  return active.map(f =>
+    `=== FICHE : ${f.title.toUpperCase()} ===\n${f.keywords ? `Mots-clés : ${f.keywords}\n` : ''}${f.content}`
+  ).join('\n\n');
+}
+
+function exportKnowledge() {
+  const kb = buildKnowledgeBase();
+  const blob = new Blob([kb], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'base-connaissance-ia.txt';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('⬇ Base de connaissance exportée');
+}
+
+function exportKnowledgeToChat() {
+  // Store in localStorage so the chat can read it
+  try {
+    localStorage.setItem('sf_knowledge_base', buildKnowledgeBase());
+    localStorage.setItem('sf_fiches_meta', JSON.stringify(
+      fiches.filter(f => f.aiActive).map(f => ({
+        id: f.id, title: f.title, category: f.category,
+        keywords: (f.keywords || '').split(',').map(k => k.trim().toLowerCase()).filter(Boolean)
+      }))
+    ));
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+exportKnowledgeToChat();
+render();
+</script>
+</body>
+</html>
