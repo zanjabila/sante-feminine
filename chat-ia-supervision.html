@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistante IA — Santé Féminine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FAF7F2;
+  --cream-dark: #F0EBE1;
+  --rose: #E8C5BB;
+  --rose-deep: #C9957F;
+  --gold: #C8A96E;
+  --gold-light: #F0E4C0;
+  --sage: #8BAA83;
+  --text-dark: #2C2420;
+  --text-mid: #6B5B52;
+  --text-light: #A09080;
+  --white: #FFFFFF;
+  --dark: #1A1210;
+  --dark-2: #231815;
+  --dark-3: #2E1F1A;
+  --shadow: 0 4px 32px rgba(44,36,32,0.10);
+  --shadow-lg: 0 16px 64px rgba(44,36,32,0.18);
+  --green: #6B8F71;
+  --green-light: #EBF3EC;
+  --red: #C0392B;
+  --red-light: #FDECEA;
+  --orange: #D4804A;
+  --orange-light: #FDEEE4;
+  --blue: #4A6FA5;
+  --blue-light: #EBF0F8;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { height:100%; overflow:hidden; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  display: flex; flex-direction: column;
+}
+
+/* ═══════════════════════════════════
+   MODE SWITCHER
+═══════════════════════════════════ */
+.mode-switcher {
+  position: fixed; top: 16px; right: 20px; z-index: 9999;
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(250,247,242,0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--cream-dark);
+  border-radius: 30px; padding: 4px;
+  box-shadow: var(--shadow);
+}
+.mode-btn {
+  padding: 7px 16px; border-radius: 24px;
+  border: none; font-size: 12.5px; font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; gap: 6px;
+  color: var(--text-light); background: transparent;
+}
+.mode-btn.active {
+  background: var(--text-dark);
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(44,36,32,0.2);
+}
+.mode-btn.doctor.active { background: var(--dark); }
+
+/* ═══════════════════════════════════
+   VIEWS
+═══════════════════════════════════ */
+.view { display:none; height:100vh; flex-direction:column; }
+.view.active { display:flex; }
+
+/* ═══════════════════════════════════
+   PATIENT VIEW
+═══════════════════════════════════ */
+#patientView {
+  background: var(--cream);
+}
+
+/* NAV */
+.p-nav {
+  height: 62px; flex-shrink:0;
+  background: rgba(250,247,242,0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--cream-dark);
+  display: flex; align-items: center; gap:14px;
+  padding: 0 24px;
+}
+.p-nav-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:18px; font-weight:500; color:var(--text-dark);
+  text-decoration:none;
+  display:flex; align-items:center; gap:8px;
+}
+.p-nav-logo span { color:var(--rose-deep); }
+.p-nav-sep { width:1px; height:18px; background:var(--cream-dark); }
+
+.p-ai-badge {
+  display:flex; align-items:center; gap:9px;
+}
+.p-ai-orb {
+  width:32px; height:32px; border-radius:50%;
+  background: linear-gradient(135deg,var(--rose-deep),var(--gold));
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; position:relative;
+}
+.p-ai-orb::after {
+  content:'';
+  position:absolute; bottom:0; right:0;
+  width:8px; height:8px; border-radius:50%;
+  background:var(--sage); border:2px solid var(--cream);
+}
+.p-ai-name { font-size:13.5px; font-weight:500; color:var(--text-dark); }
+.p-ai-sub { font-size:11px; color:var(--sage); }
+
+.p-warning-pill {
+  margin-left:auto;
+  display:flex; align-items:center; gap:6px;
+  background:var(--gold-light);
+  border:1px solid rgba(200,169,110,.3);
+  border-radius:20px; padding:5px 13px;
+  font-size:11px; color:var(--text-mid);
+}
+
+/* PATIENT LAYOUT */
+.p-layout {
+  display:flex; flex:1; overflow:hidden;
+}
+
+/* Sidebar */
+.p-sidebar {
+  width:260px; flex-shrink:0;
+  background:var(--white);
+  border-right:1px solid var(--cream-dark);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+}
+.p-sidebar-head {
+  padding:18px 18px 14px;
+  border-bottom:1px solid var(--cream-dark);
+}
+.p-sidebar-label {
+  font-size:10px; font-weight:600; color:var(--text-light);
+  text-transform:uppercase; letter-spacing:.1em;
+  margin-bottom:12px;
+}
+
+.p-topics { flex:1; overflow-y:auto; padding:10px; }
+.p-topic-section {
+  font-size:9.5px; font-weight:600; color:var(--text-light);
+  text-transform:uppercase; letter-spacing:.1em;
+  padding:12px 8px 5px;
+}
+.p-topic {
+  display:flex; align-items:center; gap:9px;
+  padding:8px 10px; border-radius:9px;
+  cursor:pointer; transition:all .15s;
+  margin-bottom:2px;
+}
+.p-topic:hover { background:var(--cream); }
+.p-topic-ico {
+  width:26px; height:26px; border-radius:7px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; flex-shrink:0;
+}
+.p-topic-txt { font-size:12.5px; color:var(--text-mid); line-height:1.3; }
+.p-topic:hover .p-topic-txt { color:var(--text-dark); }
+
+.p-sidebar-foot {
+  padding:14px 18px;
+  border-top:1px solid var(--cream-dark);
+  font-size:11px; color:var(--text-light); line-height:1.55; font-weight:300;
+}
+.p-sidebar-foot strong { color:var(--rose-deep); font-weight:500; }
+
+/* Chat */
+.p-chat {
+  flex:1; display:flex; flex-direction:column; overflow:hidden;
+}
+
+.p-messages {
+  flex:1; overflow-y:auto; padding:28px 0;
+  scroll-behavior:smooth;
+}
+.p-messages::-webkit-scrollbar { width:3px; }
+.p-messages::-webkit-scrollbar-thumb { background:var(--cream-dark); border-radius:2px; }
+
+.p-messages-inner {
+  max-width:700px; margin:0 auto; padding:0 24px;
+}
+
+/* Welcome */
+.p-welcome {
+  max-width:700px; margin:0 auto; padding:36px 24px;
+}
+.p-welcome-orb {
+  width:64px; height:64px; border-radius:20px;
+  background:linear-gradient(135deg,var(--rose-deep),var(--gold));
+  display:flex; align-items:center; justify-content:center;
+  font-size:28px; margin-bottom:20px;
+  box-shadow: 0 8px 28px rgba(201,149,127,.22);
+}
+.p-welcome h1 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px; font-weight:400;
+  color:var(--text-dark); margin-bottom:8px; line-height:1.2;
+}
+.p-welcome h1 em { font-style:italic; color:var(--rose-deep); }
+.p-welcome-desc {
+  font-size:14.5px; color:var(--text-mid);
+  line-height:1.7; font-weight:300; max-width:480px; margin-bottom:28px;
+}
+.p-chips-label {
+  font-size:10.5px; font-weight:600; color:var(--text-light);
+  text-transform:uppercase; letter-spacing:.08em; margin-bottom:12px;
+}
+.p-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.p-chip {
+  display:flex; align-items:center; gap:7px;
+  background:var(--white); border:1.5px solid var(--cream-dark);
+  border-radius:12px; padding:9px 14px;
+  font-size:13px; color:var(--text-mid);
+  cursor:pointer; transition:all .18s;
+  font-family:'DM Sans',sans-serif;
+}
+.p-chip:hover {
+  border-color:var(--rose-deep); color:var(--text-dark);
+  background:var(--cream); transform:translateY(-1px);
+}
+.p-warn-box {
+  display:flex; align-items:flex-start; gap:10px;
+  background:var(--gold-light);
+  border:1px solid rgba(200,169,110,.3);
+  border-radius:12px; padding:13px 16px;
+  max-width:500px;
+}
+.p-warn-box p { font-size:12px; color:var(--text-mid); line-height:1.6; font-weight:300; }
+.p-warn-box p strong { color:var(--text-dark); font-weight:500; }
+
+/* Messages */
+.msg-row {
+  display:flex; gap:10px; margin-bottom:18px;
+  animation: fadeUp .3s ease both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.msg-row.user { flex-direction:row-reverse; }
+.msg-ava {
+  width:30px; height:30px; border-radius:50%;
+  flex-shrink:0; margin-top:2px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px;
+}
+.msg-ava.ai { background:linear-gradient(135deg,var(--rose-deep),var(--gold)); }
+.msg-ava.user { background:var(--text-dark); color:white; font-size:11px; font-weight:600; }
+
+.msg-body { max-width:74%; }
+.msg-bubble {
+  padding:13px 17px; border-radius:16px;
+  font-size:14px; line-height:1.72;
+}
+.msg-row.ai .msg-bubble {
+  background:var(--white);
+  color:var(--text-dark);
+  border-radius:3px 16px 16px 16px;
+  box-shadow:0 2px 10px rgba(44,36,32,.06);
+  border:1px solid var(--cream-dark);
+}
+.msg-row.user .msg-bubble {
+  background:var(--text-dark); color:white;
+  border-radius:16px 3px 16px 16px;
+}
+.msg-bubble p { margin-bottom:8px; }
+.msg-bubble p:last-child { margin-bottom:0; }
+.msg-bubble ul { padding-left:18px; margin:6px 0; }
+.msg-bubble li { margin-bottom:4px; font-size:13.5px; }
+.msg-bubble strong { font-weight:500; }
+.msg-disclaimer-line {
+  margin-top:10px; padding-top:9px;
+  border-top:1px solid var(--cream-dark);
+  font-size:11px; color:var(--text-light);
+  display:flex; align-items:center; gap:5px;
+}
+
+/* Pending state (awaiting review) */
+.msg-bubble.pending {
+  border:1.5px dashed var(--orange);
+  background:#FFFAF6;
+  position:relative;
+}
+.pending-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  background:var(--orange-light);
+  border:1px solid rgba(212,128,74,.3);
+  border-radius:8px; padding:4px 10px;
+  font-size:10.5px; color:var(--orange); font-weight:500;
+  margin-bottom:8px;
+}
+.pending-badge::before { content:'⏳'; font-size:10px; }
+
+/* Approved */
+.msg-bubble.approved {
+  border:1.5px solid rgba(107,143,113,.3);
+  background:#FAFFF9;
+}
+.approved-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  background:var(--green-light);
+  border:1px solid rgba(107,143,113,.3);
+  border-radius:8px; padding:4px 10px;
+  font-size:10.5px; color:var(--green); font-weight:500;
+  margin-bottom:8px;
+}
+.approved-badge::before { content:'✓'; }
+
+/* Rejected */
+.msg-bubble.rejected {
+  border:1.5px solid rgba(192,57,43,.25);
+  background:#FFF9F9;
+}
+.rejected-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  background:var(--red-light);
+  border:1px solid rgba(192,57,43,.25);
+  border-radius:8px; padding:4px 10px;
+  font-size:10.5px; color:var(--red); font-weight:500;
+  margin-bottom:8px;
+}
+
+/* Corrected */
+.msg-bubble.corrected {
+  border:1.5px solid rgba(74,111,165,.3);
+  background:#F9FBFF;
+}
+.corrected-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  background:var(--blue-light);
+  border:1px solid rgba(74,111,165,.3);
+  border-radius:8px; padding:4px 10px;
+  font-size:10.5px; color:var(--blue); font-weight:500;
+  margin-bottom:8px;
+}
+.corrected-badge::before { content:'✎'; }
+
+.msg-time {
+  font-size:10.5px; color:var(--text-light);
+  margin-top:4px; padding:0 3px;
+}
+.msg-row.user .msg-time { text-align:right; }
+
+/* Typing */
+.typing-row { display:flex; gap:10px; margin-bottom:18px; animation:fadeUp .3s ease; }
+.typing-bub {
+  background:var(--white); border:1px solid var(--cream-dark);
+  border-radius:3px 16px 16px 16px;
+  padding:13px 17px;
+  display:flex; align-items:center; gap:5px;
+  box-shadow:0 2px 10px rgba(44,36,32,.06);
+}
+.t-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--rose-deep); opacity:.4;
+  animation:tpulse 1.4s ease infinite;
+}
+.t-dot:nth-child(2){animation-delay:.2s}
+.t-dot:nth-child(3){animation-delay:.4s}
+@keyframes tpulse {
+  0%,60%,100%{opacity:.4;transform:translateY(0)}
+  30%{opacity:1;transform:translateY(-4px)}
+}
+
+/* Input area */
+.p-input-area {
+  flex-shrink:0;
+  padding:14px 24px 18px;
+  border-top:1px solid var(--cream-dark);
+  background:rgba(250,247,242,.98);
+  backdrop-filter:blur(12px);
+}
+.p-input-inner { max-width:700px; margin:0 auto; }
+.p-urgence {
+  display:flex; align-items:center; gap:9px;
+  background:#FFF5F5; border:1px solid rgba(192,57,43,.18);
+  border-radius:10px; padding:10px 14px; margin-bottom:10px;
+}
+.p-urgence-txt { font-size:12px; color:#8B2020; }
+.p-urgence-txt strong { font-weight:600; }
+.p-urgence a {
+  margin-left:auto; font-size:12px; color:var(--red);
+  font-weight:500; text-decoration:none; white-space:nowrap;
+}
+
+.p-input-box {
+  display:flex; align-items:flex-end; gap:10px;
+  background:var(--white);
+  border:1.5px solid var(--cream-dark);
+  border-radius:16px;
+  padding:11px 11px 11px 18px;
+  transition:all .2s;
+}
+.p-input-box:focus-within {
+  border-color:var(--rose-deep);
+  box-shadow:0 0 0 3px rgba(201,149,127,.10);
+}
+#chatInput {
+  flex:1; border:none; outline:none;
+  font-size:14.5px; font-family:'DM Sans',sans-serif;
+  color:var(--text-dark); background:transparent;
+  resize:none; min-height:22px; max-height:130px; line-height:1.5;
+}
+#chatInput::placeholder { color:var(--text-light); font-weight:300; }
+.send-btn {
+  width:38px; height:38px; border-radius:11px;
+  background:var(--text-dark); color:white;
+  border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .2s; flex-shrink:0;
+}
+.send-btn:hover { background:var(--rose-deep); transform:scale(1.05); }
+.send-btn:disabled { background:var(--cream-dark); cursor:not-allowed; transform:none; }
+.send-btn svg { width:15px; height:15px; }
+.p-input-hint {
+  font-size:11px; color:var(--text-light); margin-top:7px; padding:0 3px;
+  display:flex; justify-content:space-between;
+}
+.p-input-hint kbd {
+  background:var(--cream-dark); border-radius:3px;
+  padding:1px 5px; font-size:9.5px; font-family:monospace;
+}
+
+
+/* ═══════════════════════════════════
+   DOCTOR SUPERVISION VIEW
+═══════════════════════════════════ */
+#doctorView {
+  background:var(--dark);
+  flex-direction:row;
+}
+
+/* Doctor sidebar */
+.d-sidebar {
+  width:320px; flex-shrink:0;
+  background:var(--dark-2);
+  border-right:1px solid rgba(255,255,255,.06);
+  display:flex; flex-direction:column;
+}
+
+.d-sidebar-head {
+  padding:24px 20px 18px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.d-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px; font-weight:400;
+  color:var(--white); margin-bottom:4px;
+}
+.d-logo span { color:var(--rose-deep); }
+.d-role-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  background:rgba(201,149,127,.12);
+  border:1px solid rgba(201,149,127,.2);
+  border-radius:8px; padding:4px 10px;
+  font-size:10.5px; color:var(--rose-deep);
+  font-weight:500; letter-spacing:.05em;
+  text-transform:uppercase;
+}
+
+/* Stats bar */
+.d-stats {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:1px; background:rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.d-stat {
+  padding:14px 16px;
+  background:var(--dark-2);
+}
+.d-stat-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px; font-weight:400;
+  line-height:1;
+}
+.d-stat-num.orange { color:var(--orange); }
+.d-stat-num.green { color:var(--sage); }
+.d-stat-num.blue { color:#7BA3D4; }
+.d-stat-label { font-size:10px; color:rgba(255,255,255,.35); margin-top:3px; font-weight:300; }
+
+/* Queue */
+.d-queue-label {
+  font-size:10px; font-weight:600; color:rgba(255,255,255,.3);
+  text-transform:uppercase; letter-spacing:.1em;
+  padding:16px 20px 8px;
+}
+.d-queue { flex:1; overflow-y:auto; padding:0 12px 12px; }
+.d-queue::-webkit-scrollbar { width:2px; }
+.d-queue::-webkit-scrollbar-thumb { background:rgba(255,255,255,.1); }
+
+.d-queue-item {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:12px; padding:13px 14px;
+  margin-bottom:8px; cursor:pointer;
+  transition:all .2s;
+  position:relative; overflow:hidden;
+}
+.d-queue-item:hover { background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.12); }
+.d-queue-item.selected {
+  background:rgba(201,149,127,.08);
+  border-color:rgba(201,149,127,.3);
+}
+.d-queue-item::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:3px; border-radius:2px 0 0 2px;
+}
+.d-queue-item.status-pending::before { background:var(--orange); }
+.d-queue-item.status-approved::before { background:var(--sage); }
+.d-queue-item.status-rejected::before { background:var(--red); }
+.d-queue-item.status-corrected::before { background:#7BA3D4; }
+
+.d-qi-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.d-qi-patient { font-size:12.5px; font-weight:500; color:rgba(255,255,255,.8); }
+.d-qi-status {
+  font-size:9.5px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.06em;
+  padding:2px 8px; border-radius:6px;
+}
+.d-qi-status.pending { background:rgba(212,128,74,.15); color:var(--orange); }
+.d-qi-status.approved { background:rgba(107,143,113,.15); color:var(--sage); }
+.d-qi-status.rejected { background:rgba(192,57,43,.15); color:#E57373; }
+.d-qi-status.corrected { background:rgba(74,111,165,.15); color:#7BA3D4; }
+
+.d-qi-question {
+  font-size:11.5px; color:rgba(255,255,255,.4);
+  font-weight:300; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis;
+  margin-bottom:4px;
+}
+.d-qi-time { font-size:10px; color:rgba(255,255,255,.2); }
+
+/* Doctor main panel */
+.d-main {
+  flex:1; display:flex; flex-direction:column; overflow:hidden;
+  background:var(--dark-3);
+}
+
+/* Doctor top bar */
+.d-topbar {
+  height:60px; flex-shrink:0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex; align-items:center; padding:0 24px; gap:14px;
+}
+.d-topbar-title {
+  font-size:14px; font-weight:500; color:rgba(255,255,255,.85);
+}
+.d-topbar-sub { font-size:11.5px; color:rgba(255,255,255,.3); margin-top:1px; }
+.d-topbar-actions { margin-left:auto; display:flex; gap:8px; }
+
+.d-action-btn {
+  display:flex; align-items:center; gap:6px;
+  padding:8px 16px; border-radius:10px;
+  border:none; font-size:12.5px; font-weight:500;
+  font-family:'DM Sans',sans-serif; cursor:pointer;
+  transition:all .2s;
+}
+.d-action-btn.approve {
+  background:rgba(107,143,113,.15);
+  color:var(--sage); border:1px solid rgba(107,143,113,.25);
+}
+.d-action-btn.approve:hover { background:rgba(107,143,113,.25); }
+.d-action-btn.reject {
+  background:rgba(192,57,43,.12);
+  color:#E57373; border:1px solid rgba(192,57,43,.2);
+}
+.d-action-btn.reject:hover { background:rgba(192,57,43,.22); }
+.d-action-btn.correct {
+  background:rgba(74,111,165,.12);
+  color:#7BA3D4; border:1px solid rgba(74,111,165,.2);
+}
+.d-action-btn.correct:hover { background:rgba(74,111,165,.22); }
+
+/* Review panel */
+.d-review-panel {
+  flex:1; overflow-y:auto; padding:24px;
+}
+.d-review-panel::-webkit-scrollbar { width:3px; }
+.d-review-panel::-webkit-scrollbar-thumb { background:rgba(255,255,255,.08); }
+
+.d-empty-state {
+  height:100%; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  color:rgba(255,255,255,.2);
+  text-align:center; gap:12px;
+}
+.d-empty-icon { font-size:40px; opacity:.4; }
+.d-empty-title { font-family:'Cormorant Garamond',serif; font-size:24px; font-weight:400; }
+.d-empty-sub { font-size:13px; font-weight:300; max-width:280px; line-height:1.5; }
+
+/* Review card */
+.d-review-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px; padding:20px;
+  margin-bottom:16px;
+}
+.d-review-card-label {
+  font-size:10px; font-weight:600; color:rgba(255,255,255,.25);
+  text-transform:uppercase; letter-spacing:.1em;
+  margin-bottom:10px;
+}
+.d-review-question {
+  font-size:14.5px; color:rgba(255,255,255,.75);
+  line-height:1.6; font-weight:300;
+  padding:12px 16px;
+  background:rgba(255,255,255,.04);
+  border-radius:10px; border:1px solid rgba(255,255,255,.06);
+}
+.d-review-answer {
+  font-size:13.5px; color:rgba(255,255,255,.65);
+  line-height:1.7; font-weight:300;
+}
+.d-review-answer p { margin-bottom:8px; }
+.d-review-answer p:last-child { margin-bottom:0; }
+.d-review-answer strong { color:rgba(255,255,255,.85); font-weight:500; }
+.d-review-answer ul { padding-left:16px; }
+.d-review-answer li { margin-bottom:4px; }
+
+/* Correction textarea */
+.d-correction-area {
+  margin-top:16px;
+  display:none;
+}
+.d-correction-area.visible { display:block; }
+.d-correction-label {
+  font-size:10.5px; font-weight:600; color:#7BA3D4;
+  text-transform:uppercase; letter-spacing:.08em;
+  margin-bottom:8px; display:flex; align-items:center; gap:6px;
+}
+.d-correction-textarea {
+  width:100%; min-height:120px;
+  background:rgba(74,111,165,.08);
+  border:1.5px solid rgba(74,111,165,.25);
+  border-radius:12px; padding:14px 16px;
+  font-size:13.5px; font-family:'DM Sans',sans-serif;
+  color:rgba(255,255,255,.8); line-height:1.7;
+  resize:vertical; outline:none;
+  transition:border-color .2s;
+}
+.d-correction-textarea:focus { border-color:rgba(74,111,165,.5); }
+.d-correction-textarea::placeholder { color:rgba(255,255,255,.2); }
+.d-save-correction {
+  margin-top:10px;
+  display:flex; align-items:center; gap:8px;
+  padding:10px 20px; border-radius:10px;
+  background:rgba(74,111,165,.15);
+  border:1px solid rgba(74,111,165,.3);
+  color:#7BA3D4; font-size:13px; font-weight:500;
+  font-family:'DM Sans',sans-serif; cursor:pointer;
+  transition:all .2s;
+}
+.d-save-correction:hover { background:rgba(74,111,165,.25); }
+
+/* Risk analysis */
+.d-risk-card {
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:12px; padding:16px;
+}
+.d-risk-item {
+  display:flex; align-items:center; gap:10px;
+  padding:7px 0; border-bottom:1px solid rgba(255,255,255,.05);
+}
+.d-risk-item:last-child { border-bottom:none; }
+.d-risk-dot {
+  width:8px; height:8px; border-radius:50%; flex-shrink:0;
+}
+.d-risk-dot.ok { background:var(--sage); }
+.d-risk-dot.warn { background:var(--orange); }
+.d-risk-dot.bad { background:var(--red); }
+.d-risk-txt { font-size:12.5px; color:rgba(255,255,255,.5); }
+.d-risk-val { margin-left:auto; font-size:12px; font-weight:500; }
+.d-risk-val.ok { color:var(--sage); }
+.d-risk-val.warn { color:var(--orange); }
+.d-risk-val.bad { color:#E57373; }
+
+/* Confidence meter */
+.d-confidence {
+  display:flex; align-items:center; gap:10px;
+}
+.d-confidence-bar {
+  flex:1; height:6px; background:rgba(255,255,255,.08);
+  border-radius:3px; overflow:hidden;
+}
+.d-confidence-fill {
+  height:100%; border-radius:3px;
+  transition:width .6s ease;
+}
+.d-confidence-fill.high { background:var(--sage); }
+.d-confidence-fill.medium { background:var(--orange); }
+.d-confidence-fill.low { background:var(--red); }
+.d-confidence-pct { font-size:12px; font-weight:500; color:rgba(255,255,255,.6); width:36px; text-align:right; }
+
+/* Source fiches chips */
+.msg-sources {
+  margin-top: 12px; padding-top: 11px;
+  border-top: 1px solid var(--cream-dark);
+}
+.msg-sources-label {
+  font-size: 10.5px; color: var(--text-light);
+  font-weight: 500; margin-bottom: 8px;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.msg-sources-chips {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.msg-source-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--gold-light);
+  border: 1px solid rgba(200,169,110,.35);
+  border-radius: 8px; padding: 4px 10px;
+  font-size: 11.5px; color: var(--text-mid);
+  cursor: pointer; transition: all .15s;
+  font-weight: 400;
+}
+.msg-source-chip:hover {
+  background: var(--rose); border-color: var(--rose-deep);
+  color: var(--text-dark);
+}
+
+/* Source in doctor panel */
+.d-source-chips {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+}
+.d-source-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(200,169,110,.1);
+  border: 1px solid rgba(200,169,110,.2);
+  border-radius: 8px; padding: 4px 10px;
+  font-size: 11px; color: rgba(200,169,110,.8);
+}
+.d-toast {
+  position:fixed; bottom:24px; right:24px; z-index:9999;
+  background:var(--dark); border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.85);
+  padding:12px 20px; border-radius:14px;
+  font-size:13px; font-weight:400;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+  transform:translateY(80px); opacity:0;
+  transition:all .3s;
+  display:flex; align-items:center; gap:8px;
+}
+.d-toast.show { transform:translateY(0); opacity:1; }
+
+/* Spinner */
+@keyframes spin { to { transform:rotate(360deg); } }
+.spinner {
+  width:16px; height:16px;
+  border:2px solid rgba(255,255,255,.2);
+  border-top-color:white;
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+</style>
+</head>
+<body>
+
+<!-- MODE SWITCHER -->
+<div class="mode-switcher">
+  <button class="mode-btn active" onclick="switchMode('patient')">👤 Vue patiente</button>
+  <button class="mode-btn doctor" onclick="switchMode('doctor')">🩺 Supervision médecin</button>
+</div>
+
+<!-- ═══════════════════════════════════
+     PATIENT VIEW
+═══════════════════════════════════ -->
+<div class="view active" id="patientView">
+  <nav class="p-nav">
+    <a href="plateforme-medicale.html" class="p-nav-logo">Santé <span>Féminine</span></a>
+    <div class="p-nav-sep"></div>
+    <div class="p-ai-badge">
+      <div class="p-ai-orb">🌸</div>
+      <div>
+        <div class="p-ai-name">Assistante médicale IA</div>
+        <div class="p-ai-sub">Supervisée par votre médecin</div>
+      </div>
+    </div>
+    <div class="p-warning-pill">⚠️ Ne remplace pas une consultation</div>
+  </nav>
+
+  <div class="p-layout">
+    <!-- Sidebar -->
+    <aside class="p-sidebar">
+      <div class="p-sidebar-head">
+        <div class="p-sidebar-label">Thèmes fréquents</div>
+      </div>
+      <div class="p-topics">
+        <div class="p-topic-section">Grossesse</div>
+        <div class="p-topic" onclick="askTopic('Quels sont les examens obligatoires au 1er trimestre ?')">
+          <div class="p-topic-ico" style="background:#F5DDD6">🤰</div>
+          <span class="p-topic-txt">Suivi 1er trimestre</span>
+        </div>
+        <div class="p-topic" onclick="askTopic('Quels aliments éviter pendant la grossesse ?')">
+          <div class="p-topic-ico" style="background:#F5DDD6">🥗</div>
+          <span class="p-topic-txt">Alimentation & précautions</span>
+        </div>
+        <div class="p-topic" onclick="askTopic('Quels sont les signes d\'alerte pendant la grossesse ?')">
+          <div class="p-topic-ico" style="background:#FDECEA">⚠️</div>
+          <span class="p-topic-txt">Signes d'alerte</span>
+        </div>
+        <div class="p-topic" onclick="askTopic('Qu\'est-ce que le diabète gestationnel ?')">
+          <div class="p-topic-ico" style="background:#F5DDD6">🩺</div>
+          <span class="p-topic-txt">Diabète gestationnel</span>
+        </div>
+        <div class="p-topic-section">Postpartum</div>
+        <div class="p-topic" onclick="askTopic('Comment bien démarrer l\'allaitement ?')">
+          <div class="p-topic-ico" style="background:#F5EDD6">🤱</div>
+          <span class="p-topic-txt">Allaitement maternel</span>
+        </div>
+        <div class="p-topic" onclick="askTopic('Qu\'est-ce que le baby blues ?')">
+          <div class="p-topic-ico" style="background:#F5EDD6">💛</div>
+          <span class="p-topic-txt">Baby blues</span>
+        </div>
+        <div class="p-topic" onclick="askTopic('Quand commencer la rééducation périnéale ?')">
+          <div class="p-topic-ico" style="background:#F5EDD6">🧘</div>
+          <span class="p-topic-txt">Rééducation périnéale</span>
+        </div>
+        <div class="p-topic-section">Gynécologie</div>
+        <div class="p-topic" onclick="askTopic('Quelles sont les méthodes contraceptives disponibles ?')">
+          <div class="p-topic-ico" style="background:#DDE5DB">💊</div>
+          <span class="p-topic-txt">Contraception</span>
+        </div>
+        <div class="p-topic" onclick="askTopic('Quels sont les symptômes de l\'endométriose ?')">
+          <div class="p-topic-ico" style="background:#DDE5DB">🌸</div>
+          <span class="p-topic-txt">Endométriose</span>
+        </div>
+        <div class="p-topic" onclick="askTopic('Comment fonctionne le dépistage HPV ?')">
+          <div class="p-topic-ico" style="background:#DDE5DB">🔍</div>
+          <span class="p-topic-txt">HPV & dépistage</span>
+        </div>
+      </div>
+      <div class="p-sidebar-foot">
+        <strong>⚕️ Supervisé médicalement.</strong> Toutes les réponses sont vérifiées par votre praticien.
+      </div>
+    </aside>
+
+    <!-- Chat -->
+    <main class="p-chat">
+      <div class="p-messages" id="pMessages">
+        <!-- Welcome -->
+        <div class="p-welcome" id="pWelcome">
+          <div class="p-welcome-orb">🌸</div>
+          <h1>Bonjour, je suis<br>votre <em>assistante médicale</em></h1>
+          <p class="p-welcome-desc">Posez-moi vos questions sur la grossesse, le postpartum ou la santé gynécologique. Mes réponses sont supervisées par votre médecin pour garantir leur exactitude.</p>
+          <div class="p-chips-label">Questions fréquentes</div>
+          <div class="p-chips">
+            <button class="p-chip" onclick="askTopic('Quels aliments éviter pendant la grossesse ?')">🥗 Alimentation grossesse</button>
+            <button class="p-chip" onclick="askTopic('Comment reconnaître les contractions du travail ?')">🤰 Contractions du travail</button>
+            <button class="p-chip" onclick="askTopic('Comment démarrer l\'allaitement maternel ?')">🤱 Démarrer l'allaitement</button>
+            <button class="p-chip" onclick="askTopic('Quels sont les symptômes de l\'endométriose ?')">🌸 Endométriose</button>
+            <button class="p-chip" onclick="askTopic('Comment fonctionne le stérilet hormonal ?')">💊 Stérilet hormonal</button>
+          </div>
+          <div class="p-warn-box">
+            <span style="font-size:16px;flex-shrink:0">⚠️</span>
+            <p><strong>Information importante :</strong> Je fournis des informations générales uniquement. En cas d'urgence : <strong>SAMU 15</strong>.</p>
+          </div>
+        </div>
+        <!-- Messages -->
+        <div class="p-messages-inner" id="pMsgInner" style="display:none"></div>
+      </div>
+
+      <div class="p-input-area">
+        <div class="p-input-inner">
+          <div class="p-urgence">
+            <span>🚨</span>
+            <span class="p-urgence-txt"><strong>Urgence ?</strong> Cette IA ne gère pas les urgences. Appelez le 15 (SAMU) ou le 18.</span>
+            <a href="tel:15">📞 Appeler le 15</a>
+          </div>
+          <div class="p-input-box">
+            <textarea id="chatInput" placeholder="Posez votre question sur la grossesse, le postpartum ou la gynécologie…" rows="1"
+              oninput="autoResize(this)" onkeydown="handleKey(event)"></textarea>
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </button>
+          </div>
+          <div class="p-input-hint">
+            <span><kbd>Entrée</kbd> pour envoyer · <kbd>Maj+Entrée</kbd> pour sauter une ligne</span>
+            <span style="color:var(--rose-deep);font-size:10.5px">✓ Réponses supervisées médicalement</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     DOCTOR SUPERVISION VIEW
+═══════════════════════════════════ -->
+<div class="view" id="doctorView">
+
+  <!-- Left sidebar -->
+  <div class="d-sidebar">
+    <div class="d-sidebar-head">
+      <div class="d-logo">Santé <span>Féminine</span></div>
+      <div class="d-role-badge">🩺 Espace médecin</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="d-stats">
+      <div class="d-stat">
+        <div class="d-stat-num orange" id="statPending">0</div>
+        <div class="d-stat-label">En attente</div>
+      </div>
+      <div class="d-stat">
+        <div class="d-stat-num green" id="statApproved">0</div>
+        <div class="d-stat-label">Validées</div>
+      </div>
+      <div class="d-stat">
+        <div class="d-stat-num blue" id="statCorrected">0</div>
+        <div class="d-stat-label">Corrigées</div>
+      </div>
+    </div>
+
+    <div class="d-queue-label">File de révision</div>
+    <div class="d-queue" id="dQueue">
+      <div style="padding:20px 8px; text-align:center; color:rgba(255,255,255,.2); font-size:13px; font-weight:300;">
+        Aucune réponse à réviser pour le moment.<br>
+        <span style="font-size:11px; margin-top:6px; display:block">Posez une question en vue patiente pour commencer.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main review panel -->
+  <div class="d-main">
+    <div class="d-topbar">
+      <div>
+        <div class="d-topbar-title" id="dPanelTitle">Panneau de supervision</div>
+        <div class="d-topbar-sub" id="dPanelSub">Sélectionnez une réponse à réviser dans la file</div>
+      </div>
+      <div class="d-topbar-actions" id="dActions" style="display:none">
+        <button class="d-action-btn approve" onclick="approveSelected()">✓ Valider</button>
+        <button class="d-action-btn correct" onclick="showCorrection()">✎ Corriger</button>
+        <button class="d-action-btn reject" onclick="rejectSelected()">✕ Rejeter</button>
+      </div>
+    </div>
+
+    <div class="d-review-panel" id="dReviewPanel">
+      <div class="d-empty-state">
+        <div class="d-empty-icon">🔬</div>
+        <div class="d-empty-title">Espace de supervision</div>
+        <p class="d-empty-sub">Posez une question en vue patiente, puis revenez ici pour analyser et valider la réponse de l'IA.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="d-toast" id="dToast"></div>
+
+<script>
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+let conversations = []; // { id, question, answer, status, timestamp, confidence, risks, correctedAnswer }
+let selectedId = null;
+let isLoading = false;
+let currentMode = 'patient';
+
+// ═══════════════════════════════════
+// BASE DE CONNAISSANCE — contenu du site
+// ═══════════════════════════════════
+const KNOWLEDGE_BASE = `
+=== FICHE : 1ER TRIMESTRE DE GROSSESSE ===
+Suivi médical : La première consultation prénatale doit avoir lieu avant 10 SA. Elle comprend un bilan sanguin complet, sérologies infectieuses et une échographie de datation. L'échographie du 1er trimestre (11-13 SA+6j) vérifie la vitalité, le nombre d'embryons, la clarté nucale et le dépistage de la trisomie 21. Pensez à déclarer la grossesse à la CPAM avant la fin du 3e mois.
+
+Toxoplasmose : Infection parasitaire transmise par viande crue, légumes mal lavés ou selles de chat infecté. Si non immunisée : sérologie mensuelle, cuire la viande à cœur (>65°C), laver fruits et légumes, éviter la litière du chat.
+
+CMV (Cytomégalovirus) : Virus responsable d'infections congénitales graves. Se transmet par salive/urines des jeunes enfants. Prévention : lavage des mains après changes, ne pas partager couverts/verres avec jeunes enfants.
+
+Listériose : Infection alimentaire rare mais grave pendant la grossesse (fausse couche, accouchement prématuré). Éviter : charcuteries, fromages à pâte molle au lait cru, poissons fumés, coquillages crus. Nettoyer régulièrement le réfrigérateur.
+
+Symptômes et désagréments du 1er trimestre : Nausées (parfois vomissements), fatigue intense, tension mammaire, envies fréquentes d'uriner, variations d'humeur. Liés à l'augmentation des hormones de grossesse.
+
+Risques et précautions : Risque de fausse couche plus élevé au 1er trimestre. Éviter médicaments sans avis médical, alcool, tabac, sports à risque.
+
+Mode de garde : Commencer les démarches dès le début de grossesse (listes d'attente longues). Renseignez-vous auprès des crèches municipales, assistantes maternelles agréées, et CAF pour les aides.
+
+=== FICHE : 2E TRIMESTRE DE GROSSESSE ===
+Suivi médical : Consultations mensuelles obligatoires. Échographie morphologique entre 20-25 SA pour vérifier la morphologie fœtale, le placenta et le liquide amniotique. Dépistage du diabète gestationnel entre 24-28 SA.
+
+Changements physiques : Ventre qui s'arrondit, mouvements fœtaux perçus vers 18-22 SA (plus tôt pour les multipares), douleurs ligamentaires, reflux gastrique, varices possibles.
+
+Préparation à l'accouchement : Inscription à la maternité avant 28 SA, cours de préparation à la naissance (sophologie, piscine, haptonomie, méthode de Lamaze).
+
+Démarches allocations : Déclaration de grossesse à la CAF avant 14 SA pour bénéficier de la prime de naissance de la PAJE. Prévenir son employeur et la CPAM.
+
+=== FICHE : 3E TRIMESTRE DE GROSSESSE ===
+Suivi médical : Consultations toutes les 3-4 semaines puis mensuelles, avec surveillance de la tension, poids, hauteur utérine, albuminurie. Échographie du 3e trimestre entre 30-35 SA pour vérifier croissance et présentation du bébé. Prélèvement vaginal streptocoque B entre 34-38 SA.
+
+Valise maternité : À préparer dès 36 SA. Pour la maman : documents administratifs, vêtements confortables, articles de toilette, tire-lait si allaitement. Pour le bébé : bodys, pyjamas, turbulette, siège auto homologué.
+
+Symptômes et conseils : Difficultés respiratoires, insomnies, œdèmes des membres inférieurs, contractions de Braxton Hicks. Consulter si contractions régulières avant 37 SA, pertes de sang ou liquide, diminution des mouvements fœtaux.
+
+=== FICHE : DIABÈTE GESTATIONNEL ===
+Définition : Intolérance au glucose apparaissant pendant la grossesse. Touche 8-10% des grossesses. Lié à la résistance accrue à l'insuline par les hormones placentaires.
+
+Facteurs de risque : IMC > 25 avant grossesse, antécédents familiaux de diabète type 2, antécédents de diabète gestationnel, âge > 35 ans, macrosomie fœtale antérieure, origines Asie du Sud ou Afrique subsaharienne.
+
+Dépistage : Test HGPO avec 75g glucose entre 24-28 SA. Diagnostic si glycémie à jeun ≥ 0,92 g/L, à 1h ≥ 1,80 g/L ou à 2h ≥ 1,53 g/L.
+
+Prise en charge : Mesures hygiéno-diététiques (alimentation équilibrée, activité physique adaptée, surveillance glycémique). Si objectifs non atteints après 1-2 semaines : insuline. Les antidiabétiques oraux ne sont généralement pas utilisés en France pendant la grossesse.
+
+Après accouchement : Le diabète gestationnel disparaît habituellement. Dépistage du diabète type 2 par HGPO entre 6 semaines et 6 mois après la naissance.
+
+=== FICHE : PRÉÉCLAMPSIE ===
+Définition : Complication grave associant HTA (≥ 140/90 mmHg) et protéinurie, après 20 SA. Touche 2-8% des grossesses. Peut évoluer vers l'éclampsie ou le syndrome HELLP.
+
+Signes d'alerte URGENTS : Maux de tête intenses et persistants, troubles visuels (phosphènes, scotomes), acouphènes, douleur en barre sous les côtes (épigastrique), œdèmes importants du visage et des mains, prise de poids rapide (> 1 kg/semaine). → URGENCE : appeler le 15 ou aller aux urgences obstétricales.
+
+Surveillance : Mesure régulière de la TA, bandelettes urinaires, surveillance du poids et des signes fonctionnels.
+
+Prise en charge : Seul traitement curatif = accouchement. Traitement antihypertenseur, corticothérapie si < 34 SA. Hospitalisation souvent nécessaire.
+
+=== FICHE : CHOLESTASE GRAVIDIQUE ===
+Définition : Trouble hépatique de la grossesse se manifestant par des démangeaisons intenses, surtout nocturnes, surtout aux paumes des mains et plantes des pieds. Peut entraîner une souffrance fœtale.
+Diagnostic : Bilan hépatique (ASAT, ALAT) et dosage des acides biliaires. 
+Traitement : Acide ursodésoxycholique. Surveillance fœtale renforcée. L'accouchement est souvent déclenché avant terme.
+
+=== FICHE : MENACE D'ACCOUCHEMENT PRÉMATURÉ (MAP) ===
+Définition : Contractions utérines régulières et douloureuses avec modifications du col avant 37 SA. Première cause d'hospitalisation pendant la grossesse (5-10% des grossesses).
+
+Signes d'alarme : Contractions régulières (> 4/heure) avant 37 SA, pression pelvienne intense, pertes vaginales anormales (liquide, sang), douleurs lombaires basses persistantes. → Appeler la maternité ou le 15. Ne pas conduire seule aux urgences.
+
+Prise en charge : Repos strict, tocolyse si nécessaire, corticothérapie pour maturité pulmonaire fœtale si accouchement avant 34 SA probable. Hospitalisation souvent nécessaire.
+
+=== FICHE : HYPERÉMÈSE GRAVIDIQUE ===
+Définition : Forme sévère de nausées-vomissements de grossesse entraînant une déshydratation, une perte de poids > 5%, des troubles électrolytiques. Nécessite souvent une hospitalisation pour réhydratation IV.
+Traitement : Antiémétiques sous contrôle médical, vitamine B6, parfois nutrition parentérale. 
+
+=== FICHE : FAUSSES COUCHES ===
+Définition : Perte spontanée de grossesse avant 22 SA. Concernent 15-20% des grossesses cliniques. Souvent dues à une anomalie chromosomique de l'embryon.
+Types : Fausse couche précoce (< 14 SA), tardive (14-22 SA), fausse couche à répétition (≥ 3 consécutives).
+Signes : Saignements vaginaux, douleurs pelviennes, disparition des symptômes de grossesse.
+Soutien : Un accompagnement psychologique est souvent nécessaire. Des examens complémentaires sont indiqués après 3 fausses couches consécutives.
+
+=== FICHE : INFECTIONS URINAIRES PENDANT LA GROSSESSE ===
+Fréquence : Très fréquentes pendant la grossesse (facteurs hormonaux et mécaniques). Peuvent évoluer vers une pyélonéphrite si non traitées.
+Signes : Brûlures mictionnelles, pollakiurie, urines troubles ou malodorantes. La bactériurie asymptomatique doit aussi être traitée pendant la grossesse.
+Traitement : Antibiothérapie adaptée à l'antibiogramme, compatible avec la grossesse.
+
+=== FICHE : ŒDÈMES DES JAMBES ===
+Causes : Fréquents surtout au 3e trimestre. Liés à la compression de la veine cave inférieure par l'utérus et à la rétention hydrosodée.
+Conseils : Surélevation des membres inférieurs, éviter la station debout prolongée, port de bas de contention. Consulter si œdèmes soudains du visage ou des mains (signe de prééclampsie).
+
+=== FICHE : ANÉMIE PENDANT LA GROSSESSE ===
+Définition : Hémoglobine < 11 g/dL au 1er et 3e trimestre, < 10,5 g/dL au 2e trimestre.
+Causes : Carence en fer (la plus fréquente), en folates ou vitamine B12.
+Signes : Fatigue, pâleur, essoufflement, tachycardie.
+Traitement : Supplémentation en fer par voie orale (ou IV si carence sévère). Alimentation riche en fer (viande rouge, légumineuses, fruits secs).
+
+=== FICHE : STREPTOCOQUE B ===
+Dépistage systématique entre 34-38 SA par prélèvement vaginal.
+Importance : Si positif, une antibioprophylaxie par pénicilline IV est administrée pendant le travail pour protéger le nouveau-né d'une infection néonatale grave.
+Le streptocoque B n'est pas dangereux pour la mère.
+
+=== FICHE : GROSSESSE EXTRA-UTÉRINE (GEU) ===
+Définition : Implantation de l'œuf fœcondé en dehors de la cavité utérine (le plus souvent dans la trompe).
+Urgence absolue. Signes : douleurs pelviennes unilatérales, saignements vaginaux, parfois malaise. → SAMU 15 immédiatement.
+Traitement : Médical (méthotrexate) ou chirurgical selon le cas.
+
+=== FICHE : SYNDROME DU CANAL CARPIEN PENDANT LA GROSSESSE ===
+Fréquent au 3e trimestre. Dû à la rétention hydrique comprimant le nerf médian.
+Signes : Engourdissements, fourmillements, douleurs des mains et des doigts, surtout la nuit.
+Traitement : Attelle nocturne de poignet, éviter les mouvements répétitifs. Régresse généralement après l'accouchement.
+
+=== FICHE : POSTPARTUM GÉNÉRAL ===
+Définition : Période qui suit l'accouchement, jusqu'à 1 an après la naissance.
+Suivi : Consultation postnatale obligatoire entre 6-8 semaines après l'accouchement. Surveillance des lochies (pertes vaginales post-accouchement), cicatrice de périnée ou de césarienne, reprise des cycles.
+Récupération physique : Repos indispensable, alimentation équilibrée, hydratation. Éviter les efforts importants pendant 6 semaines après une césarienne.
+
+=== FICHE : ALLAITEMENT MATERNEL ===
+Mise en route : Mettre le bébé au sein dès la 1ère heure après la naissance. Contact peau à peau favorisé. Montée de lait entre J2 et J4. Le colostrum (liquide jaune épais) est très riche en anticorps.
+Recommandations OMS : Allaitement exclusif 6 mois, puis avec diversification jusqu'à 2 ans et plus.
+
+Problèmes fréquents :
+- Crevasses : souvent dues à une mauvaise prise du sein. Vérifier que le bébé prend bien l'aréole entière. Soins à la lanoline.
+- Engorgement : seins tendus et douloureux. Allaiter fréquemment, chaleur avant tétée, froid après.
+- Mastite : inflammation du sein, parfois fièvre. Ne pas arrêter l'allaitement. Consulter si fièvre > 38,5°C.
+- Candidose mammaire : douleurs vives, brûlures. Traitement antifongique pour la mère et l'enfant.
+
+Positions : Berceau classique, football (utile après césarienne), allongée sur le côté (tétées de nuit), biologique (mère semi-inclinée).
+
+=== FICHE : BABY BLUES ===
+Définition : Épisode de labilité émotionnelle transitoire touchant 50-80% des femmes dans les 3-5 jours après l'accouchement. Lié à la chute hormonale brutale.
+Signes : Pleurs sans raison apparente, irritabilité, anxiété, fatigue intense, troubles du sommeil. Dure de quelques heures à quelques jours.
+À distinguer de la dépression post-partum : Plus sévère, plus prolongée (> 2 semaines), nécessite une prise en charge médicale. Consulter son médecin ou sage-femme.
+
+=== FICHE : CONTRACEPTION POST-PARTUM ===
+Ovulation possible dès 25 jours post-accouchement chez les femmes qui n'allaitent pas.
+Méthodes sans œstrogènes (recommandées en post-partum immédiat et allaitement) : DIU au cuivre ou hormonal, implant, microprogestatifs, préservatif.
+Pilule combinée (œstroprogestative) : déconseillée avant 6 semaines post-partum et pendant l'allaitement (risque thromboembolique et diminution de la lactation).
+
+=== FICHE : RÉÉDUCATION PÉRINÉALE ===
+Quand commencer : Sur prescription médicale, généralement entre 6-8 semaines après l'accouchement (après la visite postnatale).
+Objectifs : Renforcer le plancher pelvien, prévenir et traiter l'incontinence urinaire, améliorer la qualité de vie sexuelle.
+Méthodes : Rééducation manuelle avec une sage-femme ou kinésithérapeute, biofeedback, électrostimulation. 10 à 20 séances en moyenne.
+Recommandation : Systématique après tout accouchement, vaginal ou par césarienne.
+
+=== FICHE : CONTRACEPTION ===
+Pilule œstroprogestative : Efficace (> 99% si bien prise). Prendre à heure fixe. Oubli < 12h : prendre dès que possible. Oubli > 12h : risque de grossesse, utiliser contraception complémentaire. Contre-indiquée si : tabac après 35 ans, migraine avec aura, antécédents thromboemboliques.
+
+DIU (stérilet) : Cuivre (non hormonal, 5-10 ans) ou hormonal (3-8 ans selon type). Très efficace et réversible. Convient aux femmes avec ou sans enfants.
+
+Implant contraceptif (Nexplanon®) : Petit bâtonnet progestatif inséré sous la peau du bras, efficace 3 ans. Méthode la plus efficace disponible.
+
+Méthodes barrières : Préservatif masculin = seule méthode protégeant aussi des IST.
+
+=== FICHE : FIBROMES UTÉRINS ===
+Définition : Tumeurs bénignes du muscle utérin (myomètre). Très fréquents (20-40% des femmes).
+Signes : Règles abondantes et longues (ménorragies), douleurs pelviennes, pesanteur abdominale, troubles urinaires, infertilité possible selon localisation.
+Diagnostic : Échographie pelvienne.
+Traitement : Surveillance simple si asymptomatiques. Traitement médical (progestatifs, analogues GnRH) ou chirurgical (myomectomie, hystérectomie, embolisation) selon les cas.
+
+=== FICHE : POLYPES UTÉRINS ===
+Définition : Excroissances bénignes de l'endomètre.
+Signes : Saignements inter-menstruels, règles abondantes, parfois infertilité.
+Diagnostic : Échographie, hystéroscopie.
+Traitement : Résection hystéroscopique.
+
+=== FICHE : KYSTES OVARIENS ===
+Définition : Très fréquents, souvent fonctionnels (disparaissent spontanément) ou organiques (persistants).
+Types fréquents : Kyste folliculaire, kyste du corps jaune, endométriome, kyste dermoïde.
+Signes : Souvent asymptomatiques. Parfois douleurs pelviennes, gêne abdominale. Urgence si torsion ovarienne (douleur brutale et intense).
+Diagnostic : Échographie pelvienne.
+Traitement : Surveillance pour les kystes fonctionnels. Chirurgie si persistance, taille importante ou doute diagnostique.
+
+=== FICHE : MALFORMATIONS UTÉRINES ===
+Types : Utérus bicorne, cloisonné, unicorne, didelphe. Souvent découvertes lors d'un bilan de fausses couches à répétition ou d'infertilité.
+Conséquences possibles : Fausses couches à répétition, accouchement prématuré, présentation fœtale anormale.
+Traitement : Parfois chirurgical (résection de cloison par hystéroscopie).
+
+=== FICHE : ENDOMÉTRIOSE ===
+Définition : Présence de tissu similaire à l'endomètre en dehors de la cavité utérine. Touche 1 femme sur 10 en âge de procréer (environ 2,5 millions en France).
+Symptômes : Règles très douloureuses (dysménorrhée invalidante), douleurs pelviennes chroniques, dyspareunie (douleurs lors des rapports), douleurs à la défécation/miction pendant les règles, fatigue chronique, troubles digestifs. Règles douloureuses invalidantes ne sont PAS normales — consulter.
+Diagnostic : Examen clinique, échographie endovaginale, IRM pelvienne. La cœlioscopie est l'examen de référence.
+Délai diagnostic moyen : 7-10 ans en France.
+Traitements : Traitement hormonal (pilule en continu, progestatifs, DIU hormonal) en première ligne. Chirurgie si endométriose sévère ou infertilité. Idéalement dans un centre spécialisé.
+Fertilité : Une grossesse reste possible. Prise en charge précoce optimise les chances.
+
+=== FICHE : ADÉNOMYOSE ===
+Définition : Présence de tissu endométrial dans la paroi musculaire de l'utérus (myomètre). Souvent associée à l'endométriose.
+Signes : Règles très abondantes (ménorragies), douleurs pelviennes importantes, utérus augmenté de volume.
+Diagnostic : IRM pelvienne (examen de référence), échographie.
+Traitement : Médical (DIU hormonal, progestatifs). Chirurgical (hystérectomie) en dernier recours.
+
+=== FICHE : HPV & DÉPISTAGE ===
+HPV : Infection virale très fréquente, transmise par contact sexuel. > 200 types. La plupart transitoires. Certains types à haut risque (HPV 16 et 18) peuvent causer un cancer du col utérin.
+Dépistage : Frottis cervico-utérin (FCU). Recommandations : frottis conventionnel à 25 et 26 ans, puis test HPV tous les 5 ans de 30 à 65 ans.
+Lésions du col : CIN 1 (souvent régression spontanée), CIN 2-3 (traitement par conisation nécessaire). Le dépistage régulier est essentiel même vaccinée.
+Vaccination HPV : Recommandée pour filles et garçons entre 11-14 ans (rattrapage jusqu'à 19 ans). Prise en charge à 100% par l'Assurance Maladie.
+
+=== FICHE : INFECTIONS VAGINALES ===
+Mycose vaginale (candidose) : Causée par Candida albicans. Non IST. Favorisée par antibiotiques, grossesse, diabète, sous-vêtements synthétiques. Signes : pertes blanches épaisses caillouteuses inodores, démangeaisons, brûlures. Traitement : ovule/crème antifongique, parfois fluconazole oral.
+
+Vaginose bactérienne : Déséquilibre de la flore vaginale. Pertes grises/blanches avec odeur de poisson (surtout après rapports). Non IST mais favorise les IST et le risque d'accouchement prématuré. Traitement : métronidazole.
+
+MST/IST : Chlamydia, gonorrhée, syphilis, herpès génital, HPV. Souvent asymptomatiques. Dépistage annuel recommandé si partenaires multiples. Préservatif = seule protection contre les IST.
+
+Uréaplasma/Mycoplasma hominis : Font partie de la flore habituelle. Problématiques seulement en cas de grossesse, infertilité ou symptômes persistants. Traitement antibiotique ciblé si nécessaire.
+
+=== FICHE : INFORMATIONS GÉNÉRALES ===
+Droits des patientes : Droit à une information claire et loyale sur l'état de santé, les soins proposés et les alternatives. Droit de poser toutes les questions à son praticien.
+Remboursements : Grossesse prise en charge à 100% par l'Assurance Maladie à partir du 6e mois. Consultations prénatales obligatoires, échographies et examens biologiques prescrits remboursés.
+Congé maternité : 16 semaines pour 1er ou 2e enfant (6 avant + 10 après). Prolongé à 26 semaines pour 3e enfant ou grossesse pathologique.
+
+=== FICHE : INFORMATIONS PRÉ-OPÉRATOIRES ===
+Avant : Consultation pré-anesthésique obligatoire (au moins 48h avant). Bilan biologique +/- ECG. Être à jeun depuis au moins 6 heures (aucun aliment solide ni liquide).
+Le jour J : Apporter carte vitale, mutuelle, ordonnances, résultats d'examens. Vêtements amples et confortables. Retirer vernis, bijoux, lentilles.
+Après : Durée d'hospitalisation variable. Respecter les prescriptions médicales. Contacter le praticien en cas de doute.
+
+=== FICHE : ACCOUCHEMENT À L'ÉTRANGER ===
+Préparation : Renseignements sur le système de santé local, accès aux soins obstétricaux, coûts. Contacter mutuelle et Assurance Maladie pour les modalités de prise en charge.
+Documents indispensables : Carnet de maternité, résultats d'échographies et examens biologiques, carte européenne d'assurance maladie (si pays européen), attestation d'assurance, groupe sanguin et RAI, ordonnances des traitements en cours.
+Retour en France : Déclarer la naissance à la mairie du lieu de naissance, puis transcrire à l'état civil français (consulat ou Service central d'état civil de Nantes).
+`;
+
+// Topics mapping — pour suggérer des fiches à lire
+const TOPIC_MAP = [
+  { keywords: ['1er trimestre','premier trimestre','toxoplasmose','cmv','listériose','listeriose','nausée','nausees'], fiche: '1er trimestre', id: 't1' },
+  { keywords: ['2e trimestre','deuxième trimestre','deuxieme trimestre','morphologique'], fiche: '2e trimestre', id: 't2' },
+  { keywords: ['3e trimestre','troisième trimestre','troisieme trimestre','valise','streptocoque'], fiche: '3e trimestre', id: 't3' },
+  { keywords: ['diabète gestationnel','diabete gestationnel','hgpo','glycémie'], fiche: 'Diabète gestationnel', id: 'diabete' },
+  { keywords: ['prééclampsie','preeclampsie','hypertension','hta grossesse','tension grossesse'], fiche: 'Prééclampsie', id: 'preeclampsie' },
+  { keywords: ['fausse couche','fausses couches','saignement grossesse'], fiche: 'Fausses couches', id: 'fausses-couches' },
+  { keywords: ['map','accouchement prématuré','prématuré','contractions avant terme'], fiche: 'Menace d\'accouchement prématuré', id: 'map' },
+  { keywords: ['allaitement','sein','colostrum','tétée','crevasse','engorgement','mastite'], fiche: 'Allaitement maternel', id: 'allaitement' },
+  { keywords: ['baby blues','dépression post-partum','depression postpartum','postpartum','post-partum'], fiche: 'Baby blues & postpartum', id: 'postpartum-gen' },
+  { keywords: ['rééducation périnéale','reeducation perineale','périnée','plancher pelvien','incontinence'], fiche: 'Rééducation périnéale', id: 'reeducation' },
+  { keywords: ['contraception','pilule','stérilet','diu','implant','préservatif'], fiche: 'Contraception', id: 'contraception' },
+  { keywords: ['endométriose','endometriose','dysménorrhée','dyspareunie','règles douloureuses'], fiche: 'Endométriose', id: 'endometriose' },
+  { keywords: ['fibrome','myome'], fiche: 'Fibromes utérins', id: 'fibromes' },
+  { keywords: ['kyste ovarien','kyste ovaire','endométriome'], fiche: 'Kystes ovariens', id: 'kystes' },
+  { keywords: ['hpv','col utérin','col uterus','frottis','dépistage col','papillomavirus','cin'], fiche: 'HPV & dépistage', id: 'hpv' },
+  { keywords: ['mycose','candidose','vaginose','infection vaginale','pertes vaginales','ureaplasma','mycoplasma','ist','mst'], fiche: 'Infections vaginales', id: 'mycose' },
+  { keywords: ['cholestase','démangeaison grossesse'], fiche: 'Cholestase gravidique', id: 'diabete' },
+  { keywords: ['anémie','anemie','fatigue grossesse','fer grossesse'], fiche: 'Anémie', id: 't1' },
+  { keywords: ['canal carpien','fourmillements mains','engourdissement mains'], fiche: 'Syndrome du canal carpien', id: 't3' },
+  { keywords: ['grossesse extra-utérine','geu','trompe'], fiche: 'Grossesse extra-utérine', id: 't1' },
+];
+
+// ─── Charger la base de connaissance (admin ou défaut) ───
+function loadKnowledgeBase() {
+  try {
+    const stored = localStorage.getItem('sf_knowledge_base');
+    if (stored && stored.length > 100) return stored;
+  } catch(e) {}
+  return KNOWLEDGE_BASE; // fallback sur la base intégrée
+}
+
+function loadFichesMeta() {
+  try {
+    const stored = localStorage.getItem('sf_fiches_meta');
+    if (stored) return JSON.parse(stored);
+  } catch(e) {}
+  return null;
+}
+
+function detectRelevantTopics(question) {
+  const q = question.toLowerCase();
+  // Try to use admin-defined fiches first
+  const adminMeta = loadFichesMeta();
+  if (adminMeta) {
+    return adminMeta.filter(f =>
+      f.keywords.some(k => k && q.includes(k))
+    ).map(f => ({ fiche: f.title, id: f.category })).slice(0, 3);
+  }
+  // Fallback to static map
+  return TOPIC_MAP.filter(t => t.keywords.some(k => q.includes(k)));
+}
+
+const SYSTEM_PROMPT_TEMPLATE = (kb) => `Tu es une assistante médicale virtuelle spécialisée en obstétrique et gynécologie, intégrée à une plateforme de vulgarisation médicale créée par une professionnelle de santé.
+
+IMPORTANT : Tu disposes d'une base de connaissance médicale complète issue des fiches validées de la plateforme. Tu DOIS prioritairement t'appuyer sur ce contenu pour répondre aux questions. Si une information est dans la base de connaissance, utilise-la. Si une question dépasse la base de connaissance, précise-le clairement.
+
+BASE DE CONNAISSANCE MÉDICALE VALIDÉE PAR LE MÉDECIN :
+${kb}
+
+Règles absolues :
+1. Tu ne poses JAMAIS de diagnostic médical
+2. Tu recommandes TOUJOURS de consulter un médecin ou sage-femme pour toute situation personnelle
+3. En cas de symptômes urgents, tu diriges IMMÉDIATEMENT vers le SAMU (15)
+4. Tu ne prescris jamais de médicaments
+5. Si la question sort du cadre de tes fiches, dis-le clairement
+
+Format : Réponds en français, avec des paragraphes courts. Utilise des listes à puces pour les informations pratiques. Sois précise et accessible.`;
+
+// ═══════════════════════════════════
+// MODE SWITCH
+// ═══════════════════════════════════
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && mode === 'patient') || (i === 1 && mode === 'doctor'));
+  });
+  document.getElementById('patientView').classList.toggle('active', mode === 'patient');
+  document.getElementById('doctorView').classList.toggle('active', mode === 'doctor');
+  if (mode === 'doctor') updateDoctorQueue();
+}
+
+// ═══════════════════════════════════
+// PATIENT CHAT
+// ═══════════════════════════════════
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 130) + 'px';
+}
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+function getTime() {
+  return new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+}
+function scrollBottom() {
+  const area = document.getElementById('pMessages');
+  setTimeout(() => { area.scrollTop = area.scrollHeight; }, 60);
+}
+function showChatView() {
+  document.getElementById('pWelcome').style.display = 'none';
+  document.getElementById('pMsgInner').style.display = 'block';
+}
+
+function appendPatientMsg(role, text, convId, sourceTopics) {
+  showChatView();
+  const container = document.getElementById('pMsgInner');
+  const row = document.createElement('div');
+  row.className = `msg-row ${role}`;
+  if (convId) row.id = `msg-${convId}`;
+
+  const ava = document.createElement('div');
+  ava.className = `msg-ava ${role}`;
+  ava.textContent = role === 'ai' ? '🌸' : 'P';
+
+  const body = document.createElement('div');
+  body.className = 'msg-body';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+
+  if (role === 'ai' && convId) {
+    bubble.id = `bubble-${convId}`;
+    bubble.classList.add('pending');
+
+    let sourcesHTML = '';
+    if (sourceTopics && sourceTopics.length > 0) {
+      sourcesHTML = `<div class="msg-sources">
+        <div class="msg-sources-label">📚 Basé sur les fiches de la plateforme :</div>
+        <div class="msg-sources-chips">
+          ${sourceTopics.map(t => `<span class="msg-source-chip" onclick="window.open('plateforme-medicale.html#${t.id}','_blank')" title="Lire la fiche complète">📄 ${t.fiche} →</span>`).join('')}
+        </div>
+      </div>`;
+    }
+
+    bubble.innerHTML =
+      `<div class="pending-badge">En attente de vérification médicale</div>` +
+      formatText(text) +
+      sourcesHTML;
+
+    const disc = document.createElement('div');
+    disc.className = 'msg-disclaimer-line';
+    disc.innerHTML = '⚕️ Information générale — consultez votre praticien pour votre situation personnelle.';
+    bubble.appendChild(disc);
+  } else {
+    bubble.innerHTML = formatText(text);
+  }
+
+  const time = document.createElement('div');
+  time.className = 'msg-time';
+  time.textContent = getTime();
+
+  body.appendChild(bubble);
+  body.appendChild(time);
+  row.appendChild(ava);
+  row.appendChild(body);
+  container.appendChild(row);
+  scrollBottom();
+}
+
+function formatText(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/^[-•] (.+)$/gm, '<li>$1</li>')
+    .replace(/((<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^([^<].+)$/gm, '<p>$1</p>');
+}
+
+function showTyping() {
+  showChatView();
+  const c = document.getElementById('pMsgInner');
+  const row = document.createElement('div');
+  row.className = 'typing-row'; row.id = 'typingRow';
+  const ava = document.createElement('div');
+  ava.className = 'msg-ava ai'; ava.textContent = '🌸';
+  const bub = document.createElement('div');
+  bub.className = 'typing-bub';
+  bub.innerHTML = '<div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div>';
+  row.appendChild(ava); row.appendChild(bub);
+  c.appendChild(row);
+  scrollBottom();
+}
+function hideTyping() {
+  const t = document.getElementById('typingRow');
+  if (t) t.remove();
+}
+
+// Analyze response for risks (simple heuristic)
+function analyzeRisks(question, answer) {
+  const q = question.toLowerCase();
+  const a = answer.toLowerCase();
+  const risks = [];
+  let confidence = 88;
+
+  // Check for urgent keywords
+  const urgentKeywords = ['urgence','saignement','convulsion','chute','douleur intense','fièvre élevée'];
+  const hasUrgent = urgentKeywords.some(k => q.includes(k) || a.includes(k));
+  risks.push({ label: 'Mention d\'urgence détectée', level: hasUrgent ? 'warn' : 'ok', val: hasUrgent ? 'Oui' : 'Non' });
+
+  // Check for medication names
+  const medKeywords = ['mg','milligramme','doliprane','paracétamol','ibuprofène','aspirine','posologie'];
+  const hasMed = medKeywords.some(k => a.includes(k));
+  risks.push({ label: 'Mention de médicament/posologie', level: hasMed ? 'warn' : 'ok', val: hasMed ? 'Détectée' : 'Aucune' });
+
+  // Check if disclaimer present
+  const hasDisclaimer = a.includes('consulter') || a.includes('médecin') || a.includes('praticien');
+  risks.push({ label: 'Recommandation de consultation', level: hasDisclaimer ? 'ok' : 'warn', val: hasDisclaimer ? 'Présente' : 'Absente' });
+
+  // Check length/completeness
+  const wordCount = answer.split(' ').length;
+  risks.push({ label: 'Complétude de la réponse', level: wordCount > 50 ? 'ok' : 'warn', val: wordCount > 50 ? 'Bonne' : 'Courte' });
+
+  // Check diagnosis attempt
+  const diagKeywords = ['vous avez','c\'est certain','diagnostic','vous souffrez de'];
+  const hasDiag = diagKeywords.some(k => a.includes(k));
+  risks.push({ label: 'Tentative de diagnostic', level: hasDiag ? 'bad' : 'ok', val: hasDiag ? 'Détectée ⚠️' : 'Aucune' });
+
+  if (hasMed) confidence -= 15;
+  if (!hasDisclaimer) confidence -= 10;
+  if (hasDiag) confidence -= 25;
+  if (hasUrgent) confidence -= 5;
+  confidence = Math.max(30, Math.min(98, confidence));
+
+  return { risks, confidence };
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  appendPatientMsg('user', text);
+
+  const convId = Date.now();
+  isLoading = true;
+  document.getElementById('sendBtn').disabled = true;
+  showTyping();
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT_TEMPLATE(loadKnowledgeBase()),
+        messages: [{ role: 'user', content: text }]
+      })
+    });
+
+    const data = await response.json();
+    hideTyping();
+
+    if (data.content && data.content[0]) {
+      const aiText = data.content[0].text;
+      const sourceTopics = detectRelevantTopics(text);
+      appendPatientMsg('ai', aiText, convId, sourceTopics);
+
+      // Analyze and store
+      const { risks, confidence } = analyzeRisks(text, aiText);
+      const conv = {
+        id: convId,
+        question: text,
+        answer: aiText,
+        status: 'pending',
+        timestamp: new Date(),
+        confidence,
+        risks,
+        correctedAnswer: null,
+        sourceTopics
+      };
+      conversations.push(conv);
+      updateDoctorQueue();
+      showToast('📬 Nouvelle réponse à réviser');
+    }
+  } catch (err) {
+    hideTyping();
+    appendPatientMsg('ai', "Je ne suis pas disponible pour le moment. En cas d'urgence, appelez le **15 (SAMU)**.");
+  } finally {
+    isLoading = false;
+    document.getElementById('sendBtn').disabled = false;
+  }
+}
+
+function askTopic(q) {
+  const input = document.getElementById('chatInput');
+  input.value = q;
+  autoResize(input);
+  sendMessage();
+}
+
+// ═══════════════════════════════════
+// DOCTOR SUPERVISION
+// ═══════════════════════════════════
+function updateDoctorQueue() {
+  const queue = document.getElementById('dQueue');
+  const pending = conversations.filter(c => c.status === 'pending').length;
+  const approved = conversations.filter(c => c.status === 'approved').length;
+  const corrected = conversations.filter(c => c.status === 'corrected').length;
+
+  document.getElementById('statPending').textContent = pending;
+  document.getElementById('statApproved').textContent = approved;
+  document.getElementById('statCorrected').textContent = corrected;
+
+  if (conversations.length === 0) {
+    queue.innerHTML = `<div style="padding:20px 8px; text-align:center; color:rgba(255,255,255,.2); font-size:13px; font-weight:300;">
+      Aucune réponse à réviser.<br><span style="font-size:11px;margin-top:6px;display:block">Posez une question en vue patiente.</span>
+    </div>`;
+    return;
+  }
+
+  queue.innerHTML = '';
+  [...conversations].reverse().forEach(conv => {
+    const item = document.createElement('div');
+    item.className = `d-queue-item status-${conv.status} ${selectedId === conv.id ? 'selected' : ''}`;
+    item.onclick = () => selectConversation(conv.id);
+
+    const statusLabel = { pending:'En attente', approved:'Validée', rejected:'Rejetée', corrected:'Corrigée' }[conv.status];
+    const timeStr = conv.timestamp.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+
+    item.innerHTML = `
+      <div class="d-qi-header">
+        <div class="d-qi-patient">Patiente anonyme</div>
+        <div class="d-qi-status ${conv.status}">${statusLabel}</div>
+      </div>
+      <div class="d-qi-question">${conv.question}</div>
+      <div class="d-qi-time">Aujourd'hui à ${timeStr} · Confiance IA : ${conv.confidence}%</div>
+    `;
+    queue.appendChild(item);
+  });
+}
+
+function selectConversation(id) {
+  selectedId = id;
+  const conv = conversations.find(c => c.id === id);
+  if (!conv) return;
+
+  // Update queue selection
+  document.querySelectorAll('.d-queue-item').forEach(el => el.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+
+  // Update topbar
+  document.getElementById('dPanelTitle').textContent = 'Révision de réponse';
+  const sub = { pending:'En attente de validation', approved:'Réponse validée', rejected:'Réponse rejetée', corrected:'Réponse corrigée' }[conv.status];
+  document.getElementById('dPanelSub').textContent = sub;
+  document.getElementById('dActions').style.display = conv.status === 'pending' ? 'flex' : 'none';
+
+  // Confidence level
+  const confLevel = conv.confidence >= 80 ? 'high' : conv.confidence >= 60 ? 'medium' : 'low';
+  const confLabel = conv.confidence >= 80 ? '✓ Élevée' : conv.confidence >= 60 ? '⚠ Moyenne' : '✕ Faible';
+
+  // Render review panel
+  const panel = document.getElementById('dReviewPanel');
+  panel.innerHTML = `
+    <!-- Question -->
+    <div class="d-review-card">
+      <div class="d-review-card-label">Question de la patiente</div>
+      <div class="d-review-question">${conv.question}</div>
+    </div>
+
+    <!-- AI Answer -->
+    <div class="d-review-card">
+      <div class="d-review-card-label">Réponse générée par l'IA</div>
+      ${conv.sourceTopics && conv.sourceTopics.length > 0 ? `
+      <div style="margin-bottom:12px;">
+        <div style="font-size:10px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Fiches sources utilisées</div>
+        <div class="d-source-chips">
+          ${conv.sourceTopics.map(t => `<span class="d-source-chip">📄 ${t.fiche}</span>`).join('')}
+        </div>
+      </div>` : ''}
+      <div class="d-review-answer" id="dAnswerText">${formatText(conv.correctedAnswer || conv.answer)}</div>
+
+      <!-- Correction area -->
+      <div class="d-correction-area" id="correctionArea">
+        <div class="d-correction-label">✎ Correction médicale</div>
+        <textarea class="d-correction-textarea" id="correctionText"
+          placeholder="Saisissez ici la version corrigée de la réponse…">${conv.correctedAnswer || conv.answer}</textarea>
+        <button class="d-save-correction" onclick="saveCorrection(${conv.id})">
+          ✓ Enregistrer la correction et valider
+        </button>
+      </div>
+    </div>
+
+    <!-- Confidence score -->
+    <div class="d-review-card">
+      <div class="d-review-card-label">Score de confiance IA</div>
+      <div class="d-confidence">
+        <div class="d-confidence-bar">
+          <div class="d-confidence-fill ${confLevel}" style="width:${conv.confidence}%"></div>
+        </div>
+        <div class="d-confidence-pct">${conv.confidence}%</div>
+        <div style="font-size:12px;color:${confLevel==='high'?'var(--sage)':confLevel==='medium'?'var(--orange)':'var(--red)'}; margin-left:4px;">${confLabel}</div>
+      </div>
+    </div>
+
+    <!-- Risk analysis -->
+    <div class="d-review-card">
+      <div class="d-review-card-label">Analyse automatique des risques</div>
+      <div class="d-risk-card">
+        ${conv.risks.map(r => `
+          <div class="d-risk-item">
+            <div class="d-risk-dot ${r.level}"></div>
+            <span class="d-risk-txt">${r.label}</span>
+            <span class="d-risk-val ${r.level}">${r.val}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    ${conv.status !== 'pending' ? `
+    <div class="d-review-card" style="border-color:rgba(255,255,255,.04)">
+      <div class="d-review-card-label">Décision</div>
+      <div style="font-size:13px; color:rgba(255,255,255,.4); font-weight:300; padding:8px 0;">
+        ${conv.status === 'approved' ? '✓ Réponse validée et visible par la patiente.' :
+          conv.status === 'corrected' ? '✎ Réponse corrigée et mise à jour côté patiente.' :
+          '✕ Réponse rejetée. La patiente voit un message de redirection vers son médecin.'}
+      </div>
+    </div>
+    ` : ''}
+  `;
+}
+
+function approveSelected() {
+  const conv = conversations.find(c => c.id === selectedId);
+  if (!conv) return;
+  conv.status = 'approved';
+  updateBubbleStatus(conv.id, 'approved', conv.correctedAnswer || conv.answer);
+  updateDoctorQueue();
+  selectConversationById(conv.id);
+  showToast('✓ Réponse validée et visible par la patiente');
+}
+
+function rejectSelected() {
+  const conv = conversations.find(c => c.id === selectedId);
+  if (!conv) return;
+  conv.status = 'rejected';
+  const rejectionMsg = "Je suis désolée, je n'ai pas pu fournir une réponse suffisamment précise à votre question. Je vous invite à en parler directement avec votre médecin ou sage-femme lors de votre prochain rendez-vous.";
+  updateBubbleStatus(conv.id, 'rejected', rejectionMsg);
+  updateDoctorQueue();
+  selectConversationById(conv.id);
+  showToast('✕ Réponse rejetée — patiente redirigée vers le médecin');
+}
+
+function showCorrection() {
+  const area = document.getElementById('correctionArea');
+  if (area) area.classList.add('visible');
+}
+
+function saveCorrection(id) {
+  const conv = conversations.find(c => c.id === id);
+  const text = document.getElementById('correctionText')?.value.trim();
+  if (!conv || !text) return;
+  conv.correctedAnswer = text;
+  conv.status = 'corrected';
+  updateBubbleStatus(conv.id, 'corrected', text);
+  updateDoctorQueue();
+  selectConversationById(conv.id);
+  showToast('✎ Correction enregistrée et visible par la patiente');
+}
+
+function selectConversationById(id) {
+  selectedId = id;
+  const fakeEvent = { currentTarget: { classList: { add: () => {}, remove: () => {} } } };
+  // Re-render
+  const conv = conversations.find(c => c.id === id);
+  if (conv) {
+    // Trigger re-render
+    const items = document.querySelectorAll('.d-queue-item');
+    items.forEach(el => el.classList.remove('selected'));
+    selectConversation(id);
+  }
+}
+
+function updateBubbleStatus(convId, status, newText) {
+  const bubble = document.getElementById(`bubble-${convId}`);
+  if (!bubble) return;
+
+  bubble.className = `msg-bubble ${status}`;
+
+  const badges = {
+    approved: `<div class="approved-badge">Réponse validée par votre médecin</div>`,
+    rejected: `<div class="rejected-badge">✕ Réponse non disponible — consultez votre médecin</div>`,
+    corrected: `<div class="corrected-badge">Réponse vérifiée et corrigée par votre médecin</div>`
+  };
+
+  const disclaimer = `<div class="msg-disclaimer-line">⚕️ Information générale — consultez votre praticien pour votre situation personnelle.</div>`;
+  bubble.innerHTML = (badges[status] || '') + formatText(newText) + disclaimer;
+}
+
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('dToast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+// Init
+document.getElementById('chatInput').addEventListener('focus', () => {});
+</script>
+</body>
+</html>
