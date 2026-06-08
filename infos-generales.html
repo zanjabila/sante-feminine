@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informations pratiques — Santé Féminine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FAF7F2;--cream-dark:#F0EBE1;--rose:#E8C5BB;--rose-deep:#C9957F;--rose-pale:#F7EDE8;--gold:#C8A96E;--gold-light:#F0E4C0;--gold-pale:#FBF5E6;--purple:#9B8BB5;--purple-pale:#F2EFF8;--text-dark:#2C2420;--text-mid:#6B5B52;--text-light:#A09080;--white:#FFFFFF;--shadow:0 4px 32px rgba(44,36,32,0.08);--shadow-lg:0 16px 64px rgba(44,36,32,0.14);}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;background:rgba(250,247,242,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--cream-dark);display:flex;align-items:center;padding:0 36px;gap:16px;}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:var(--text-dark);text-decoration:none;}
+.nav-logo span{color:var(--rose-deep);}
+.nav-links{display:flex;gap:4px;}
+.nav-link{text-decoration:none;font-size:13px;color:var(--text-light);padding:6px 14px;border-radius:20px;transition:all .2s;}
+.nav-link:hover{color:var(--text-dark);background:var(--cream-dark);}
+.nav-link.active{color:var(--purple);background:var(--purple-pale);font-weight:500;}
+.nav-back{margin-left:auto;display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--text-light);font-size:13px;padding:7px 14px;border-radius:20px;border:1px solid var(--cream-dark);transition:all .2s;}
+.nav-back:hover{color:var(--text-dark);border-color:var(--rose-deep);}
+.hero{padding:100px 60px 60px;background:linear-gradient(160deg,var(--purple-pale) 0%,var(--cream) 60%);border-bottom:1px solid var(--cream-dark);position:relative;overflow:hidden;}
+.hero::after{content:'📋';position:absolute;right:80px;top:50%;transform:translateY(-50%);font-size:120px;opacity:.08;}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--purple-pale);border:1px solid rgba(155,139,181,.3);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:600;color:var(--purple);text-transform:uppercase;letter-spacing:.07em;margin-bottom:16px;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,5vw,64px);font-weight:400;color:var(--text-dark);line-height:1.1;margin-bottom:14px;}
+.hero h1 em{font-style:italic;color:var(--purple);}
+.hero-desc{font-size:15px;color:var(--text-mid);font-weight:300;line-height:1.7;max-width:560px;}
+.page-layout{display:grid;grid-template-columns:260px 1fr;max-width:1200px;margin:0 auto;padding:48px 24px 80px;gap:40px;}
+.side-nav{position:sticky;top:82px;height:fit-content;}
+.side-nav-title{font-size:10px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;padding-left:4px;}
+.side-nav-section{margin-bottom:20px;}
+.side-nav-section-label{font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;padding:0 10px 7px;}
+.side-nav-item{display:block;text-decoration:none;font-size:13px;color:var(--text-mid);padding:8px 10px;border-radius:9px;transition:all .15s;margin-bottom:2px;border-left:2px solid transparent;}
+.side-nav-item:hover{background:var(--cream-dark);color:var(--text-dark);}
+.side-nav-item.active{background:var(--purple-pale);color:var(--purple);border-left-color:var(--purple);font-weight:500;}
+.content-section{margin-bottom:64px;}
+.section-anchor{display:block;height:80px;margin-top:-80px;visibility:hidden;}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--cream-dark);}
+.section-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;background:linear-gradient(135deg,var(--purple-pale),rgba(155,139,181,.3));}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:var(--text-dark);}
+.section-sub{font-size:13px;color:var(--text-light);font-weight:300;margin-top:2px;}
+.articles-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.article-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:18px;padding:24px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;text-decoration:none;display:block;}
+.article-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--purple);}
+.article-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple-pale),var(--purple));opacity:0;transition:opacity .2s;}
+.article-card:hover::after{opacity:1;}
+.article-card-icon{font-size:24px;margin-bottom:12px;display:block;}
+.article-card-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--text-dark);margin-bottom:6px;line-height:1.3;}
+.article-card-desc{font-size:12.5px;color:var(--text-mid);line-height:1.6;font-weight:300;}
+.article-card-tag{display:inline-flex;align-items:center;margin-top:12px;padding:3px 10px;background:var(--purple-pale);border-radius:8px;font-size:10.5px;color:var(--purple);font-weight:500;}
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(44,36,32,.5);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--white);border-radius:24px;width:860px;max-width:100%;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);transform:scale(.96);transition:transform .3s;}
+.modal-overlay.open .modal{transform:scale(1);}
+.modal-header{padding:28px 36px 22px;border-bottom:1px solid var(--cream-dark);display:flex;align-items:flex-start;justify-content:space-between;gap:20px;}
+.modal-badge{display:inline-flex;align-items:center;background:var(--purple-pale);border-radius:10px;padding:3px 12px;margin-bottom:10px;font-size:11px;color:var(--purple);font-weight:500;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:var(--text-dark);}
+.modal-close{background:var(--cream);border:none;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-mid);flex-shrink:0;transition:all .2s;}
+.modal-close:hover{background:var(--rose);}
+.modal-body{flex:1;overflow-y:auto;padding:28px 36px;}
+.modal-body h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--text-dark);margin:24px 0 10px;}
+.modal-body h3:first-child{margin-top:0;}
+.modal-body p{font-size:14px;color:var(--text-mid);line-height:1.75;font-weight:300;margin-bottom:12px;}
+.modal-body ul{list-style:none;margin:8px 0 16px;padding:0;}
+.modal-body ul li{font-size:14px;color:var(--text-mid);font-weight:300;padding:6px 0 6px 18px;position:relative;line-height:1.6;}
+.modal-body ul li::before{content:'';position:absolute;left:0;top:13px;width:5px;height:5px;border-radius:50%;background:var(--purple);}
+.info-box{background:var(--purple-pale);border-left:3px solid var(--purple);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;}
+.info-box-title{font-size:11px;font-weight:600;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.urgent-box{background:#FDECEA;border-left:3px solid #C0392B;border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;}
+.urgent-box-title{font-size:11px;font-weight:600;color:#C0392B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.urgent-box p{color:#8B2020;}
+@media(max-width:900px){.page-layout{grid-template-columns:1fr;}.side-nav{display:none;}.articles-grid{grid-template-columns:1fr;}nav{padding:0 20px;}.nav-links{display:none;}.hero{padding:90px 24px 48px;}.hero::after{display:none;}}
+</style>
+<script src="translate.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Santé <span>Féminine</span></a>
+  <div style="width:1px;height:18px;background:var(--cream-dark)"></div>
+  <div class="nav-links">
+    <a href="grossesse.html" class="nav-link">🤰 Grossesse</a>
+    <a href="postpartum.html" class="nav-link">👶 Post-partum</a>
+    <a href="gynecologie.html" class="nav-link">🌸 Gynécologie</a>
+    <a href="infos-generales.html" class="nav-link active">📋 Infos pratiques</a>
+  </div>
+  <a href="index.html" class="nav-back">← Accueil</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">📋 Informations pratiques</div>
+  <h1>Informations<br><em>pratiques</em></h1>
+  <p class="hero-desc">Tout ce que vous devez savoir avant de consulter, avant une intervention et pour les patientes accouchant à l'étranger.</p>
+</div>
+
+<div class="page-layout">
+  <nav class="side-nav">
+    <div class="side-nav-title">Sur cette page</div>
+    <div class="side-nav-section">
+      <div class="side-nav-section-label">Rubriques</div>
+      <a href="#infos-gen" class="side-nav-item active">Informations générales</a>
+      <a href="#preop" class="side-nav-item">Informations pré-opératoires</a>
+      <a href="#etranger" class="side-nav-item">Accouchement à l'étranger</a>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <!-- INFORMATIONS GÉNÉRALES -->
+    <div class="content-section">
+      <span class="section-anchor" id="infos-gen"></span>
+      <div class="section-header">
+        <div class="section-icon">📋</div>
+        <div><div class="section-title">Informations générales</div><div class="section-sub">Rendez-vous, documents, résultats et urgences</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('rdv')">
+          <span class="article-card-icon">📅</span>
+          <div class="article-card-title">Comment prendre rendez-vous</div>
+          <p class="article-card-desc">Comment contacter le cabinet, les différents types de consultations et les délais habituels.</p>
+          <span class="article-card-tag">Pratique</span>
+        </a>
+        <a class="article-card" onclick="openModal('documents')">
+          <span class="article-card-icon">🗂️</span>
+          <div class="article-card-title">Documents à apporter</div>
+          <p class="article-card-desc">La liste complète des documents à avoir avec soi lors de chaque type de consultation.</p>
+          <span class="article-card-tag">Pratique</span>
+        </a>
+        <a class="article-card" onclick="openModal('resultats')">
+          <span class="article-card-icon">🔬</span>
+          <div class="article-card-title">Résultats d'examens</div>
+          <p class="article-card-desc">Comment recevoir et comprendre vos résultats d'analyses, d'échographies et autres examens.</p>
+          <span class="article-card-tag">Pratique</span>
+        </a>
+        <a class="article-card" onclick="openModal('urgences')">
+          <span class="article-card-icon">🚨</span>
+          <div class="article-card-title">Urgences gynécologiques et obstétricales</div>
+          <p class="article-card-desc">Quand aller aux urgences, quoi faire en cas de saignements, douleurs intenses ou perte de liquide.</p>
+          <span class="article-card-tag">Urgence</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- PRÉ-OPÉRATOIRE -->
+    <div class="content-section">
+      <span class="section-anchor" id="preop"></span>
+      <div class="section-header">
+        <div class="section-icon">🏥</div>
+        <div><div class="section-title">Informations pré-opératoires</div><div class="section-sub">Tout savoir avant une intervention chirurgicale</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('consignes-preop')">
+          <span class="article-card-icon">📝</span>
+          <div class="article-card-title">Consignes avant intervention</div>
+          <p class="article-card-desc">Ce qu'il faut faire et ne pas faire dans les jours précédant votre intervention.</p>
+          <span class="article-card-tag">Pré-opératoire</span>
+        </a>
+        <a class="article-card" onclick="openModal('jeune-preop')">
+          <span class="article-card-icon">🍽️</span>
+          <div class="article-card-title">Jeûne pré-opératoire</div>
+          <p class="article-card-desc">Les règles du jeûne avant une anesthésie générale ou locorégionale.</p>
+          <span class="article-card-tag">Pré-opératoire</span>
+        </a>
+        <a class="article-card" onclick="openModal('medicaments-preop')">
+          <span class="article-card-icon">💊</span>
+          <div class="article-card-title">Médicaments</div>
+          <p class="article-card-desc">Quels médicaments continuer ou arrêter avant une intervention. Importance de la consultation pré-anesthésique.</p>
+          <span class="article-card-tag">Pré-opératoire</span>
+        </a>
+        <a class="article-card" onclick="openModal('retour-domicile')">
+          <span class="article-card-icon">🏠</span>
+          <div class="article-card-title">Retour à domicile</div>
+          <p class="article-card-desc">Conseils pour la récupération à domicile après une intervention ambulatoire ou une hospitalisation.</p>
+          <span class="article-card-tag">Pré-opératoire</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ACCOUCHEMENT À L'ÉTRANGER -->
+    <div class="content-section">
+      <span class="section-anchor" id="etranger"></span>
+      <div class="section-header">
+        <div class="section-icon">✈️</div>
+        <div><div class="section-title">Patientes accouchant à l'étranger</div><div class="section-sub">Préparation, documents et suivi au retour</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('dossier-medical')">
+          <span class="article-card-icon">📂</span>
+          <div class="article-card-title">Dossier médical</div>
+          <p class="article-card-desc">Quels documents médicaux emporter et comment constituer un dossier complet pour accoucher à l'étranger.</p>
+          <span class="article-card-tag">Étranger</span>
+        </a>
+        <a class="article-card" onclick="openModal('assurances')">
+          <span class="article-card-icon">🛡️</span>
+          <div class="article-card-title">Assurances</div>
+          <p class="article-card-desc">Mutuelle, assurance voyage, carte européenne d'assurance maladie — ce que couvre votre assurance à l'étranger.</p>
+          <span class="article-card-tag">Étranger</span>
+        </a>
+        <a class="article-card" onclick="openModal('documents-etranger')">
+          <span class="article-card-icon">📄</span>
+          <div class="article-card-title">Documents nécessaires</div>
+          <p class="article-card-desc">La liste complète des documents administratifs et médicaux indispensables avant le départ.</p>
+          <span class="article-card-tag">Étranger</span>
+        </a>
+        <a class="article-card" onclick="openModal('suivi-retour')">
+          <span class="article-card-icon">🔄</span>
+          <div class="article-card-title">Suivi au retour</div>
+          <p class="article-card-desc">Démarches administratives et médicales à effectuer en Belgique après un accouchement à l'étranger.</p>
+          <span class="article-card-tag">Étranger</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div><div class="modal-badge" id="modalBadge"></div><div class="modal-title" id="modalTitle"></div></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const MODALS={
+'rdv':{badge:'📋 Informations générales',title:'Comment prendre rendez-vous',body:`
+  <h3>Comment contacter le cabinet</h3>
+  <p>Les coordonnées et modalités de prise de rendez-vous sont disponibles directement sur la page d'accueil de la plateforme. Vous pouvez consulter votre espace personnel pour retrouver les informations de contact de votre praticien.</p>
+  <h3>Les différents types de consultations</h3>
+  <ul>
+    <li><strong>Consultation de suivi de grossesse</strong> — mensuelle, obligatoire</li>
+    <li><strong>Consultation gynécologique</strong> — frottis, contraception, pathologies</li>
+    <li><strong>Consultation postnatale</strong> — entre 6 et 8 semaines après l'accouchement</li>
+    <li><strong>Consultation urgente</strong> — saignements, douleurs, questions urgentes</li>
+  </ul>
+  <h3>Délais habituels</h3>
+  <p>Les consultations de suivi sont planifiées à l'avance lors de chaque rendez-vous. Pour une consultation urgente, contactez directement le cabinet ou, en dehors des heures d'ouverture, appelez le 112 ou rendez-vous aux urgences de la maternité.</p>
+`},
+'documents':{badge:'📋 Informations générales',title:'Documents à apporter',body:`
+  <h3>Pour toute consultation</h3>
+  <ul>
+    <li>Carte d'identité</li>
+    <li>Carte de mutuelle (vignette SIS en Belgique)</li>
+    <li>Carnet de santé ou carnet de maternité si applicable</li>
+    <li>Liste de vos médicaments en cours</li>
+  </ul>
+  <h3>Pour une consultation de grossesse</h3>
+  <ul>
+    <li>Carnet de maternité complet et à jour</li>
+    <li>Résultats des dernières prises de sang</li>
+    <li>Résultats des dernières échographies</li>
+    <li>Derniers résultats de tension artérielle si surveillée à domicile</li>
+  </ul>
+  <h3>Pour une consultation gynécologique</h3>
+  <ul>
+    <li>Résultats du dernier frottis si disponibles</li>
+    <li>Résultats d'échographies antérieures si pertinents</li>
+    <li>Ordonnances en cours (contraception, traitements)</li>
+  </ul>
+  <h3>Pour une première consultation</h3>
+  <ul>
+    <li>Tous les documents ci-dessus</li>
+    <li>Antécédents médicaux et chirurgicaux personnels</li>
+    <li>Antécédents familiaux importants</li>
+    <li>Résultats d'examens antérieurs (groupe sanguin, RAI…)</li>
+  </ul>
+`},
+'resultats':{badge:'📋 Informations générales',title:'Résultats d\'examens',body:`
+  <h3>Comment recevoir vos résultats</h3>
+  <p>Les résultats d'analyses biologiques sont transmis au cabinet médical. Votre praticien vous les communique lors de la consultation suivante ou vous contacte directement si un résultat nécessite une action rapide.</p>
+  <h3>Résultats d'analyses biologiques</h3>
+  <p>Les prises de sang sont transmises directement au laboratoire. Les résultats sont disponibles sous 24 à 72 heures selon les examens. Certains résultats urgents sont communiqués plus rapidement.</p>
+  <h3>Résultats d'échographies</h3>
+  <p>Le compte-rendu écrit de l'échographie est remis lors de l'examen ou envoyé au cabinet. Les images sont disponibles sur support numérique ou papier selon le centre d'imagerie.</p>
+  <h3>En cas de résultat anormal</h3>
+  <p>Votre praticien vous contacte pour vous expliquer le résultat et organiser la suite de la prise en charge. Ne cherchez pas à interpréter seule un résultat inquiétant — attendez l'avis médical.</p>
+`},
+'urgences':{badge:'📋 Informations générales',title:'Urgences gynécologiques et obstétricales',body:`
+  <div class="urgent-box"><div class="urgent-box-title">🚨 Appelez le 112 ou allez aux urgences si</div><p>Saignements abondants · Douleur abdominale intense et soudaine · Perte de liquide amniotique · Absence de mouvements fœtaux · Fièvre élevée + douleurs · Contractions régulières avant 37 SA · Maux de tête intenses + troubles visuels</p></div>
+  <h3>Urgences obstétricales (pendant la grossesse)</h3>
+  <ul>
+    <li>Saignements vaginaux abondants</li>
+    <li>Contractions régulières avant 37 SA</li>
+    <li>Rupture de la poche des eaux</li>
+    <li>Absence ou diminution brutale des mouvements fœtaux</li>
+    <li>Maux de tête intenses + troubles visuels (prééclampsie)</li>
+    <li>Douleur abdominale intense et persistante</li>
+  </ul>
+  <h3>Urgences gynécologiques</h3>
+  <ul>
+    <li>Douleur pelvienne brutale et intense (torsion ovarienne possible)</li>
+    <li>Saignements importants en dehors des règles</li>
+    <li>Signes d'infection pelvienne (fièvre + douleurs)</li>
+    <li>Test de grossesse positif + douleurs unilatérales (GEU possible)</li>
+  </ul>
+  <h3>En dehors des heures d'ouverture du cabinet</h3>
+  <p>Appelez le 112 (urgences) ou rendez-vous directement aux urgences gynécologiques et obstétricales de la maternité la plus proche.</p>
+`},
+'consignes-preop':{badge:'🏥 Pré-opératoire',title:'Consignes avant intervention',body:`
+  <h3>La consultation pré-anesthésique</h3>
+  <p>Obligatoire avant toute anesthésie générale ou locorégionale. Elle doit avoir lieu au moins 48 heures avant l'intervention. Lors de cette consultation, l'anesthésiste évalue votre état de santé et prescrit les examens complémentaires nécessaires.</p>
+  <h3>Les jours précédant l'intervention</h3>
+  <ul>
+    <li>Respecter les consignes concernant les médicaments (voir article dédié)</li>
+    <li>Prévoir un accompagnant pour le jour de l'intervention</li>
+    <li>Ne pas porter de vernis à ongles (gêne la surveillance de l'oxymétrie)</li>
+    <li>Retirer piercing, bijoux et lentilles de contact le jour J</li>
+    <li>Prévoir des vêtements amples et confortables</li>
+  </ul>
+  <h3>Le jour de l'intervention</h3>
+  <ul>
+    <li>Respecter le jeûne pré-opératoire</li>
+    <li>Apporter vos documents d'identité, carte de mutuelle et ordonnances</li>
+    <li>Apporter les résultats d'examens demandés par l'anesthésiste</li>
+    <li>Ne pas conduire après une anesthésie générale ou sédation</li>
+  </ul>
+`},
+'jeune-preop':{badge:'🏥 Pré-opératoire',title:'Jeûne pré-opératoire',body:`
+  <h3>Règle générale</h3>
+  <p>Le jeûne pré-opératoire est indispensable pour éviter les complications liées à l'anesthésie (inhalation du contenu gastrique). Les règles sont précisées par votre anesthésiste lors de la consultation pré-anesthésique.</p>
+  <h3>Règles standard</h3>
+  <ul>
+    <li><strong>Solides et lait</strong> : arrêt 6 heures avant l'intervention</li>
+    <li><strong>Liquides clairs</strong> (eau, jus de fruits sans pulpe, thé ou café sans lait) : arrêt 2 heures avant</li>
+    <li><strong>Chewing-gum et tabac</strong> : arrêt 2 heures avant</li>
+  </ul>
+  <div class="info-box"><div class="info-box-title">Important</div><p>Ces règles peuvent varier selon le type d'anesthésie et l'intervention. Suivez toujours les consignes spécifiques de votre anesthésiste qui priment sur ces recommandations générales.</p></div>
+  <h3>En cas de diabète</h3>
+  <p>Des consignes spécifiques vous seront données par l'anesthésiste concernant la gestion de votre traitement et de votre glycémie le jour de l'intervention.</p>
+`},
+'medicaments-preop':{badge:'🏥 Pré-opératoire',title:'Médicaments',body:`
+  <h3>Importance de la consultation pré-anesthésique</h3>
+  <p>Lors de la consultation pré-anesthésique, signalez TOUS vos médicaments, y compris les médicaments en vente libre, les compléments alimentaires et les plantes médicinales. L'anesthésiste décidera lesquels continuer ou arrêter.</p>
+  <h3>Médicaments généralement à arrêter</h3>
+  <ul>
+    <li><strong>Anticoagulants et antiagrégants</strong> (aspirine, clopidogrel, warfarine…) — arrêt selon protocole</li>
+    <li><strong>Anti-inflammatoires non stéroïdiens</strong> (ibuprofène, kétoprofène…) — arrêt 5 jours avant</li>
+    <li><strong>Certains antidépresseurs</strong> — selon le type et l'avis de l'anesthésiste</li>
+    <li><strong>Pilule contraceptive</strong> — peut être suspendue selon le risque thromboembolique</li>
+  </ul>
+  <h3>Médicaments généralement à continuer</h3>
+  <ul>
+    <li>Traitements pour l'hypertension artérielle</li>
+    <li>Traitements pour l'asthme</li>
+    <li>Traitements thyroïdiens</li>
+    <li>Paracétamol</li>
+  </ul>
+  <div class="info-box"><div class="info-box-title">Règle d'or</div><p>Ne modifiez jamais votre traitement sans l'avis de votre anesthésiste ou médecin. Cette liste est indicative — seul votre médecin peut décider.</p></div>
+`},
+'retour-domicile':{badge:'🏥 Pré-opératoire',title:'Retour à domicile',body:`
+  <h3>Après une intervention ambulatoire</h3>
+  <p>Une intervention ambulatoire signifie que vous rentrez le jour même. Vous devez être accompagnée — il est interdit de conduire après une anesthésie générale ou une sédation. Prévoyez un accompagnant adulte pour la nuit.</p>
+  <h3>Conseils généraux</h3>
+  <ul>
+    <li>Respecter les prescriptions médicales (antidouleurs, antibiotiques si prescrits)</li>
+    <li>Ne pas conduire pendant 24 à 48 heures après une anesthésie générale</li>
+    <li>Éviter l'alcool pendant les 24 heures suivant l'anesthésie</li>
+    <li>Ne pas prendre de décisions importantes le jour de l'intervention</li>
+    <li>Reprendre l'alimentation progressivement</li>
+  </ul>
+  <h3>Surveillance de la cicatrice</h3>
+  <p>Consultez si vous observez : rougeur, chaleur, gonflement, écoulement ou fièvre > 38°C — ce sont des signes possibles d'infection.</p>
+  <h3>Quand rappeler le cabinet</h3>
+  <ul>
+    <li>Douleurs importantes non soulagées par les antalgiques prescrits</li>
+    <li>Saignements inhabituels</li>
+    <li>Fièvre supérieure à 38°C</li>
+    <li>Tout signe qui vous inquiète</li>
+  </ul>
+`},
+'dossier-medical':{badge:'✈️ Accouchement à l\'étranger',title:'Dossier médical',body:`
+  <h3>Quels documents médicaux emporter</h3>
+  <ul>
+    <li>Carnet de maternité complet et à jour</li>
+    <li>Résultats de toutes les échographies (avec comptes-rendus écrits)</li>
+    <li>Résultats des dernières prises de sang (NFS, bilan hépatique, sérologies…)</li>
+    <li>Résultat du groupe sanguin et RAI</li>
+    <li>Résultat du prélèvement streptocoque B si réalisé</li>
+    <li>Ordonnances des traitements en cours</li>
+    <li>Carnet de vaccination</li>
+  </ul>
+  <h3>Comment constituer un dossier complet</h3>
+  <p>Demandez à votre sage-femme ou médecin un résumé médical de votre grossesse (lettre de liaison) à remettre à l'équipe médicale à l'étranger. Ce document doit mentionner vos antécédents, le déroulement de la grossesse et toute particularité médicale.</p>
+  <h3>Traduction des documents</h3>
+  <p>Si vous accouchez dans un pays non francophone, une traduction professionnelle de vos documents médicaux essentiels peut être utile. Renseignez-vous auprès d'un traducteur assermenté.</p>
+`},
+'assurances':{badge:'✈️ Accouchement à l\'étranger',title:'Assurances',body:`
+  <h3>Mutuelle belge à l'étranger</h3>
+  <p>Contactez votre mutuelle avant le départ pour connaître vos droits à l'étranger. La prise en charge varie selon le pays de destination et le type de mutuelle. Certaines mutuelles remboursent les soins à l'étranger sur base des tarifs belges.</p>
+  <h3>Carte européenne d'assurance maladie (CEAM)</h3>
+  <p>Si vous accouchez dans un pays de l'Union Européenne, la CEAM vous donne accès aux soins de santé aux mêmes conditions que les ressortissants du pays. Demandez-la à votre mutuelle avant le départ. Attention : elle ne couvre pas tout et ne remplace pas une assurance voyage.</p>
+  <h3>Assurance voyage</h3>
+  <p>Une assurance voyage avec couverture maternité est fortement recommandée. Vérifiez que la grossesse est bien couverte et jusqu'à quel terme. Certaines assurances excluent les accouchements après 28 SA.</p>
+  <h3>Frais non couverts</h3>
+  <p>Dans de nombreux pays, les frais d'accouchement peuvent être très élevés. Prévoyez un budget suffisant ou assurez-vous que votre couverture est complète avant le départ.</p>
+`},
+'documents-etranger':{badge:'✈️ Accouchement à l\'étranger',title:'Documents nécessaires',body:`
+  <h3>Documents administratifs</h3>
+  <ul>
+    <li>Passeport ou carte d'identité (valable au moins 6 mois après la date prévue de retour)</li>
+    <li>Carte de mutuelle et attestation de droits</li>
+    <li>Carte européenne d'assurance maladie (si pays UE)</li>
+    <li>Attestation d'assurance voyage avec couverture maternité</li>
+    <li>Coordonnées bancaires pour les avances de frais éventuelles</li>
+  </ul>
+  <h3>Documents médicaux</h3>
+  <ul>
+    <li>Carnet de maternité complet</li>
+    <li>Résultats des échographies et prises de sang</li>
+    <li>Groupe sanguin et RAI</li>
+    <li>Résultat du prélèvement streptocoque B</li>
+    <li>Lettre de liaison de votre praticien</li>
+    <li>Ordonnances des traitements en cours</li>
+  </ul>
+  <div class="info-box"><div class="info-box-title">Conseil</div><p>Faites des copies de tous vos documents importants et conservez-les séparément. Envoyez-vous également des copies par email en cas de perte.</p></div>
+`},
+'suivi-retour':{badge:'✈️ Accouchement à l\'étranger',title:'Suivi au retour',body:`
+  <h3>Démarches administratives en Belgique</h3>
+  <ul>
+    <li>Déclarer la naissance à la commune belge dans les délais légaux</li>
+    <li>Si l'enfant est né à l'étranger : transcription de l'acte de naissance étranger à l'état civil belge (via la commune ou le SPF Affaires étrangères)</li>
+    <li>Inscription de l'enfant à la mutuelle</li>
+    <li>Demande des allocations familiales</li>
+    <li>Remboursement des frais médicaux engagés à l'étranger auprès de votre mutuelle</li>
+  </ul>
+  <h3>Suivi médical au retour</h3>
+  <ul>
+    <li>Consultation postnatale entre 6 et 8 semaines après l'accouchement</li>
+    <li>Première consultation pédiatrique pour le nouveau-né</li>
+    <li>Rééducation périnéale sur prescription médicale</li>
+    <li>Apporter le dossier médical de l'accouchement à l'étranger à votre praticien belge</li>
+  </ul>
+  <h3>Documents à récupérer à l'étranger avant de partir</h3>
+  <ul>
+    <li>Compte-rendu d'accouchement</li>
+    <li>Résultats des examens réalisés pendant le séjour</li>
+    <li>Acte de naissance local</li>
+    <li>Carnet de santé du nouveau-né si délivré</li>
+  </ul>
+`},
+};
+
+function openModal(id){const d=MODALS[id];if(!d)return;document.getElementById('modalBadge').textContent=d.badge;document.getElementById('modalTitle').textContent=d.title;document.getElementById('modalBody').innerHTML=d.body;document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';}
+function closeModalBg(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+const sections=document.querySelectorAll('.section-anchor');
+const navItems=document.querySelectorAll('.side-nav-item');
+window.addEventListener('scroll',()=>{let cur='';sections.forEach(s=>{if(window.scrollY>=s.offsetTop-120)cur=s.id;});navItems.forEach(n=>{n.classList.remove('active');if(n.getAttribute('href')==='#'+cur)n.classList.add('active');});});
+</script>
+</body>
+</html>

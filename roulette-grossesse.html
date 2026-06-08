@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roulette de grossesse — Santé Féminine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FAF7F2;
+  --cream-dark: #F0EBE1;
+  --rose: #E8C5BB;
+  --rose-deep: #C9957F;
+  --rose-pale: #F7EDE8;
+  --gold: #C8A96E;
+  --gold-light: #F0E4C0;
+  --gold-pale: #FBF5E6;
+  --sage: #A8B5A0;
+  --sage-pale: #EFF3ED;
+  --text-dark: #2C2420;
+  --text-mid: #6B5B52;
+  --text-light: #A09080;
+  --white: #FFFFFF;
+  --shadow: 0 4px 40px rgba(44,36,32,0.08);
+  --shadow-lg: 0 20px 80px rgba(44,36,32,0.14);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'DM Sans',sans-serif;
+  background:var(--cream);
+  color:var(--text-dark);
+  min-height:100vh;
+}
+
+/* ─── NAV ─── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  height:62px;
+  background:rgba(250,247,242,.96);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--cream-dark);
+  display:flex; align-items:center; padding:0 36px; gap:16px;
+}
+.nav-logo {
+  font-family:'Cormorant Garamond',serif;
+  font-size:19px; font-weight:500;
+  color:var(--text-dark); text-decoration:none;
+  display:flex; align-items:center; gap:8px;
+}
+.nav-logo span { color:var(--rose-deep); }
+.nav-sep { width:1px; height:18px; background:var(--cream-dark); }
+.nav-page-title {
+  font-size:13.5px; color:var(--text-mid);
+  display:flex; align-items:center; gap:8px;
+}
+.nav-page-title span { font-size:16px; }
+.nav-back {
+  margin-left:auto;
+  display:flex; align-items:center; gap:6px;
+  text-decoration:none; color:var(--text-light);
+  font-size:13px; padding:7px 14px;
+  border-radius:20px; border:1px solid var(--cream-dark);
+  transition:all .2s;
+}
+.nav-back:hover { color:var(--text-dark); border-color:var(--rose-deep); }
+
+/* ─── HERO ─── */
+.hero {
+  padding:100px 40px 0;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before {
+  content:'';
+  position:absolute; top:62px; left:50%; transform:translateX(-50%);
+  width:600px; height:600px; border-radius:50%;
+  background:radial-gradient(circle, rgba(232,197,187,.18) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero-badge {
+  display:inline-flex; align-items:center; gap:7px;
+  background:var(--gold-pale);
+  border:1px solid rgba(200,169,110,.25);
+  border-radius:20px; padding:6px 16px;
+  font-size:11.5px; font-weight:500; color:var(--text-mid);
+  letter-spacing:.05em; text-transform:uppercase;
+  margin-bottom:20px;
+}
+.hero-badge-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); }
+.hero h1 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(38px,5vw,58px); font-weight:400;
+  line-height:1.12; color:var(--text-dark);
+  margin-bottom:14px; letter-spacing:-.01em;
+}
+.hero h1 em { font-style:italic; color:var(--rose-deep); }
+.hero-desc {
+  font-size:15px; color:var(--text-mid); font-weight:300;
+  line-height:1.7; max-width:500px; margin:0 auto 48px;
+}
+
+/* ─── MAIN CARD ─── */
+.main-card {
+  max-width:900px; margin:0 auto;
+  padding:0 24px 80px;
+}
+
+/* Input section */
+.input-section {
+  background:var(--white);
+  border-radius:28px;
+  padding:44px;
+  box-shadow:var(--shadow-lg);
+  border:1px solid var(--cream-dark);
+  margin-bottom:28px;
+  position:relative;
+  overflow:hidden;
+}
+.input-section::before {
+  content:'';
+  position:absolute; top:0; right:0;
+  width:200px; height:200px;
+  background:radial-gradient(circle at top right, rgba(232,197,187,.2) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.input-tabs {
+  display:flex; gap:4px;
+  background:var(--cream-dark);
+  border-radius:14px; padding:4px;
+  margin-bottom:36px;
+  width:fit-content;
+}
+.input-tab {
+  padding:9px 22px; border-radius:10px;
+  border:none; font-size:13.5px; font-weight:400;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer; transition:all .2s;
+  color:var(--text-light); background:transparent;
+}
+.input-tab.active {
+  background:var(--white); color:var(--text-dark);
+  font-weight:500;
+  box-shadow:0 2px 8px rgba(44,36,32,.08);
+}
+
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+.input-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:24px;
+  margin-bottom:32px;
+}
+.input-group { position:relative; }
+.input-label {
+  display:block; font-size:11.5px; font-weight:600;
+  color:var(--text-light); text-transform:uppercase;
+  letter-spacing:.07em; margin-bottom:10px;
+}
+.date-input-wrap { position:relative; }
+.date-input-wrap svg {
+  position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  width:16px; height:16px; color:var(--rose-deep); pointer-events:none;
+}
+.date-input {
+  width:100%; padding:14px 44px 14px 18px;
+  border:1.5px solid var(--cream-dark);
+  border-radius:14px; font-size:15px;
+  font-family:'DM Sans',sans-serif;
+  color:var(--text-dark); background:var(--cream);
+  outline:none; cursor:pointer;
+  transition:all .2s;
+  appearance:none;
+}
+.date-input:focus {
+  border-color:var(--rose-deep);
+  background:var(--white);
+  box-shadow:0 0 0 3px rgba(201,149,127,.10);
+}
+
+/* SA selector */
+.sa-selector {
+  display:flex; flex-direction:column; gap:8px;
+}
+.sa-row { display:flex; align-items:center; gap:12px; }
+.sa-label-inline {
+  font-size:13px; color:var(--text-mid); min-width:80px; font-weight:300;
+}
+.sa-input {
+  width:80px; padding:10px 14px;
+  border:1.5px solid var(--cream-dark);
+  border-radius:10px; font-size:16px; font-weight:500;
+  font-family:'DM Sans',sans-serif;
+  color:var(--text-dark); background:var(--cream);
+  outline:none; text-align:center;
+  transition:all .2s;
+}
+.sa-input:focus { border-color:var(--rose-deep); background:var(--white); }
+.sa-hint {
+  font-size:11.5px; color:var(--text-light); font-weight:300;
+  padding:8px 12px; background:var(--gold-pale);
+  border-radius:8px; border:1px solid rgba(200,169,110,.2);
+  line-height:1.5;
+}
+
+.calc-btn {
+  width:100%; padding:16px;
+  background:var(--text-dark); color:var(--white);
+  border:none; border-radius:16px;
+  font-size:15px; font-weight:500;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer; transition:all .25s;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  letter-spacing:.01em;
+}
+.calc-btn:hover {
+  background:var(--rose-deep);
+  transform:translateY(-2px);
+  box-shadow:0 10px 32px rgba(201,149,127,.3);
+}
+.calc-btn:active { transform:translateY(0); }
+
+/* ─── RESULTS ─── */
+.results-section {
+  display:none;
+  animation:fadeUp .5s ease both;
+}
+.results-section.visible { display:block; }
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* Big SA display */
+.sa-display-card {
+  background:linear-gradient(135deg, var(--text-dark) 0%, #3D2E29 100%);
+  border-radius:28px; padding:48px;
+  text-align:center; margin-bottom:20px;
+  position:relative; overflow:hidden;
+}
+.sa-display-card::before {
+  content:'';
+  position:absolute; inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='%23C9957F' fill-opacity='0.08'/%3E%3C/g%3E%3C/svg%3E");
+}
+.sa-display-card::after {
+  content:'';
+  position:absolute; top:-80px; right:-80px;
+  width:300px; height:300px; border-radius:50%;
+  border:1px solid rgba(201,149,127,.1);
+  pointer-events:none;
+}
+.sa-display-inner { position:relative; z-index:1; }
+.sa-display-label {
+  font-size:11px; font-weight:600; color:rgba(201,149,127,.7);
+  text-transform:uppercase; letter-spacing:.12em; margin-bottom:16px;
+}
+.sa-display-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(72px,12vw,110px); font-weight:300;
+  color:var(--white); line-height:1;
+  margin-bottom:4px;
+}
+.sa-display-unit {
+  font-size:18px; font-weight:300; color:rgba(255,255,255,.5);
+  margin-bottom:24px;
+}
+.sa-display-badges {
+  display:flex; justify-content:center; flex-wrap:wrap; gap:10px;
+}
+.sa-badge {
+  display:flex; align-items:center; gap:7px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:20px; padding:8px 18px;
+  font-size:13.5px; color:rgba(255,255,255,.8);
+}
+.sa-badge-icon { font-size:16px; }
+
+/* Progress ring */
+.progress-section {
+  background:var(--white);
+  border-radius:24px; padding:36px;
+  border:1px solid var(--cream-dark);
+  margin-bottom:20px;
+  display:flex; align-items:center; gap:40px;
+}
+.ring-wrap { flex-shrink:0; position:relative; }
+.ring-svg { width:160px; height:160px; transform:rotate(-90deg); }
+.ring-track { fill:none; stroke:var(--cream-dark); stroke-width:10; }
+.ring-fill {
+  fill:none; stroke-width:10;
+  stroke-linecap:round;
+  stroke:var(--rose-deep);
+  transition:stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1);
+  stroke-dasharray:440;
+  stroke-dashoffset:440;
+}
+.ring-center {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.ring-pct {
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px; font-weight:400; color:var(--text-dark);
+  line-height:1;
+}
+.ring-pct-label { font-size:11px; color:var(--text-light); margin-top:2px; }
+
+.progress-info { flex:1; }
+.progress-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px; font-weight:400; color:var(--text-dark);
+  margin-bottom:8px;
+}
+.progress-sub {
+  font-size:14px; color:var(--text-mid);
+  font-weight:300; line-height:1.6; margin-bottom:20px;
+}
+
+/* Progress bar timeline */
+.timeline {
+  display:flex; align-items:center; gap:0;
+  margin-bottom:10px;
+}
+.timeline-segment {
+  flex:1; height:6px; border-radius:3px;
+  transition:all .3s;
+}
+.timeline-segment.t1 { background:var(--rose-pale); border-radius:3px 0 0 3px; }
+.timeline-segment.t2 { background:var(--cream-dark); }
+.timeline-segment.t3 { background:var(--sage-pale); border-radius:0 3px 3px 0; }
+.timeline-segment.t1.filled { background:var(--rose); }
+.timeline-segment.t2.filled { background:var(--gold); }
+.timeline-segment.t3.filled { background:var(--sage); }
+.timeline-labels {
+  display:flex;
+  font-size:10.5px; color:var(--text-light);
+}
+.timeline-labels span { flex:1; text-align:center; }
+
+/* Info grid */
+.info-grid {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:16px;
+  margin-bottom:20px;
+}
+.info-card {
+  background:var(--white);
+  border:1px solid var(--cream-dark);
+  border-radius:18px; padding:22px;
+  transition:all .2s;
+}
+.info-card:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+
+.info-card-icon {
+  font-size:26px; margin-bottom:12px; display:block;
+}
+.info-card-label {
+  font-size:10.5px; font-weight:600; color:var(--text-light);
+  text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px;
+}
+.info-card-value {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:500; color:var(--text-dark);
+  line-height:1.2; margin-bottom:4px;
+}
+.info-card-sub {
+  font-size:12px; color:var(--text-light); font-weight:300;
+}
+
+/* Trimester card */
+.trimester-card {
+  border-radius:18px; padding:24px;
+  margin-bottom:20px;
+  display:flex; align-items:flex-start; gap:18px;
+  border:1.5px solid transparent;
+}
+.trimester-card.t1 { background:var(--rose-pale); border-color:rgba(232,197,187,.5); }
+.trimester-card.t2 { background:var(--gold-pale); border-color:rgba(200,169,110,.25); }
+.trimester-card.t3 { background:var(--sage-pale); border-color:rgba(168,181,160,.35); }
+.trimester-icon {
+  width:48px; height:48px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; flex-shrink:0;
+}
+.t1 .trimester-icon { background:var(--rose); }
+.t2 .trimester-icon { background:var(--gold-light); }
+.t3 .trimester-icon { background:rgba(168,181,160,.4); }
+.trimester-info {}
+.trimester-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px; font-weight:500; color:var(--text-dark);
+  margin-bottom:4px;
+}
+.trimester-range { font-size:12px; color:var(--text-mid); font-weight:300; margin-bottom:10px; }
+.trimester-desc {
+  font-size:13px; color:var(--text-mid); line-height:1.65; font-weight:300;
+}
+
+/* Development section */
+.dev-section {
+  background:var(--white);
+  border-radius:24px; padding:32px;
+  border:1px solid var(--cream-dark);
+  margin-bottom:20px;
+}
+.dev-section-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:400; color:var(--text-dark);
+  margin-bottom:20px;
+  display:flex; align-items:center; gap:10px;
+}
+.dev-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:14px;
+}
+.dev-item {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:14px; background:var(--cream);
+  border-radius:12px; border:1px solid var(--cream-dark);
+}
+.dev-item-icon {
+  width:32px; height:32px; border-radius:9px;
+  background:var(--rose-pale);
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; flex-shrink:0; margin-top:1px;
+}
+.dev-item-title { font-size:13px; font-weight:500; color:var(--text-dark); margin-bottom:3px; }
+.dev-item-desc { font-size:12px; color:var(--text-mid); font-weight:300; line-height:1.5; }
+
+/* DPA card */
+.dpa-card {
+  background:var(--white);
+  border-radius:24px; padding:32px;
+  border:1px solid var(--cream-dark);
+  display:flex; align-items:center; gap:28px;
+  margin-bottom:20px;
+}
+.dpa-icon-wrap {
+  width:72px; height:72px; border-radius:20px;
+  background:linear-gradient(135deg, var(--rose), var(--gold-light));
+  display:flex; align-items:center; justify-content:center;
+  font-size:32px; flex-shrink:0;
+}
+.dpa-info {}
+.dpa-label {
+  font-size:11px; font-weight:600; color:var(--text-light);
+  text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px;
+}
+.dpa-date {
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px; font-weight:400; color:var(--text-dark);
+  margin-bottom:4px;
+}
+.dpa-countdown { font-size:14px; color:var(--rose-deep); font-weight:500; }
+.dpa-note { font-size:12px; color:var(--text-light); font-weight:300; margin-top:4px; }
+
+/* Share / reset */
+.action-row {
+  display:flex; gap:12px; margin-bottom:40px;
+}
+.btn-share {
+  flex:1; padding:14px;
+  background:var(--text-dark); color:white;
+  border:none; border-radius:14px;
+  font-size:14px; font-weight:500;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer; transition:all .2s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.btn-share:hover { background:var(--rose-deep); }
+.btn-reset {
+  padding:14px 24px;
+  background:transparent; color:var(--text-mid);
+  border:1.5px solid var(--cream-dark);
+  border-radius:14px; font-size:14px;
+  font-family:'DM Sans',sans-serif; cursor:pointer;
+  transition:all .2s;
+}
+.btn-reset:hover { border-color:var(--rose-deep); color:var(--rose-deep); }
+
+/* Months conversion card */
+.months-card {
+  background:var(--white);
+  border-radius:24px; padding:32px;
+  border:1px solid var(--cream-dark);
+  margin-bottom:20px;
+}
+.months-card-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:400; color:var(--text-dark);
+  margin-bottom:20px;
+}
+.months-grid {
+  display:grid; grid-template-columns:repeat(5,1fr); gap:10px;
+  margin-bottom:20px;
+}
+.month-tile {
+  border-radius:14px; padding:14px 10px;
+  text-align:center; cursor:default;
+  border:1.5px solid transparent;
+  transition:all .2s;
+  position:relative;
+}
+.month-tile.current {
+  border-color:var(--rose-deep);
+  box-shadow:0 4px 16px rgba(201,149,127,.2);
+  transform:translateY(-2px);
+}
+.month-tile.past { background:var(--cream-dark); opacity:.6; }
+.month-tile.future { background:var(--cream); }
+.month-tile.current { background:linear-gradient(135deg,var(--rose-pale),var(--gold-pale)); }
+
+.month-num {
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px; font-weight:400; color:var(--text-dark);
+  line-height:1;
+}
+.month-tile.current .month-num { color:var(--rose-deep); }
+.month-label { font-size:9.5px; font-weight:600; color:var(--text-light); text-transform:uppercase; letter-spacing:.06em; margin:4px 0 6px; }
+.month-sa-range { font-size:11px; color:var(--text-mid); font-weight:300; line-height:1.4; }
+.month-tile.current .month-sa-range { color:var(--text-dark); font-weight:400; }
+.month-current-badge {
+  position:absolute; top:-8px; left:50%; transform:translateX(-50%);
+  background:var(--rose-deep); color:white;
+  font-size:9px; font-weight:600;
+  padding:2px 8px; border-radius:8px;
+  white-space:nowrap; text-transform:uppercase; letter-spacing:.05em;
+}
+.months-note {
+  background:var(--gold-pale);
+  border:1px solid rgba(200,169,110,.2);
+  border-radius:12px; padding:14px 16px;
+  font-size:12.5px; color:var(--text-mid);
+  line-height:1.6; font-weight:300;
+}
+.months-note strong { color:var(--text-dark); font-weight:500; }
+
+/* Disclaimer */
+.disclaimer-box {
+  background:var(--gold-pale);
+  border:1px solid rgba(200,169,110,.25);
+  border-radius:16px; padding:18px 20px;
+  display:flex; align-items:flex-start; gap:10px;
+  margin-bottom:40px;
+}
+.disclaimer-box p { font-size:12.5px; color:var(--text-mid); line-height:1.6; font-weight:300; }
+.disclaimer-box p strong { color:var(--text-dark); font-weight:500; }
+
+/* Toast */
+.toast {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(60px);
+  background:var(--text-dark); color:white;
+  padding:12px 24px; border-radius:30px;
+  font-size:13.5px; box-shadow:var(--shadow-lg);
+  transition:transform .3s; z-index:9999;
+  display:flex; align-items:center; gap:8px;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width:700px) {
+  .input-grid { grid-template-columns:1fr; }
+  .info-grid { grid-template-columns:1fr 1fr; }
+  .dev-grid { grid-template-columns:1fr; }
+  .months-grid { grid-template-columns:repeat(3,1fr); }
+  .progress-section { flex-direction:column; text-align:center; }
+  .dpa-card { flex-direction:column; text-align:center; }
+  .action-row { flex-direction:column; }
+  .input-section { padding:28px 20px; }
+  nav { padding:0 20px; }
+  .main-card { padding:0 16px 60px; }
+  .hero { padding:88px 20px 0; }
+}
+</style>
+<script src="translate.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="plateforme-medicale.html" class="nav-logo">Santé <span>Féminine</span></a>
+  <div class="nav-sep"></div>
+  <div class="nav-page-title"><span>🤰</span> Roulette de grossesse</div>
+  <a href="plateforme-medicale.html" class="nav-back">← Accueil</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    Outil médical de suivi
+  </div>
+  <h1>Votre <em>roulette</em><br>de grossesse</h1>
+  <p class="hero-desc">Calculez votre terme, visualisez votre avancement semaine par semaine et retrouvez toutes les informations clés de votre grossesse.</p>
+</div>
+
+<!-- MAIN -->
+<div class="main-card">
+
+  <!-- INPUT CARD -->
+  <div class="input-section">
+
+    <div class="input-tabs">
+      <button class="input-tab active" onclick="switchTab('ddr')">📅 Date des dernières règles</button>
+      <button class="input-tab" onclick="switchTab('echo')">🔬 Date d'échographie</button>
+      <button class="input-tab" onclick="switchTab('sa')">📋 Je connais mes SA</button>
+    </div>
+
+    <!-- Tab DDR -->
+    <div class="tab-panel active" id="tab-ddr">
+      <div class="input-grid">
+        <div class="input-group">
+          <label class="input-label">Date du 1er jour des dernières règles</label>
+          <div class="date-input-wrap">
+            <input class="date-input" type="date" id="ddrInput" max="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Durée habituelle de votre cycle</label>
+          <div class="date-input-wrap">
+            <select class="date-input" id="cycleInput" style="padding-right:44px">
+              <option value="28">28 jours (standard)</option>
+              <option value="21">21 jours</option>
+              <option value="24">24 jours</option>
+              <option value="25">25 jours</option>
+              <option value="26">26 jours</option>
+              <option value="27">27 jours</option>
+              <option value="29">29 jours</option>
+              <option value="30">30 jours</option>
+              <option value="31">31 jours</option>
+              <option value="32">32 jours</option>
+              <option value="35">35 jours</option>
+            </select>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+      </div>
+      <button class="calc-btn" onclick="calculateFromDDR()">
+        Calculer ma grossesse →
+      </button>
+    </div>
+
+    <!-- Tab ECHO -->
+    <div class="tab-panel" id="tab-echo">
+      <div class="input-grid">
+        <div class="input-group">
+          <label class="input-label">Date de l'échographie</label>
+          <div class="date-input-wrap">
+            <input class="date-input" type="date" id="echoDate" max="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Terme annoncé à cette date</label>
+          <div class="sa-selector">
+            <div class="sa-row">
+              <span class="sa-label-inline">Semaines</span>
+              <input class="sa-input" type="number" id="echoSA" min="1" max="41" placeholder="ex: 12">
+              <span class="sa-label-inline">SA</span>
+            </div>
+            <div class="sa-row">
+              <span class="sa-label-inline">+ Jours</span>
+              <input class="sa-input" type="number" id="echoJ" min="0" max="6" placeholder="ex: 3">
+              <span class="sa-label-inline">jours</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="calc-btn" onclick="calculateFromEcho()">
+        Calculer ma grossesse →
+      </button>
+    </div>
+
+    <!-- Tab SA -->
+    <div class="tab-panel" id="tab-sa">
+      <div class="input-grid">
+        <div class="input-group">
+          <label class="input-label">Semaines d'aménorrhée actuelles</label>
+          <div class="sa-selector">
+            <div class="sa-row">
+              <span class="sa-label-inline">Semaines</span>
+              <input class="sa-input" type="number" id="saWeeks" min="1" max="41" placeholder="ex: 20">
+              <span class="sa-label-inline">SA</span>
+            </div>
+            <div class="sa-row">
+              <span class="sa-label-inline">+ Jours</span>
+              <input class="sa-input" type="number" id="saDays" min="0" max="6" placeholder="ex: 4">
+              <span class="sa-label-inline">jours</span>
+            </div>
+            <div class="sa-hint">💡 Les SA s'obtiennent lors de votre échographie du 1er trimestre ou sont calculées à partir du 1er jour de vos dernières règles.</div>
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Date d'aujourd'hui</label>
+          <div class="date-input-wrap">
+            <input class="date-input" type="date" id="saToday" readonly style="background:var(--cream-dark);cursor:default">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+        </div>
+      </div>
+      <button class="calc-btn" onclick="calculateFromSA()">
+        Calculer ma grossesse →
+      </button>
+    </div>
+
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-section" id="results">
+
+    <!-- Big SA -->
+    <div class="sa-display-card">
+      <div class="sa-display-inner">
+        <div class="sa-display-label">Vous êtes actuellement à</div>
+        <div class="sa-display-num" id="rSA">—</div>
+        <div class="sa-display-unit">semaines d'aménorrhée</div>
+        <div class="sa-display-badges">
+          <div class="sa-badge"><span class="sa-badge-icon">📅</span><span id="rSAdetail">—</span></div>
+          <div class="sa-badge"><span class="sa-badge-icon">🗓</span><span id="rMois">—</span></div>
+          <div class="sa-badge"><span class="sa-badge-icon">👶</span><span id="rSG">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress ring -->
+    <div class="progress-section">
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 160 160">
+          <circle class="ring-track" cx="80" cy="80" r="70"/>
+          <circle class="ring-fill" id="ringFill" cx="80" cy="80" r="70"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-pct" id="ringPct">0%</div>
+          <div class="ring-pct-label">accompli</div>
+        </div>
+      </div>
+      <div class="progress-info">
+        <div class="progress-title" id="progressTitle">Avancement de la grossesse</div>
+        <div class="progress-sub" id="progressSub">—</div>
+        <div class="timeline">
+          <div class="timeline-segment t1" id="seg1"></div>
+          <div class="timeline-segment t2" id="seg2"></div>
+          <div class="timeline-segment t3" id="seg3"></div>
+        </div>
+        <div class="timeline-labels">
+          <span>1er trim.</span>
+          <span>2e trim.</span>
+          <span>3e trim.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info cards -->
+    <div class="info-grid">
+      <div class="info-card">
+        <span class="info-card-icon">🌱</span>
+        <div class="info-card-label">Taille du bébé</div>
+        <div class="info-card-value" id="rTaille">—</div>
+        <div class="info-card-sub" id="rTailleComp">—</div>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">⚖️</span>
+        <div class="info-card-label">Poids estimé</div>
+        <div class="info-card-value" id="rPoids">—</div>
+        <div class="info-card-sub">Estimation moyenne</div>
+      </div>
+      <div class="info-card">
+        <span class="info-card-icon">📆</span>
+        <div class="info-card-label">Semaine en cours</div>
+        <div class="info-card-value" id="rSemaine">—</div>
+        <div class="info-card-sub" id="rSemaineDesc">—</div>
+      </div>
+    </div>
+
+    <!-- Months conversion -->
+    <div class="months-card" id="monthsCard">
+      <div class="months-card-title">🗓 Correspondance semaines → mois</div>
+      <div class="months-grid" id="monthsGrid"></div>
+      <div class="months-note">
+        💡 La grossesse dure <strong>9 mois civils</strong> (ou <strong>10 mois lunaires</strong> de 4 semaines). Les mois civils et les semaines ne correspondent pas exactement, ce qui explique parfois la confusion !
+      </div>
+    </div>
+
+    <!-- DPA -->
+    <div class="dpa-card">
+      <div class="dpa-icon-wrap">🎀</div>
+      <div class="dpa-info">
+        <div class="dpa-label">Date présumée d'accouchement (DPA)</div>
+        <div class="dpa-date" id="rDPA">—</div>
+        <div class="dpa-countdown" id="rCountdown">—</div>
+        <div class="dpa-note">Terme calculé à 40 SA · La naissance peut survenir entre 37 SA et 41 SA + 3 jours</div>
+      </div>
+    </div>
+
+    <!-- Trimester -->
+    <div id="trimesterCard"></div>
+
+    <!-- Development -->
+    <div class="dev-section">
+      <div class="dev-section-title">🌿 Développement du bébé cette semaine</div>
+      <div class="dev-grid" id="devGrid"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-row">
+      <button class="btn-share" onclick="shareResults()">📤 Partager mes résultats</button>
+      <button class="btn-reset" onclick="resetCalc()">↺ Nouveau calcul</button>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer-box">
+      <span style="font-size:18px;flex-shrink:0">⚕️</span>
+      <p><strong>Information médicale :</strong> Cette roulette est calibrée sur le protocole belge avec un terme à <strong>40 SA</strong>. Les résultats sont des estimations indicatives et ne remplacent pas le suivi médical personnalisé par votre sage-femme ou médecin. La date d'accouchement ne peut être déterminée avec certitude.</p>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════
+// DATA PAR SEMAINE
+// ═══════════════════════════════
+const WEEKLY_DATA = {
+  4:  { taille:'0,4 cm', tailleComp:'Grain de pavot', poids:'<1 g', dev:['Implantation dans l\'utérus','Début de formation du placenta','Tube neural en cours','Cœur commence à se former'] },
+  5:  { taille:'0,5 cm', tailleComp:'Graine de sésame', poids:'<1 g', dev:['Cœur qui bat pour la première fois','Formation des organes principaux','Bourgeons des bras et jambes','Cerveau en développement'] },
+  6:  { taille:'0,8 cm', tailleComp:'Lentille', poids:'<1 g', dev:['Battements cardiaques visibles à l\'écho','Début de formation du visage','Bourgeons des membres','Système nerveux en formation'] },
+  7:  { taille:'1,3 cm', tailleComp:'Myrtille', poids:'<1 g', dev:['Doigts et orteils en formation','Cerveau se développe rapidement','Yeux se pigmentent','Mouvements spontanés débutent'] },
+  8:  { taille:'1,8 cm', tailleComp:'Framboise', poids:'3 g', dev:['Tous les organes principaux présents','Oreilles externes visibles','Lèvres et nez se dessinent','Queue disparaît complètement'] },
+  9:  { taille:'2,5 cm', tailleComp:'Olive', poids:'4 g', dev:['Tête très grosse (50% du corps)','Paupières formées mais fermées','Mains et pieds développés','Réflexes primitifs présents'] },
+  10: { taille:'3,5 cm', tailleComp:'Datte', poids:'7 g', dev:['Foie produit des globules rouges','Doigts séparés clairement','Ongles commencent à pousser','Estomac produit des sucs gastriques'] },
+  11: { taille:'5 cm', tailleComp:'Citron vert', poids:'14 g', dev:['Stade embryonnaire terminé (fœtus)','Sexe génétiquement déterminé','Mouvements plus coordonnés','Os commencent à se durcir'] },
+  12: { taille:'6 cm', tailleComp:'Lime', poids:'18 g', dev:['Tous les organes formés','Réflexe de succion présent','Mouvements perçus à l\'écho','Risque de fausse couche très diminué'] },
+  13: { taille:'7,5 cm', tailleComp:'Pêche', poids:'30 g', dev:['Empreintes digitales se forment','Intestins migrent vers l\'abdomen','Cordes vocales en place','2e trimestre commence'] },
+  14: { taille:'8,5 cm', tailleComp:'Citron', poids:'43 g', dev:['Lanugo (duvet) commence à pousser','Mouvements de succion','Expressions faciales possible','Sexe parfois visible à l\'écho'] },
+  15: { taille:'10 cm', tailleComp:'Pomme', poids:'70 g', dev:['Os de plus en plus solides','Peut froncer les sourcils','Mâchoire se renforce','Cheveux poussent sur la tête'] },
+  16: { taille:'12 cm', tailleComp:'Avocat', poids:'100 g', dev:['Premiers mouvements perçus (multigeste)','Yeux peuvent faire de petits mouvements','Cœur pompe 25 litres par jour','Jambes plus longues que les bras'] },
+  17: { taille:'13 cm', tailleComp:'Poire', poids:'140 g', dev:['Graisse sous-cutanée se dépose','Oreilles fonctionnelles','Entend les sons extérieurs','Cartilage → os (ossification)'] },
+  18: { taille:'14 cm', tailleComp:'Poivron', poids:'190 g', dev:['Premiers mouvements sentis (primigeste)','Myélinisation des nerfs débute','Fingerprints finalisées','Peut bâiller et s\'étirer'] },
+  19: { taille:'15 cm', tailleComp:'Mangue', poids:'240 g', dev:['Vernix caseosa se dépose','Sens du goût développé','Cycle veille-sommeil','Ovaires ou testicules formés'] },
+  20: { taille:'25 cm', tailleComp:'Banane', poids:'300 g', dev:['Mi-parcours de la grossesse !','Échographie morphologique','Mouvements réguliers','Ongles longs et durs'] },
+  21: { taille:'26 cm', tailleComp:'Carotte', poids:'360 g', dev:['Eyebrows et cils présents','Déglutit du liquide amniotique','Réflexe de préhension','Visage pleinement formé'] },
+  22: { taille:'28 cm', tailleComp:'Maïs', poids:'430 g', dev:['Lèvres bien dessinées','Peut sursauter aux bruits','Pupilles réagissent à la lumière','Seuil de viabilité approche'] },
+  23: { taille:'29 cm', tailleComp:'Aubergine', poids:'500 g', dev:['Poumons se préparent (surfactant)','Sang produit par la moelle osseuse','Mouvements vigoureux','Peau encore très fine'] },
+  24: { taille:'30 cm', tailleComp:'Épi de maïs', poids:'600 g', dev:['Seuil de viabilité (24 SA)','Poumons continuent à mûrir','Papilles gustatives actives','Voix maternelle reconnue'] },
+  25: { taille:'34 cm', tailleComp:'Navet', poids:'700 g', dev:['Capillaires se forment','Réponses aux stimuli externes','Cycle sommeil 20h/jour','Graisses brunes se déposent'] },
+  26: { taille:'35 cm', tailleComp:'Concombre', poids:'800 g', dev:['Yeux s\'ouvrent pour la première fois','Réagit à la lumière','Commence à rêver (REM)','Poumons: production surfactant'] },
+  27: { taille:'37 cm', tailleComp:'Chou-fleur', poids:'900 g', dev:['3e trimestre commence','Cerveau très actif','Prise de poids rapide','Peut tousser et avoir hoquet'] },
+  28: { taille:'38 cm', tailleComp:'Aubergine', poids:'1 kg', dev:['Cligne des yeux','Rythme veille/sommeil établi','Mouvements très actifs','Corticothérapie si naissance prématurée'] },
+  29: { taille:'39 cm', tailleComp:'Butternut', poids:'1,2 kg', dev:['Muscles et poumons mûrissent','Cerveau: milliards de neurones','Régulation thermique débute','Unghie bien formées'] },
+  30: { taille:'40 cm', tailleComp:'Chou de Bruxelles', poids:'1,5 kg', dev:['Tête souvent vers le bas','Lanugo disparaît progressivement','Cerveau: circonvolutions','Bon chez soi dans l\'utérus'] },
+  31: { taille:'42 cm', tailleComp:'Noix de coco', poids:'1,6 kg', dev:['Système immunitaire renforçé','Iris pigmenté','Orteils et doigts bien définis','Corticothérapie recommandée < 34 SA'] },
+  32: { taille:'43 cm', tailleComp:'Jicama', poids:'1,8 kg', dev:['Ongles atteignent le bout des doigts','Prise de poids: 200-250g/sem.','Vernix plus épais','Position souvent tête en bas'] },
+  33: { taille:'45 cm', tailleComp:'Ananas', poids:'2 kg', dev:['Os du crâne encore souples','Poumons presque matures','Succion et déglutition coordonnées','Iris de couleur bleue/grise'] },
+  34: { taille:'46 cm', tailleComp:'Cantaloup', poids:'2,3 kg', dev:['Système nerveux central mature','Naissance à 34 SA: soins spécialisés','Graisses: 8% du poids','Réflexes de naissance présents'] },
+  35: { taille:'47 cm', tailleComp:'Melon de miel', poids:'2,5 kg', dev:['Reins pleinement fonctionnels','Foie stocke le fer','Espace dans l\'utérus réduit','Tête généralement engagée'] },
+  36: { taille:'48 cm', tailleComp:'Papaye', poids:'2,7 kg', dev:['Terme proche: bébé quasi-prêt','Lanugo presque disparu','Joues rondes formées','Naissance à 36 SA: prématuré tardif'] },
+  37: { taille:'49 cm', tailleComp:'Brocoli romanesco', poids:'3 kg', dev:['Terme: grossesse à terme !','Tous les organes fonctionnels','Continues à prendre du poids','Mouvements peuvent sembler moins fréquents'] },
+  38: { taille:'50 cm', tailleComp:'Poireau', poids:'3,1 kg', dev:['Accouchement peut survenir à tout moment','Poumons parfaitement matures','Méconium dans l\'intestin','Cerveau continue à se développer'] },
+  39: { taille:'50,5 cm', tailleComp:'Pastèque mini', poids:'3,3 kg', dev:['Terme idéal : 39-40 SA','Production de surfactant maximale','Anticorps maternels transmis','Col commence à se préparer'] },
+  40: { taille:'51 cm', tailleComp:'Pastèque', poids:'3,4 kg', dev:['Terme officiel en Belgique (40 SA)','Bébé pleinement prêt à naître','Déclenchement souvent proposé si pas de travail','Consultez votre sage-femme ou maternité'] },
+  41: { taille:'51 cm', tailleComp:'Courge', poids:'3,6 kg', dev:['Déclenchement souvent proposé','Surveillance renforcée','Mouvements toujours importants','Terme dépassé : consultation urgente si soucis'] },
+};
+
+const TRIMESTER_INFO = {
+  1: {
+    cls:'t1', icon:'🌱', name:'1er Trimestre',
+    range:'Semaines 1 à 13',
+    desc:'La période de formation. Tous les organes de votre bébé se mettent en place. C\'est souvent la période des nausées, de la fatigue intense et de la sensibilité émotionnelle. Le risque de fausse couche est plus élevé, mais diminue fortement après 12 SA.',
+  },
+  2: {
+    cls:'t2', icon:'🌸', name:'2e Trimestre',
+    range:'Semaines 14 à 27',
+    desc:'Le trimestre "lune de miel". Les nausées disparaissent, l\'énergie revient et le ventre s\'arrondit. Vous sentirez bientôt les premiers coups de votre bébé. C\'est le moment de l\'échographie morphologique et de la préparation à la naissance.',
+  },
+  3: {
+    cls:'t3', icon:'⭐', name:'3e Trimestre',
+    range:'Semaines 28 à 40',
+    desc:'La dernière ligne droite ! Votre bébé prend rapidement du poids et se prépare à naître. Le sommeil devient difficile, les inconforts augmentent, mais la rencontre approche. C\'est le moment de préparer votre valise de maternité. En Belgique, le terme est fixé à 40 SA.',
+  },
+};
+
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
+const today = new Date();
+const todayStr = today.toISOString().split('T')[0];
+document.getElementById('ddrInput').max = todayStr;
+document.getElementById('echoDate').max = todayStr;
+document.getElementById('saToday').value = todayStr;
+
+// ═══════════════════════════════
+// TABS
+// ═══════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.input-tab').forEach((b, i) => {
+    b.classList.toggle('active', ['ddr','echo','sa'][i] === tab);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+}
+
+// ═══════════════════════════════
+// CALCULATIONS
+// ═══════════════════════════════
+function calculateFromDDR() {
+  const ddr = document.getElementById('ddrInput').value;
+  if (!ddr) { showToast('⚠️ Veuillez saisir la date de vos dernières règles'); return; }
+  const cycle = parseInt(document.getElementById('cycleInput').value) || 28;
+  const ddrDate = new Date(ddr);
+  const diff = cycle - 28; // correction de cycle
+  const adjustedDDR = new Date(ddrDate);
+  adjustedDDR.setDate(adjustedDDR.getDate() - diff);
+  const days = Math.floor((today - adjustedDDR) / (1000 * 60 * 60 * 24));
+  const totalSA = Math.floor(days / 7);
+  const remainDays = days % 7;
+  renderResults(totalSA, remainDays, adjustedDDR);
+}
+
+function calculateFromEcho() {
+  const echoDate = document.getElementById('echoDate').value;
+  const echoSA = parseInt(document.getElementById('echoSA').value);
+  const echoJ = parseInt(document.getElementById('echoJ').value) || 0;
+  if (!echoDate || !echoSA) { showToast('⚠️ Veuillez remplir la date et les SA de l\'échographie'); return; }
+  const echo = new Date(echoDate);
+  const daysSinceEcho = Math.floor((today - echo) / (1000 * 60 * 60 * 24));
+  const totalDaysAtEcho = echoSA * 7 + echoJ;
+  const totalDaysNow = totalDaysAtEcho + daysSinceEcho;
+  const totalSA = Math.floor(totalDaysNow / 7);
+  const remainDays = totalDaysNow % 7;
+  // Compute DDR
+  const ddr = new Date(echo);
+  ddr.setDate(ddr.getDate() - totalDaysAtEcho);
+  renderResults(totalSA, remainDays, ddr);
+}
+
+function calculateFromSA() {
+  const weeks = parseInt(document.getElementById('saWeeks').value);
+  const days = parseInt(document.getElementById('saDays').value) || 0;
+  if (!weeks) { showToast('⚠️ Veuillez entrer le nombre de semaines'); return; }
+  const ddr = new Date(today);
+  ddr.setDate(ddr.getDate() - (weeks * 7 + days));
+  renderResults(weeks, days, ddr);
+}
+
+// ═══════════════════════════════
+// RENDER RESULTS
+// ═══════════════════════════════
+function renderResults(sa, jours, ddr) {
+  if (sa < 1 || sa > 44) { showToast('⚠️ Le terme calculé semble incorrect. Vérifiez vos données.'); return; }
+
+  const saClamp = Math.min(sa, 40);
+  const data = WEEKLY_DATA[saClamp] || WEEKLY_DATA[40];
+
+  // DPA = DDR + 40 SA = DDR + 280 jours (terme belge)
+  const dpa = new Date(ddr);
+  dpa.setDate(dpa.getDate() + 280);
+
+  const daysLeft = Math.ceil((dpa - today) / (1000 * 60 * 60 * 24));
+
+  // Mois de grossesse (mois lunaires de 4 SA)
+  const moisLunaire = Math.ceil(sa / 4);
+  const moisCivil = Math.floor((sa - 2) / 4.33);
+
+  // Semaine de grossesse (≠ SA : SG = SA - 2)
+  const sg = sa - 2;
+
+  // Progress (sur 40 SA)
+  const pct = Math.min(100, Math.round((sa / 40) * 100));
+  const circumference = 2 * Math.PI * 70;
+  const offset = circumference - (pct / 100) * circumference;
+
+  // Trimester
+  const trimester = sa <= 13 ? 1 : sa <= 27 ? 2 : 3;
+
+  // ─── Update DOM ───
+  document.getElementById('rSA').textContent = sa;
+  document.getElementById('rSAdetail').textContent = `${sa} SA + ${jours} jour${jours > 1 ? 's' : ''}`;
+  document.getElementById('rMois').textContent = `${moisLunaire}e mois de grossesse`;
+  document.getElementById('rSG').textContent = sg > 0 ? `${sg} semaines de grossesse` : 'Début de grossesse';
+
+  // Ring
+  document.getElementById('ringFill').style.strokeDashoffset = offset;
+  document.getElementById('ringFill').style.strokeDasharray = circumference;
+  document.getElementById('ringPct').textContent = pct + '%';
+
+  // Progress
+  const progressLabels = { 1:'Vous êtes au 1er trimestre', 2:'Vous êtes au 2e trimestre', 3:'Vous êtes au 3e trimestre' };
+  document.getElementById('progressTitle').textContent = progressLabels[trimester];
+  document.getElementById('progressSub').textContent =
+    daysLeft > 0
+      ? `Il reste environ ${daysLeft} jours avant votre terme estimé (${formatDate(dpa)}).`
+      : `Votre terme estimé est dépassé de ${Math.abs(daysLeft)} jour(s). Consultez votre médecin.`;
+
+  // Timeline
+  document.getElementById('seg1').className = `timeline-segment t1${trimester >= 1 ? ' filled' : ''}`;
+  document.getElementById('seg2').className = `timeline-segment t2${trimester >= 2 ? ' filled' : ''}`;
+  document.getElementById('seg3').className = `timeline-segment t3${trimester >= 3 ? ' filled' : ''}`;
+
+  // Info cards
+  document.getElementById('rTaille').textContent = data.taille;
+  document.getElementById('rTailleComp').textContent = data.tailleComp;
+  document.getElementById('rPoids').textContent = data.poids;
+  document.getElementById('rSemaine').textContent = `Semaine ${sa}`;
+  document.getElementById('rSemaineDesc').textContent = trimester === 1 ? '1er trimestre' : trimester === 2 ? '2e trimestre' : '3e trimestre';
+
+  // DPA
+  document.getElementById('rDPA').textContent = formatDate(dpa);
+  if (daysLeft > 0) {
+    const weeks = Math.floor(daysLeft / 7);
+    const days2 = daysLeft % 7;
+    document.getElementById('rCountdown').textContent =
+      weeks > 0 ? `Dans ${weeks} semaine${weeks > 1 ? 's' : ''} et ${days2} jour${days2 > 1 ? 's' : ''}` : `Dans ${daysLeft} jour${daysLeft > 1 ? 's' : ''}`;
+  } else {
+    document.getElementById('rCountdown').textContent = daysLeft === 0 ? 'C\'est aujourd\'hui !' : `Terme dépassé de ${Math.abs(daysLeft)} jour(s) — consultez votre sage-femme`;
+  }
+
+  // Trimester card
+  const t = TRIMESTER_INFO[trimester];
+  document.getElementById('trimesterCard').innerHTML = `
+    <div class="trimester-card ${t.cls}">
+      <div class="trimester-icon">${t.icon}</div>
+      <div class="trimester-info">
+        <div class="trimester-name">${t.name}</div>
+        <div class="trimester-range">${t.range}</div>
+        <div class="trimester-desc">${t.desc}</div>
+      </div>
+    </div>
+  `;
+
+  // Development
+  document.getElementById('devGrid').innerHTML = data.dev.map(d => `
+    <div class="dev-item">
+      <div class="dev-item-icon">🌿</div>
+      <div><div class="dev-item-title">${d}</div></div>
+    </div>
+  `).join('');
+
+  // Months grid
+  renderMonthsGrid(sa);
+
+  // Show
+  const section = document.getElementById('results');
+  section.classList.add('visible');
+  setTimeout(() => section.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+}
+
+// ═══════════════════════════════
+// MONTHS GRID
+// ═══════════════════════════════
+// Correspondance SA → mois civils (grossesse de 40 SA = 9 mois civils)
+// Mois civil 1 = SA 1-4, Mois 2 = SA 5-8, etc.
+const MONTHS_DATA = [
+  { num:1, label:'1er mois',  saStart:1,  saEnd:4,  lunaire:'1er mois lunaire' },
+  { num:2, label:'2e mois',   saStart:5,  saEnd:8,  lunaire:'2e mois lunaire' },
+  { num:3, label:'3e mois',   saStart:9,  saEnd:13, lunaire:'3e mois lunaire' },
+  { num:4, label:'4e mois',   saStart:14, saEnd:17, lunaire:'4e mois lunaire' },
+  { num:5, label:'5e mois',   saStart:18, saEnd:21, lunaire:'5e mois lunaire' },
+  { num:6, label:'6e mois',   saStart:22, saEnd:26, lunaire:'6e mois lunaire' },
+  { num:7, label:'7e mois',   saStart:27, saEnd:30, lunaire:'7e mois lunaire' },
+  { num:8, label:'8e mois',   saStart:31, saEnd:35, lunaire:'8e mois lunaire' },
+  { num:9, label:'9e mois',   saStart:36, saEnd:40, lunaire:'9e mois lunaire' },
+];
+
+function renderMonthsGrid(currentSA) {
+  const grid = document.getElementById('monthsGrid');
+  const currentMonth = MONTHS_DATA.find(m => currentSA >= m.saStart && currentSA <= m.saEnd);
+
+  grid.innerHTML = MONTHS_DATA.map(m => {
+    const isCurrent = currentMonth && m.num === currentMonth.num;
+    const isPast = currentMonth && m.num < currentMonth.num;
+    const cls = isCurrent ? 'current' : isPast ? 'past' : 'future';
+
+    return `
+      <div class="month-tile ${cls}">
+        ${isCurrent ? '<div class="month-current-badge">Vous êtes ici</div>' : ''}
+        <div class="month-num">${m.num}</div>
+        <div class="month-label">${m.label}</div>
+        <div class="month-sa-range">SA ${m.saStart} – ${m.saEnd}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ═══════════════════════════════
+// HELPERS
+// ═══════════════════════════════
+function formatDate(date) {
+  return date.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+}
+
+function resetCalc() {
+  document.getElementById('results').classList.remove('visible');
+  document.getElementById('ddrInput').value = '';
+  document.getElementById('echoDate').value = '';
+  document.getElementById('echoSA').value = '';
+  document.getElementById('echoJ').value = '';
+  document.getElementById('saWeeks').value = '';
+  document.getElementById('saDays').value = '';
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function shareResults() {
+  const sa = document.getElementById('rSA').textContent;
+  const dpa = document.getElementById('rDPA').textContent;
+  const text = `🤰 Je suis à ${sa} SA de grossesse !\nDate présumée d'accouchement : ${dpa}\nCalculé avec la roulette de grossesse de ma sage-femme.`;
+  if (navigator.share) {
+    navigator.share({ title:'Ma grossesse', text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => showToast('✓ Résultats copiés dans le presse-papier !'));
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

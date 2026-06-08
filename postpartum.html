@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post-partum — Santé Féminine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FAF7F2;--cream-dark:#F0EBE1;--rose:#E8C5BB;--rose-deep:#C9957F;--rose-pale:#F7EDE8;--gold:#C8A96E;--gold-light:#F0E4C0;--gold-pale:#FBF5E6;--sage:#A8B5A0;--sage-pale:#EFF3ED;--sage-deep:#6B8F71;--text-dark:#2C2420;--text-mid:#6B5B52;--text-light:#A09080;--white:#FFFFFF;--shadow:0 4px 32px rgba(44,36,32,0.08);--shadow-lg:0 16px 64px rgba(44,36,32,0.14);}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;background:rgba(250,247,242,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--cream-dark);display:flex;align-items:center;padding:0 36px;gap:16px;}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:var(--text-dark);text-decoration:none;}
+.nav-logo span{color:var(--rose-deep);}
+.nav-links{display:flex;gap:4px;}
+.nav-link{text-decoration:none;font-size:13px;color:var(--text-light);padding:6px 14px;border-radius:20px;transition:all .2s;}
+.nav-link:hover{color:var(--text-dark);background:var(--cream-dark);}
+.nav-link.active{color:var(--gold);background:var(--gold-pale);font-weight:500;}
+.nav-back{margin-left:auto;display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--text-light);font-size:13px;padding:7px 14px;border-radius:20px;border:1px solid var(--cream-dark);transition:all .2s;}
+.nav-back:hover{color:var(--text-dark);border-color:var(--rose-deep);}
+.hero{padding:100px 60px 60px;background:linear-gradient(160deg,var(--gold-pale) 0%,var(--cream) 60%);border-bottom:1px solid var(--cream-dark);position:relative;overflow:hidden;}
+.hero::after{content:'👶';position:absolute;right:80px;top:50%;transform:translateY(-50%);font-size:120px;opacity:.08;}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--gold-pale);border:1px solid var(--gold-light);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.07em;margin-bottom:16px;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,5vw,64px);font-weight:400;color:var(--text-dark);line-height:1.1;margin-bottom:14px;}
+.hero h1 em{font-style:italic;color:var(--gold);}
+.hero-desc{font-size:15px;color:var(--text-mid);font-weight:300;line-height:1.7;max-width:560px;}
+.page-layout{display:grid;grid-template-columns:260px 1fr;max-width:1200px;margin:0 auto;padding:48px 24px 80px;gap:40px;}
+.side-nav{position:sticky;top:82px;height:fit-content;}
+.side-nav-title{font-size:10px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;padding-left:4px;}
+.side-nav-section{margin-bottom:20px;}
+.side-nav-section-label{font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;padding:0 10px 7px;}
+.side-nav-item{display:block;text-decoration:none;font-size:13px;color:var(--text-mid);padding:8px 10px;border-radius:9px;transition:all .15s;margin-bottom:2px;border-left:2px solid transparent;}
+.side-nav-item:hover{background:var(--cream-dark);color:var(--text-dark);}
+.side-nav-item.active{background:var(--gold-pale);color:var(--gold);border-left-color:var(--gold);font-weight:500;}
+.content-section{margin-bottom:64px;}
+.section-anchor{display:block;height:80px;margin-top:-80px;visibility:hidden;}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--cream-dark);}
+.section-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;background:linear-gradient(135deg,var(--gold-pale),var(--gold-light));}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:var(--text-dark);}
+.section-sub{font-size:13px;color:var(--text-light);font-weight:300;margin-top:2px;}
+.articles-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.article-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:18px;padding:24px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;text-decoration:none;display:block;}
+.article-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--gold);}
+.article-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold-light),var(--gold));opacity:0;transition:opacity .2s;}
+.article-card:hover::after{opacity:1;}
+.article-card-icon{font-size:24px;margin-bottom:12px;display:block;}
+.article-card-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--text-dark);margin-bottom:6px;line-height:1.3;}
+.article-card-desc{font-size:12.5px;color:var(--text-mid);line-height:1.6;font-weight:300;}
+.article-card-tag{display:inline-flex;align-items:center;margin-top:12px;padding:3px 10px;background:var(--gold-pale);border-radius:8px;font-size:10.5px;color:var(--gold);font-weight:500;}
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(44,36,32,.5);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--white);border-radius:24px;width:860px;max-width:100%;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);transform:scale(.96);transition:transform .3s;}
+.modal-overlay.open .modal{transform:scale(1);}
+.modal-header{padding:28px 36px 22px;border-bottom:1px solid var(--cream-dark);display:flex;align-items:flex-start;justify-content:space-between;gap:20px;}
+.modal-badge{display:inline-flex;align-items:center;background:var(--gold-pale);border-radius:10px;padding:3px 12px;margin-bottom:10px;font-size:11px;color:var(--gold);font-weight:500;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:var(--text-dark);}
+.modal-close{background:var(--cream);border:none;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-mid);flex-shrink:0;transition:all .2s;}
+.modal-close:hover{background:var(--rose);}
+.modal-body{flex:1;overflow-y:auto;padding:28px 36px;}
+.modal-body h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--text-dark);margin:24px 0 10px;}
+.modal-body h3:first-child{margin-top:0;}
+.modal-body p{font-size:14px;color:var(--text-mid);line-height:1.75;font-weight:300;margin-bottom:12px;}
+.modal-body ul{list-style:none;margin:8px 0 16px;padding:0;}
+.modal-body ul li{font-size:14px;color:var(--text-mid);font-weight:300;padding:6px 0 6px 18px;position:relative;line-height:1.6;}
+.modal-body ul li::before{content:'';position:absolute;left:0;top:13px;width:5px;height:5px;border-radius:50%;background:var(--gold);}
+.info-box{background:var(--gold-pale);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;}
+.info-box-title{font-size:11px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.warn-box{background:var(--rose-pale);border-left:3px solid var(--rose-deep);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;}
+.warn-box-title{font-size:11px;font-weight:600;color:var(--rose-deep);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+@media(max-width:900px){.page-layout{grid-template-columns:1fr;}.side-nav{display:none;}.articles-grid{grid-template-columns:1fr;}nav{padding:0 20px;}.nav-links{display:none;}.hero{padding:90px 24px 48px;}.hero::after{display:none;}}
+</style>
+<script src="translate.js"></script>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">Santé <span>Féminine</span></a>
+  <div style="width:1px;height:18px;background:var(--cream-dark)"></div>
+  <div class="nav-links">
+    <a href="grossesse.html" class="nav-link">🤰 Grossesse</a>
+    <a href="postpartum.html" class="nav-link active">👶 Post-partum</a>
+    <a href="gynecologie.html" class="nav-link">🌸 Gynécologie</a>
+    <a href="infos-generales.html" class="nav-link">📋 Infos pratiques</a>
+  </div>
+  <a href="index.html" class="nav-back">← Accueil</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">👶 Post-partum</div>
+  <h1>Après <em>l'accouchement</em></h1>
+  <p class="hero-desc">Post-partum, allaitement, baby blues, contraception et rééducation périnéale — tout ce dont vous avez besoin après la naissance.</p>
+</div>
+
+<div class="page-layout">
+  <nav class="side-nav">
+    <div class="side-nav-title">Sur cette page</div>
+    <div class="side-nav-section">
+      <div class="side-nav-section-label">Rubriques</div>
+      <a href="#postpartum" class="side-nav-item active">Post-partum</a>
+      <a href="#allaitement" class="side-nav-item">Allaitement</a>
+      <a href="#babyblues" class="side-nav-item">Baby blues</a>
+      <a href="#contraception" class="side-nav-item">Contraception post-partum</a>
+      <a href="#reeducation" class="side-nav-item">Rééducation périnéale</a>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <!-- POST-PARTUM -->
+    <div class="content-section">
+      <span class="section-anchor" id="postpartum"></span>
+      <div class="section-header">
+        <div class="section-icon">👶</div>
+        <div><div class="section-title">Post-partum</div><div class="section-sub">Les premières semaines après l'accouchement</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('retour-maison')">
+          <span class="article-card-icon">🏠</span>
+          <div class="article-card-title">Retour à la maison</div>
+          <p class="article-card-desc">Organisation, repos, aide extérieure et premiers jours avec votre bébé.</p>
+          <span class="article-card-tag">Post-partum</span>
+        </a>
+        <a class="article-card" onclick="openModal('saignements-pp')">
+          <span class="article-card-icon">🩸</span>
+          <div class="article-card-title">Saignements après l'accouchement</div>
+          <p class="article-card-desc">Les lochies : ce qui est normal, leur évolution et quand consulter.</p>
+          <span class="article-card-tag">Post-partum</span>
+        </a>
+        <a class="article-card" onclick="openModal('douleurs-cicatrisation')">
+          <span class="article-card-icon">🌿</span>
+          <div class="article-card-title">Douleurs et cicatrisation</div>
+          <p class="article-card-desc">Périnée, épisiotomie, cicatrice de césarienne — soins et récupération.</p>
+          <span class="article-card-tag">Post-partum</span>
+        </a>
+        <a class="article-card" onclick="openModal('fatigue-parentale')">
+          <span class="article-card-icon">💤</span>
+          <div class="article-card-title">Fatigue parentale</div>
+          <p class="article-card-desc">Gérer le manque de sommeil, accepter l'aide et prendre soin de soi.</p>
+          <span class="article-card-tag">Post-partum</span>
+        </a>
+        <a class="article-card" onclick="openModal('organisation-bebe')">
+          <span class="article-card-icon">👶</span>
+          <div class="article-card-title">Organisation avec le bébé</div>
+          <p class="article-card-desc">Rythme du nouveau-né, soins quotidiens et adaptation à la vie à deux (ou plus).</p>
+          <span class="article-card-tag">Post-partum</span>
+        </a>
+        <a class="article-card" onclick="openModal('signes-alerte-pp')">
+          <span class="article-card-icon">⚠️</span>
+          <div class="article-card-title">Signes d'alerte</div>
+          <p class="article-card-desc">Quand consulter en urgence après l'accouchement : fièvre, saignements abondants, douleurs.</p>
+          <span class="article-card-tag">Urgence</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ALLAITEMENT -->
+    <div class="content-section">
+      <span class="section-anchor" id="allaitement"></span>
+      <div class="section-header">
+        <div class="section-icon">🤱</div>
+        <div><div class="section-title">Allaitement</div><div class="section-sub">Mise en route, problèmes fréquents et positions</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('allaitement-mise-en-route')">
+          <span class="article-card-icon">🌸</span>
+          <div class="article-card-title">Mise en route</div>
+          <p class="article-card-desc">Première tétée, montée de lait, fréquence des tétées et signes d'un bon transfert.</p>
+          <span class="article-card-tag">Allaitement</span>
+        </a>
+        <a class="article-card" onclick="openModal('allaitement-problemes')">
+          <span class="article-card-icon">⚕️</span>
+          <div class="article-card-title">Problèmes fréquents</div>
+          <p class="article-card-desc">Crevasses, engorgement, mastite et faible prise de poids du bébé.</p>
+          <span class="article-card-tag">Allaitement</span>
+        </a>
+        <a class="article-card" onclick="openModal('allaitement-positions')">
+          <span class="article-card-icon">🪑</span>
+          <div class="article-card-title">Positions d'allaitement</div>
+          <p class="article-card-desc">Madonna, biological nurturing, ballon de rugby, allongée.</p>
+          <span class="article-card-tag">Allaitement</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- BABY BLUES -->
+    <div class="content-section">
+      <span class="section-anchor" id="babyblues"></span>
+      <div class="section-header">
+        <div class="section-icon">💛</div>
+        <div><div class="section-title">Baby blues</div><div class="section-sub">Émotions post-partum et soutien</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('babyblues-info')">
+          <span class="article-card-icon">🌧️</span>
+          <div class="article-card-title">Baby blues</div>
+          <p class="article-card-desc">Différence baby blues / dépression post-partum, symptômes fréquents, quand demander de l'aide et ressources utiles.</p>
+          <span class="article-card-tag">Baby blues</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- CONTRACEPTION POST-PARTUM -->
+    <div class="content-section">
+      <span class="section-anchor" id="contraception"></span>
+      <div class="section-header">
+        <div class="section-icon">💊</div>
+        <div><div class="section-title">Contraception post-partum</div><div class="section-sub">Reprendre une contraception après l'accouchement</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('contraception-pp')">
+          <span class="article-card-icon">💊</span>
+          <div class="article-card-title">Contraception post-partum</div>
+          <p class="article-card-desc">Microprogestatif, DIU, implant, allaitement et contraception, retour de fertilité.</p>
+          <span class="article-card-tag">Contraception</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- RÉÉDUCATION PÉRINÉALE -->
+    <div class="content-section">
+      <span class="section-anchor" id="reeducation"></span>
+      <div class="section-header">
+        <div class="section-icon">🧘</div>
+        <div><div class="section-title">Rééducation périnéale</div><div class="section-sub">Renforcer le plancher pelvien après l'accouchement</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('reeducation-info')">
+          <span class="article-card-icon">🏋️</span>
+          <div class="article-card-title">Rééducation périnéale</div>
+          <p class="article-card-desc">Pourquoi la faire, quand commencer, techniques et conseils au quotidien.</p>
+          <span class="article-card-tag">Rééducation</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div><div class="modal-badge" id="modalBadge"></div><div class="modal-title" id="modalTitle"></div></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const MODALS={
+'retour-maison':{badge:'👶 Post-partum',title:'Retour à la maison',body:`<h3>Les premiers jours</h3><p>Le retour à la maison est une période d'adaptation pour toute la famille. Acceptez l'aide proposée par votre entourage et n'essayez pas de tout gérer seule.</p><h3>Organisation</h3><ul><li>Préparez la chambre du bébé avant le terme</li><li>Faites des provisions alimentaires avant l'accouchement</li><li>Organisez une rotation d'aide avec famille et amis</li><li>Limitez les visites les premiers jours</li></ul><h3>Repos</h3><p>Le repos est indispensable à votre récupération. Dormez quand bébé dort. Évitez les efforts importants, surtout après une césarienne.</p>`},
+'saignements-pp':{badge:'👶 Post-partum',title:'Saignements après l\'accouchement',body:`<h3>Les lochies</h3><p>Les lochies sont des pertes vaginales normales après l'accouchement. Elles correspondent à l'élimination de la muqueuse utérine.</p><h3>Leur évolution</h3><ul><li>J1 à J4 : rouges et abondantes</li><li>J5 à J10 : rosées, moins abondantes</li><li>J10 à J21 : jaunâtres ou blanchâtres</li><li>Disparition progressive jusqu'à 6 semaines</li></ul><h3>Quand consulter</h3><ul><li>Saignements très abondants (plus d'une serviette par heure)</li><li>Caillots importants</li><li>Mauvaise odeur (signe d'infection)</li><li>Fièvre associée aux saignements</li></ul>`},
+'douleurs-cicatrisation':{badge:'👶 Post-partum',title:'Douleurs et cicatrisation',body:`<h3>Périnée et épisiotomie</h3><p>Des douleurs périnéales sont normales les premières semaines. La cicatrisation prend 2 à 3 semaines. Des bains de siège à l'eau tiède peuvent soulager. Évitez les rapports sexuels jusqu'à la visite postnatale.</p><h3>Cicatrice de césarienne</h3><p>La cicatrice de césarienne nécessite des soins réguliers. Évitez de porter des charges lourdes pendant 6 semaines. Portez des vêtements amples.</p><h3>Signes d'infection</h3><p>Consultez si vous observez : rougeur, chaleur, écoulement, ouverture de la cicatrice ou fièvre.</p>`},
+'fatigue-parentale':{badge:'👶 Post-partum',title:'Fatigue parentale',body:`<h3>Le manque de sommeil</h3><p>La fatigue post-partum est intense et normale. Les nuits sont fractionnées pendant les premières semaines. C'est temporaire.</p><h3>Comment la gérer</h3><ul><li>Dormez quand bébé dort, même le jour</li><li>Partagez les nuits avec votre partenaire si possible</li><li>Acceptez l'aide proposée par l'entourage</li><li>N'essayez pas d'être parfaite</li></ul><h3>Prendre soin de soi</h3><p>Mangez équilibré, hydratez-vous. Si vous ressentez une fatigue extrême persistante ou des pensées négatives, parlez-en à votre sage-femme ou médecin.</p>`},
+'organisation-bebe':{badge:'👶 Post-partum',title:'Organisation avec le bébé',body:`<h3>Le rythme du nouveau-né</h3><p>Le nouveau-né dort 16 à 20 heures par jour mais se réveille toutes les 2 à 3 heures pour se nourrir. Il ne fait pas encore la différence entre le jour et la nuit — c'est normal jusqu'à 3 mois environ.</p><h3>Soins quotidiens</h3><ul><li>Bain quotidien ou bain 2-3 fois par semaine selon les conseils de votre pédiatre</li><li>Soins du cordon jusqu'à sa chute (5 à 15 jours)</li><li>Surveillance du poids : reprise du poids de naissance attendue avant 15 jours</li></ul><h3>Adaptation</h3><p>Chaque famille trouve son propre rythme. Faites confiance à votre instinct et n'hésitez pas à demander conseils à votre sage-femme.</p>`},
+'signes-alerte-pp':{badge:'👶 Post-partum',title:'Signes d\'alerte',body:`<h3>Consultez en urgence si vous présentez</h3><ul><li>Fièvre supérieure à 38°C</li><li>Saignements très abondants (plus d'une serviette par heure)</li><li>Douleurs abdominales intenses</li><li>Douleur, rougeur ou chaleur dans un mollet (phlébite)</li><li>Essoufflement soudain ou douleur thoracique (embolie)</li><li>Maux de tête intenses, troubles visuels</li><li>Pensées de vous faire du mal ou de faire du mal à votre bébé</li></ul><div class="warn-box"><div class="warn-box-title">En cas de doute</div><p>Appelez votre sage-femme, médecin ou le 112. Mieux vaut consulter inutilement que de laisser évoluer une complication.</p></div>`},
+'allaitement-mise-en-route':{badge:'🤱 Allaitement',title:'Mise en route',body:`<h3>Première tétée</h3><p>Mettre le bébé au sein dès la première heure après la naissance. Le contact peau à peau favorise les réflexes naturels du bébé (fouissement, succion).</p><h3>Montée de lait</h3><p>La montée de lait survient entre J2 et J4. Les seins deviennent tendus et chauds. Dans les premiers jours, votre sein produit le colostrum : liquide jaune épais, très riche en anticorps.</p><h3>Fréquence des tétées</h3><p>Allaiter à la demande, sans restriction. En moyenne 8 à 12 tétées par 24 heures au début. Ne pas regarder l'horloge mais les signaux d'éveil du bébé.</p><h3>Signes d'un bon transfert</h3><ul><li>Bébé prend bien l'aréole entière (pas seulement le mamelon)</li><li>On entend bébé déglutir</li><li>Le sein se ramollit après la tétée</li><li>Bébé est calme après la tétée</li><li>Nombre de couches mouillées suffisant (6 couches/jour à partir de J5)</li></ul>`},
+'allaitement-problemes':{badge:'🤱 Allaitement',title:'Problèmes fréquents',body:`<h3>Crevasses</h3><p>Causées par une mauvaise prise du sein. Bébé doit prendre l'aréole entière. Appliquer du lait maternel sur le mamelon après chaque tétée. Consulter une sage-femme pour corriger la position.</p><h3>Engorgement</h3><p>Seins très tendus, durs et douloureux lors de la montée de lait. Allaiter fréquemment, appliquer chaleur avant et froid après la tétée. Massage doux.</p><h3>Mastite</h3><p>Inflammation du sein avec rougeur, chaleur et parfois fièvre. Ne pas arrêter l'allaitement. Consulter si fièvre > 38,5°C ou pas d'amélioration en 24h.</p><h3>Faible prise de poids</h3><p>Si bébé ne reprend pas suffisamment de poids, consultez votre sage-femme ou pédiatre. Il peut s'agir d'un problème de position, de fréquence des tétées ou de production de lait.</p>`},
+'allaitement-positions':{badge:'🤱 Allaitement',title:'Positions d\'allaitement',body:`<h3>Madonna (berceau classique)</h3><p>Bébé tenu dans vos bras, ventre contre ventre, sa tête dans le creux de votre coude. Position la plus courante.</p><h3>Biological nurturing</h3><p>Mère semi-inclinée, bébé posé sur votre ventre face à vous. Utilise la gravité et les réflexes naturels. Très efficace en cas de difficultés de prise du sein.</p><h3>Ballon de rugby</h3><p>Bébé tenu sous votre bras, les pieds vers l'arrière. Très utile après une césarienne (pas de pression sur la cicatrice). Idéale pour les prématurés ou les petits bébés.</p><h3>Allongée</h3><p>Mère et bébé allongés sur le côté, face à face. Idéale pour les tétées de nuit et pour se reposer pendant l'allaitement.</p><div class="info-box"><div class="info-box-title">Note</div><p>Des illustrations de ces positions seront ajoutées prochainement.</p></div>`},
+'babyblues-info':{badge:'💛 Baby blues',title:'Baby blues',body:`<h3>Différence baby blues / dépression post-partum</h3><p><strong>Baby blues</strong> : épisode transitoire touchant 50 à 80% des femmes dans les 3 à 5 jours post-accouchement. Lié à la chute hormonale brutale. Dure quelques heures à quelques jours. Normal et transitoire.</p><p><strong>Dépression post-partum</strong> : plus sévère et plus prolongée (> 2 semaines). Nécessite une prise en charge médicale. Consultez sans attendre si les symptômes persistent.</p><h3>Symptômes fréquents</h3><ul><li>Pleurs sans raison apparente</li><li>Irritabilité, hypersensibilité</li><li>Anxiété, sentiment d'être dépassée</li><li>Fatigue intense</li><li>Troubles du sommeil</li></ul><h3>Quand demander de l'aide</h3><p>Si les symptômes durent plus de 2 semaines, s'aggravent, ou si vous avez des pensées négatives envers vous-même ou votre bébé, consultez votre médecin ou sage-femme sans attendre.</p><h3>Ressources utiles</h3><ul><li>Votre sage-femme ou médecin traitant</li><li>La ligne d'écoute de votre mutuelle</li><li>Un psychologue spécialisé en périnatalité</li></ul>`},
+'contraception-pp':{badge:'💊 Contraception post-partum',title:'Contraception post-partum',body:`<h3>Microprogestatif</h3><p>Pilule sans œstrogène, à commencer dès 3 semaines post-partum. Compatible avec l'allaitement. Doit être prise à heure fixe (tolérance de 3 heures).</p><h3>DIU</h3><p>DIU au cuivre (non hormonal) ou DIU hormonal. Posé dès 4 à 6 semaines post-partum. Très efficace et de longue durée. Compatible avec l'allaitement.</p><h3>Implant</h3><p>Bâtonnet progestatif sous la peau du bras. Posé dès 4 semaines. Méthode la plus efficace. Compatible avec l'allaitement. Dure 3 ans.</p><h3>Allaitement et contraception</h3><p>L'allaitement exclusif peut retarder le retour de couches mais n'est PAS une contraception fiable. Une méthode contraceptive doit être utilisée dès 3 semaines post-partum.</p><h3>Retour de fertilité</h3><p>L'ovulation peut reprendre dès 25 jours après l'accouchement chez les femmes qui n'allaitent pas — avant même les premières règles.</p>`},
+'reeducation-info':{badge:'🧘 Rééducation périnéale',title:'Rééducation périnéale',body:`<h3>Pourquoi la faire</h3><ul><li>Prévenir et traiter les fuites urinaires (incontinence)</li><li>Prévenir les prolapsus (descente d'organes)</li><li>Améliorer la qualité de vie sexuelle</li><li>Reprendre le sport en toute sécurité</li></ul><h3>Quand commencer</h3><p>Entre 6 et 8 semaines après l'accouchement, après la visite postnatale. Sur prescription médicale. Remboursée par la mutuelle en Belgique.</p><h3>Techniques</h3><ul><li><strong>Rééducation manuelle</strong> : réalisée par une sage-femme ou kinésithérapeute. Exercices de contraction et relâchement.</li><li><strong>Biofeedback</strong> : sonde qui mesure les contractions musculaires et les affiche en temps réel.</li><li><strong>Électrostimulation</strong> : légers courants électriques pour stimuler les muscles périnéaux.</li></ul><h3>Conseils au quotidien</h3><ul><li>Contracter le périnée avant un effort (toux, éternuement)</li><li>Éviter de porter des charges lourdes les premières semaines</li><li>Ne pas reprendre la course à pied avant la fin de la rééducation</li></ul>`},
+};
+function openModal(id){const d=MODALS[id];if(!d)return;document.getElementById('modalBadge').textContent=d.badge;document.getElementById('modalTitle').textContent=d.title;document.getElementById('modalBody').innerHTML=d.body;document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';}
+function closeModalBg(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+const sections=document.querySelectorAll('.section-anchor');
+const navItems=document.querySelectorAll('.side-nav-item');
+window.addEventListener('scroll',()=>{let cur='';sections.forEach(s=>{if(window.scrollY>=s.offsetTop-120)cur=s.id;});navItems.forEach(n=>{n.classList.remove('active');if(n.getAttribute('href')==='#'+cur)n.classList.add('active');});});
+</script>
+</body>
+</html>
