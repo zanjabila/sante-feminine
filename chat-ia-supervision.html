@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistant santé — Santé Féminine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#FAF7F2; --cream-dark:#F0EBE1; --rose:#E8C5BB; --rose-deep:#C9957F;
+  --rose-pale:#F7EDE8; --gold:#C8A96E; --gold-light:#F0E4C0; --gold-pale:#FBF5E6;
+  --text-dark:#2C2420; --text-mid:#6B5B52; --text-light:#A09080; --white:#FFFFFF;
+  --shadow:0 4px 32px rgba(44,36,32,0.08); --shadow-lg:0 16px 64px rgba(44,36,32,0.14);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;height:62px;
+  background:rgba(250,247,242,.96);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--cream-dark);
+  display:flex;align-items:center;padding:0 36px;gap:16px;
+}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:var(--text-dark);text-decoration:none;}
+.nav-logo span{color:var(--rose-deep);}
+.nav-back{margin-left:auto;text-decoration:none;font-size:13px;color:var(--text-light);padding:7px 16px;border-radius:20px;border:1px solid var(--cream-dark);transition:all .2s;}
+.nav-back:hover{color:var(--text-dark);border-color:var(--rose-deep);}
+
+/* ─── LAYOUT ─── */
+.chat-layout{
+  display:flex;flex-direction:column;
+  height:100vh;padding-top:62px;
+}
+
+/* ─── HEADER ─── */
+.chat-header{
+  padding:24px 36px 20px;
+  background:linear-gradient(160deg,var(--rose-pale) 0%,var(--cream) 100%);
+  border-bottom:1px solid var(--cream-dark);
+  text-align:center;
+}
+.chat-header-icon{font-size:36px;margin-bottom:8px;}
+.chat-header-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:400;color:var(--text-dark);margin-bottom:4px;
+}
+.chat-header-sub{font-size:13px;color:var(--text-light);font-weight:300;}
+.chat-disclaimer{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:10px;padding:5px 14px;
+  background:var(--gold-pale);border:1px solid var(--gold-light);
+  border-radius:20px;font-size:11px;color:var(--gold);font-weight:500;
+}
+
+/* ─── MESSAGES ─── */
+.chat-messages{
+  flex:1;overflow-y:auto;
+  padding:24px 36px;
+  display:flex;flex-direction:column;gap:16px;
+}
+.chat-messages::-webkit-scrollbar{width:4px;}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--cream-dark);border-radius:2px;}
+
+/* Message bubbles */
+.msg{display:flex;gap:12px;align-items:flex-start;max-width:780px;}
+.msg.user{flex-direction:row-reverse;align-self:flex-end;}
+.msg-avatar{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+.msg.bot .msg-avatar{background:linear-gradient(135deg,var(--rose-pale),var(--rose));}
+.msg.user .msg-avatar{background:linear-gradient(135deg,var(--gold-pale),var(--gold-light));}
+.msg-bubble{
+  padding:14px 18px;border-radius:18px;
+  font-size:14px;line-height:1.65;font-weight:300;
+  max-width:600px;
+}
+.msg.bot .msg-bubble{
+  background:var(--white);border:1px solid var(--cream-dark);
+  border-top-left-radius:4px;
+}
+.msg.user .msg-bubble{
+  background:var(--text-dark);color:white;
+  border-top-right-radius:4px;
+}
+
+/* Typing indicator */
+.typing{display:flex;gap:5px;padding:16px 18px;}
+.typing span{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--rose-deep);animation:bounce .8s infinite;
+}
+.typing span:nth-child(2){animation-delay:.15s;}
+.typing span:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,80%,100%{transform:scale(0.7);opacity:.5}40%{transform:scale(1);opacity:1}}
+
+/* Article cards in chat */
+.article-results{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+.article-result-card{
+  background:var(--cream);border:1px solid var(--cream-dark);
+  border-radius:14px;padding:16px;transition:all .2s;cursor:pointer;
+  text-decoration:none;display:block;
+}
+.article-result-card:hover{border-color:var(--rose-deep);background:var(--rose-pale);transform:translateX(3px);}
+.arc-category{
+  font-size:10.5px;font-weight:600;color:var(--rose-deep);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;
+}
+.arc-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px;font-weight:500;color:var(--text-dark);margin-bottom:5px;
+}
+.arc-excerpt{font-size:12.5px;color:var(--text-mid);font-weight:300;line-height:1.5;}
+.arc-arrow{font-size:12px;color:var(--rose-deep);margin-top:8px;font-weight:500;}
+
+/* Suggestions rapides */
+.suggestions{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;
+}
+.suggestion-btn{
+  padding:7px 16px;border-radius:20px;
+  border:1.5px solid var(--rose);background:var(--rose-pale);
+  font-size:12.5px;color:var(--rose-deep);font-weight:500;
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+}
+.suggestion-btn:hover{background:var(--rose);color:var(--text-dark);}
+
+/* ─── INPUT ─── */
+.chat-input-area{
+  padding:16px 36px 24px;
+  border-top:1px solid var(--cream-dark);
+  background:var(--white);
+}
+.chat-input-wrap{
+  display:flex;gap:10px;align-items:flex-end;
+  max-width:780px;margin:0 auto;
+}
+.chat-input{
+  flex:1;padding:13px 18px;
+  border:1.5px solid var(--cream-dark);border-radius:24px;
+  font-size:14px;font-family:'DM Sans',sans-serif;
+  color:var(--text-dark);background:var(--cream);
+  outline:none;resize:none;line-height:1.5;
+  transition:all .2s;min-height:48px;max-height:120px;
+}
+.chat-input:focus{border-color:var(--rose-deep);background:var(--white);}
+.chat-send{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--text-dark);color:white;border:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;flex-shrink:0;font-size:18px;
+}
+.chat-send:hover{background:var(--rose-deep);}
+.chat-send:disabled{background:var(--cream-dark);cursor:not-allowed;}
+.chat-notice{
+  text-align:center;font-size:11px;color:var(--text-light);
+  margin-top:10px;font-weight:300;
+}
+
+/* Responsive */
+@media(max-width:700px){
+  .chat-messages,.chat-input-area{padding-left:16px;padding-right:16px;}
+  nav{padding:0 16px;}
+  .msg-bubble{max-width:85vw;}
+}
+</style>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: "fr",
+    includedLanguages: "fr,nl,en,ar,pt",
+    autoDisplay: false,
+  }, "google_translate_element");
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<style>
+.goog-te-banner-frame{display:none !important;}
+body{top:0 !important;}
+.goog-te-gadget{font-size:0 !important;}
+.goog-te-gadget .goog-te-combo{padding:6px 14px;border-radius:20px;border:1px solid var(--cream-dark);background:var(--white);font-size:13px;font-family:"DM Sans",sans-serif;color:var(--text-mid);cursor:pointer;outline:none;}
+</style>
+
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Santé <span>Féminine</span></a>
+  <div id="google_translate_element" style="margin-left:auto;"></div>
+  <a href="index.html" class="nav-back">← Accueil</a>
+</nav>
+
+<div class="chat-layout">
+
+  <div class="chat-header">
+    <div class="chat-header-icon">💬</div>
+    <div class="chat-header-title">Assistant santé</div>
+    <div class="chat-header-sub">Posez vos questions — je recherche dans les articles validés par votre sage-femme</div>
+    <div class="chat-disclaimer">📋 Réponses basées uniquement sur des articles médicaux validés</div>
+  </div>
+
+  <div class="chat-messages" id="chatMessages">
+    <!-- Message de bienvenue -->
+    <div class="msg bot">
+      <div class="msg-avatar">🌸</div>
+      <div class="msg-bubble">
+        Bonjour ! Je suis votre assistant santé. Je recherche dans les articles médicaux validés par votre sage-femme pour répondre à vos questions.<br><br>
+        Vous pouvez me poser des questions sur la grossesse, le post-partum, la gynécologie ou les informations pratiques.
+        <div class="suggestions">
+          <button class="suggestion-btn" onclick="sendSuggestion('nausées grossesse')">🤢 Nausées</button>
+          <button class="suggestion-btn" onclick="sendSuggestion('allaitement')">🤱 Allaitement</button>
+          <button class="suggestion-btn" onclick="sendSuggestion('contractions')">⏰ Contractions</button>
+          <button class="suggestion-btn" onclick="sendSuggestion('diabète gestationnel')">🍬 Diabète</button>
+          <button class="suggestion-btn" onclick="sendSuggestion('contraception')">💊 Contraception</button>
+          <button class="suggestion-btn" onclick="sendSuggestion('rééducation périnéale')">🧘 Rééducation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-area">
+    <div class="chat-input-wrap">
+      <textarea
+        class="chat-input"
+        id="chatInput"
+        placeholder="Posez votre question ici…"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="chat-send" id="sendBtn" onclick="sendMessage()">➤</button>
+    </div>
+    <div class="chat-notice">
+      ⚠️ Cet assistant ne remplace pas une consultation médicale. En cas d'urgence, appelez le 112.
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════
+// SUPABASE CONFIG
+// ═══════════════════════════════
+const SUPABASE_URL = 'https://kiavvxomyyvwuexjupdf.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpYXZ2eG9teXl2d3VleGp1cGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTEzOTQsImV4cCI6MjA5NjQyNzM5NH0.d1919fG_0HMdKPcNSbrQTvQK4YyYLQSWvw7vYsMYMnU';
+const SB_HEADERS = {
+  'Content-Type': 'application/json',
+  'apikey': SUPABASE_KEY,
+  'Authorization': `Bearer ${SUPABASE_KEY}`
+};
+
+// Cache des articles
+let articlesCache = [];
+
+async function loadArticles() {
+  if (articlesCache.length > 0) return articlesCache;
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/articles?medecin_id=is.null&actif_ia=eq.true&select=*`, { headers: SB_HEADERS });
+  articlesCache = await res.json();
+  return articlesCache;
+}
+
+// ═══════════════════════════════
+// SYNONYMES ET ASSOCIATIONS MÉDICALES
+// ═══════════════════════════════
+const SYNONYMES = {
+  // Grossesse générale
+  'enceinte': ['grossesse','suivi','trimestre'],
+  'grossesse': ['grossesse','suivi','trimestre','enceinte'],
+  'bébé': ['grossesse','fœtus','suivi'],
+  'ventre': ['douleurs abdominales','grossesse','contractions'],
+
+  // Saignements
+  'saignement': ['saignements','lochies','fausse couche','décollement','grossesse extra-utérine','prééclampsie','post-partum'],
+  'saigne': ['saignements','lochies','fausse couche','décollement','grossesse extra-utérine'],
+  'sang': ['saignements','lochies','fausse couche','décollement','anémie'],
+  'pertes': ['saignements','infections vaginales','décollement','pertes'],
+  'perte': ['saignements','infections vaginales','lochies','pertes'],
+  'taches': ['saignements','décollement','fausse couche'],
+  'spotting': ['saignements','décollement','fausse couche'],
+
+  // Douleurs
+  'douleur': ['douleurs','contractions','prééclampsie','MAP','douleurs abdominales'],
+  'mal': ['douleurs','contractions','douleurs abdominales','douleurs lombaires'],
+  'crampe': ['contractions','douleurs abdominales','Braxton Hicks'],
+  'contraction': ['contractions','MAP','Braxton Hicks','signes de travail'],
+
+  // Liquide
+  'liquide': ['rupture','poche des eaux','MAP','signes de travail'],
+  'eaux': ['rupture','poche des eaux','signes de travail'],
+  'eau': ['rupture','poche des eaux','signes de travail'],
+
+  // Nausées
+  'nausée': ['nausées','vomissements','hyperémèse','symptômes','désagréments'],
+  'nausées': ['nausées','vomissements','hyperémèse','symptômes'],
+  'vomissement': ['vomissements','nausées','hyperémèse'],
+  'vomit': ['vomissements','nausées','hyperémèse'],
+
+  // Allaitement
+  'allaitement': ['allaitement','sein','colostrum','tétée','montée de lait'],
+  'sein': ['allaitement','crevasse','engorgement','mastite'],
+  'lait': ['allaitement','montée de lait','colostrum'],
+  'tétée': ['allaitement','mise en route','positions'],
+  'crevasse': ['crevasses','allaitement','problèmes'],
+  'engorgement': ['engorgement','allaitement','problèmes'],
+  'mastite': ['mastite','allaitement','problèmes'],
+
+  // Post-partum
+  'accouchement': ['post-partum','lochies','récupération','césarienne'],
+  'après accouchement': ['post-partum','lochies','récupération'],
+  'bébé blues': ['baby blues','dépression','post-partum'],
+  'baby blues': ['baby blues','dépression','émotions'],
+  'pleurs': ['baby blues','dépression post-partum'],
+  'dépression': ['dépression post-partum','baby blues'],
+
+  // Contractions
+  'braxton': ['Braxton Hicks','contractions','3e trimestre'],
+  'travail': ['signes de travail','contractions','accouchement'],
+
+  // Infections
+  'démangeaison': ['mycoses','infections vaginales','cholestase'],
+  'démangeaisons': ['mycoses','infections vaginales','cholestase'],
+  'mycose': ['mycoses','infections vaginales','candidose'],
+  'infection': ['infections','mycoses','vaginoses','urinaires'],
+  'brûlure': ['infections urinaires','cystite','mycoses'],
+  'pipi': ['infections urinaires','cystite','pollakiurie'],
+  'uriner': ['infections urinaires','cystite'],
+
+  // Contraception
+  'pilule': ['pilule','contraception','oubli'],
+  'stérilet': ['stérilet','DIU','contraception'],
+  'implant': ['implant','contraception','Nexplanon'],
+  'contraception': ['contraception','pilule','DIU','implant'],
+
+  // Pathologies
+  'tension': ['prééclampsie','hypertension','surveillance'],
+  'hypertension': ['prééclampsie','tension','surveillance'],
+  'diabète': ['diabète gestationnel','glycémie','HGPO'],
+  'sucre': ['diabète gestationnel','glycémie'],
+  'endométriose': ['endométriose','règles douloureuses','dysménorrhée'],
+  'règles': ['endométriose','adénomyose','contraception','fibrome'],
+  'kyste': ['kystes ovariens','surveillance','chirurgie'],
+  'fibrome': ['fibromes','ménorragies','traitement'],
+  'hpv': ['HPV','papillomavirus','dépistage','vaccin'],
+  'frottis': ['frottis','dépistage','HPV','CIN'],
+
+  // Périnée
+  'périnée': ['rééducation périnéale','périnée','plancher pelvien'],
+  'fuites': ['rééducation périnéale','incontinence','plancher pelvien'],
+  'incontinence': ['rééducation périnéale','plancher pelvien'],
+
+  // Toxoplasmose etc
+  'chat': ['toxoplasmose','prévention'],
+  'toxoplasmose': ['toxoplasmose','transmission','prévention'],
+  'listériose': ['listériose','aliments','prévention'],
+  'cmv': ['CMV','transmission','prévention'],
+
+  // Fatigue
+  'fatigue': ['fatigue','anémie','symptômes','post-partum'],
+  'anémie': ['anémie','fer','fatigue'],
+  'fer': ['anémie','supplémentation'],
+
+  // GEU
+  'extra-utérin': ['grossesse extra-utérine','urgence','douleurs'],
+  'trompe': ['grossesse extra-utérine','urgence'],
+
+  // Autres
+  'streptocoque': ['streptocoque B','dépistage','prélèvement'],
+  'canal carpien': ['canal carpien','fourmillements','attelle'],
+  'fourmillement': ['canal carpien','fourmillements','mains'],
+  'cholestase': ['cholestase','démangeaisons','acides biliaires'],
+  'jaunisse': ['cholestase'],
+  'prématuré': ['MAP','accouchement prématuré','contractions'],
+  'valise': ['valise maternité','documents','préparation'],
+  'mode de garde': ['mode de garde','crèche','accueillante'],
+  'allocations': ['allocations naissance','mutuelle','FAMIWAL'],
+};
+
+function expandQuery(tokens) {
+  const expanded = new Set(tokens);
+  for (const token of tokens) {
+    for (const [key, synonyms] of Object.entries(SYNONYMES)) {
+      if (key.includes(token) || token.includes(key)) {
+        synonyms.forEach(s => tokenize(s).forEach(t => expanded.add(t)));
+      }
+    }
+  }
+  return [...expanded];
+}
+const CAT_LABELS = {
+  'grossesse-t1': '🌱 1er trimestre',
+  'grossesse-t2': '🌸 2e trimestre',
+  'grossesse-t3': '⭐ 3e trimestre',
+  'grossesse-patho': '🩺 Pathologie grossesse',
+  'postpartum-gen': '👶 Post-partum',
+  'postpartum-allaitement': '🤱 Allaitement',
+  'postpartum-babyblues': '💛 Baby blues',
+  'postpartum-contraception': '💊 Contraception post-partum',
+  'postpartum-reeducation': '🧘 Rééducation périnéale',
+  'gyneco-contraception': '💊 Contraception',
+  'gyneco-patho': '🔬 Pathologie gynécologique',
+  'gyneco-hpv': '🔍 HPV',
+  'gyneco-infections-vaginales': '🧬 Infections vaginales',
+  'gyneco-infections-urinaires': '💧 Infections urinaires',
+  'infos-generales': '📋 Informations générales',
+  'infos-preop': '🏥 Pré-opératoire',
+  'infos-etranger': '✈️ Accouchement à l\'étranger',
+};
+
+// Pages pour liens
+const CAT_PAGES = {
+  'grossesse-t1': 'grossesse.html#t1',
+  'grossesse-t2': 'grossesse.html#t2',
+  'grossesse-t3': 'grossesse.html#t3',
+  'grossesse-patho': 'grossesse.html#pathologies',
+  'postpartum-gen': 'postpartum.html#postpartum',
+  'postpartum-allaitement': 'postpartum.html#allaitement',
+  'postpartum-babyblues': 'postpartum.html#babyblues',
+  'postpartum-contraception': 'postpartum.html#contraception',
+  'postpartum-reeducation': 'postpartum.html#reeducation',
+  'gyneco-contraception': 'gynecologie.html#contraception',
+  'gyneco-patho': 'gynecologie.html#pathologies',
+  'gyneco-hpv': 'gynecologie.html#hpv',
+  'gyneco-infections-vaginales': 'gynecologie.html#infections-vaginales',
+  'gyneco-infections-urinaires': 'gynecologie.html#infections-urinaires',
+  'infos-generales': 'infos-generales.html#infos-gen',
+  'infos-preop': 'infos-generales.html#preop',
+  'infos-etranger': 'infos-generales.html#etranger',
+};
+
+// ═══════════════════════════════
+// RECHERCHE INTELLIGENTE
+// ═══════════════════════════════
+function tokenize(text) {
+  return text.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // enlever accents
+    .replace(/[^a-z0-9\s]/g,' ')
+    .split(/\s+/)
+    .filter(w => w.length > 2);
+}
+
+function scoreArticle(article, queryTokens) {
+  const titleTokens = tokenize(article.titre);
+  const keywordTokens = tokenize(article.mots_cles || '');
+  const contentTokens = tokenize(article.contenu || '');
+  let score = 0;
+
+  for (const q of queryTokens) {
+    // Titre : poids 5
+    if (titleTokens.some(t => t.includes(q) || q.includes(t))) score += 5;
+    // Mots-clés : poids 3
+    if (keywordTokens.some(t => t.includes(q) || q.includes(t))) score += 3;
+    // Contenu : poids 1
+    if (contentTokens.some(t => t.includes(q) || q.includes(t))) score += 1;
+  }
+  return score;
+}
+
+function searchArticles(query, articles, maxResults = 3) {
+  const queryTokens = tokenize(query);
+  if (queryTokens.length === 0) return [];
+
+  // Étendre avec les synonymes médicaux
+  const expandedTokens = expandQuery(queryTokens);
+
+  const scored = articles
+    .map(a => ({ article: a, score: scoreArticle(a, expandedTokens) }))
+    .filter(x => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, maxResults);
+
+  return scored.map(x => x.article);
+}
+
+function getExcerpt(content, maxLength = 120) {
+  if (!content) return '';
+  const clean = content.replace(/\n/g, ' ').trim();
+  return clean.length > maxLength ? clean.substring(0, maxLength) + '…' : clean;
+}
+
+// ═══════════════════════════════
+// RÉPONSES AUTOMATIQUES
+// ═══════════════════════════════
+const URGENCY_KEYWORDS = [
+  'urgence','112','ambulance','hôpital','maternité',
+  'saignement abondant','saigne beaucoup','beaucoup de sang',
+  'plus de mouvement','bébé ne bouge plus','ne bouge plus',
+  'rupture','perdu les eaux','poche des eaux',
+  'douleur intense','très mal','insupportable',
+  'tête qui tourne','je tombe','syncope','malaise',
+  'fièvre élevée','39','40 degrés',
+  'vision floue','yeux','taches noires',
+  'au secours','aidez-moi','help'
+];
+const GREETINGS = ['bonjour','bonsoir','salut','hello','coucou','bonne journée'];
+const THANKS = ['merci','merçi','super','parfait','top','génial'];
+
+function detectIntent(query) {
+  const q = query.toLowerCase();
+  if (URGENCY_KEYWORDS.some(k => q.includes(k))) return 'urgency';
+  if (GREETINGS.some(k => q.includes(k))) return 'greeting';
+  if (THANKS.some(k => q.includes(k))) return 'thanks';
+  return 'search';
+}
+
+// ═══════════════════════════════
+// UI — MESSAGES
+// ═══════════════════════════════
+function addMessage(type, content) {
+  const messages = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `msg ${type}`;
+  div.innerHTML = `
+    <div class="msg-avatar">${type === 'bot' ? '🌸' : '👤'}</div>
+    <div class="msg-bubble">${content}</div>
+  `;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+  return div;
+}
+
+function addTyping() {
+  const messages = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.id = 'typingIndicator';
+  div.innerHTML = `
+    <div class="msg-avatar">🌸</div>
+    <div class="msg-bubble">
+      <div class="typing"><span></span><span></span><span></span></div>
+    </div>
+  `;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typingIndicator');
+  if (t) t.remove();
+}
+
+function buildResultsHTML(articles, query) {
+  if (articles.length === 0) {
+    return `Je n'ai pas trouvé d'article correspondant à votre question sur "<strong>${query}</strong>".<br><br>
+    Vous pouvez :<br>
+    • Reformuler votre question avec d'autres mots<br>
+    • Consulter directement les rubriques du site<br>
+    • Contacter votre médecin ou sage-femme`;
+  }
+
+  const cards = articles.map(a => `
+    <a class="article-result-card" href="${CAT_PAGES[a.categorie] || 'index.html'}" target="_blank">
+      <div class="arc-category">${CAT_LABELS[a.categorie] || a.categorie}</div>
+      <div class="arc-title">${a.titre}</div>
+      <div class="arc-excerpt">${getExcerpt(a.contenu)}</div>
+      <div class="arc-arrow">Lire l'article complet →</div>
+    </a>
+  `).join('');
+
+  const intro = articles.length === 1
+    ? `J'ai trouvé <strong>1 article</strong> correspondant à votre question :`
+    : `J'ai trouvé <strong>${articles.length} articles</strong> correspondant à votre question :`;
+
+  return `${intro}<div class="article-results">${cards}</div>`;
+}
+
+// ═══════════════════════════════
+// ENVOYER UN MESSAGE
+// ═══════════════════════════════
+const ALERT_KEYWORDS = [
+  'saignement','saigne','sang','pertes de sang',
+  'contraction','contractions','douleur','mal au ventre',
+  'liquide','eaux','tête qui tourne','fièvre'
+];
+
+async function processMessage(query) {
+  const q = query.toLowerCase();
+  const intent = detectIntent(query);
+
+  // Urgence absolue
+  if (intent === 'urgency') {
+    return `🚨 <strong>En cas d'urgence, appelez le 112 immédiatement.</strong><br><br>
+    Ne perdez pas de temps — les urgences obstétricales et gynécologiques nécessitent une prise en charge rapide.<br><br>
+    Rendez-vous aux urgences de la maternité la plus proche si vous présentez : saignements abondants, douleurs intenses, absence de mouvements fœtaux, rupture de la poche des eaux.`;
+  }
+
+  if (intent === 'greeting') {
+    return `Bonjour ! 😊 Comment puis-je vous aider aujourd'hui ? Posez-moi votre question sur la grossesse, le post-partum ou la gynécologie.`;
+  }
+
+  if (intent === 'thanks') {
+    return `Avec plaisir ! N'hésitez pas si vous avez d'autres questions. 🌸`;
+  }
+
+  // Avertissement si symptôme potentiellement urgent
+  const hasAlert = ALERT_KEYWORDS.some(k => q.includes(k));
+
+  // Recherche dans les articles
+  const articles = await loadArticles();
+  const results = searchArticles(query, articles);
+
+  let html = '';
+
+  // Ajouter avertissement si nécessaire
+  if (hasAlert) {
+    html += `<div style="background:#FDECEA;border-left:3px solid #C0392B;border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#8B2020;">
+      ⚠️ <strong>Si vos symptômes sont intenses ou s'aggravent</strong>, contactez votre médecin ou appelez le <strong>112</strong> sans attendre.
+    </div>`;
+  }
+
+  html += buildResultsHTML(results, query);
+  return html;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const query = input.value.trim();
+  if (!query) return;
+
+  // Afficher message utilisateur
+  addMessage('user', query);
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('sendBtn').disabled = true;
+
+  // Afficher l'indicateur de saisie
+  addTyping();
+
+  // Simuler un délai naturel
+  await new Promise(r => setTimeout(r, 600));
+  removeTyping();
+
+  // Obtenir et afficher la réponse
+  const response = await processMessage(query);
+  addMessage('bot', response);
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('chatInput').focus();
+}
+
+function sendSuggestion(text) {
+  document.getElementById('chatInput').value = text;
+  sendMessage();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// Précharger les articles au démarrage
+loadArticles();
+</script>
+</body>
+</html>
