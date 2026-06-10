@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grossesse — Santé Féminine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FAF7F2;--cream-dark:#F0EBE1;--rose:#E8C5BB;--rose-deep:#C9957F;--rose-pale:#F7EDE8;--gold:#C8A96E;--gold-light:#F0E4C0;--text-dark:#2C2420;--text-mid:#6B5B52;--text-light:#A09080;--white:#FFFFFF;--shadow:0 4px 32px rgba(44,36,32,0.08);--shadow-lg:0 16px 64px rgba(44,36,32,0.14);}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;background:rgba(250,247,242,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--cream-dark);display:flex;align-items:center;padding:0 36px;gap:16px;}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:var(--text-dark);text-decoration:none;}
+.nav-logo span{color:var(--rose-deep);}
+.nav-links{display:flex;gap:4px;}
+.nav-link{text-decoration:none;font-size:13px;color:var(--text-light);padding:6px 14px;border-radius:20px;transition:all .2s;}
+.nav-link:hover{color:var(--text-dark);background:var(--cream-dark);}
+.nav-link.active{color:var(--rose-deep);background:var(--rose-pale);font-weight:500;}
+.nav-back{margin-left:auto;display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--text-light);font-size:13px;padding:7px 14px;border-radius:20px;border:1px solid var(--cream-dark);transition:all .2s;}
+.nav-back:hover{color:var(--text-dark);border-color:var(--rose-deep);}
+.hero{padding:100px 60px 60px;background:linear-gradient(160deg,var(--rose-pale) 0%,var(--cream) 60%);border-bottom:1px solid var(--cream-dark);position:relative;overflow:hidden;}
+.hero::after{content:'🤰';position:absolute;right:80px;top:50%;transform:translateY(-50%);font-size:120px;opacity:.08;}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--rose-pale);border:1px solid var(--rose);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:600;color:var(--rose-deep);text-transform:uppercase;letter-spacing:.07em;margin-bottom:16px;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,5vw,64px);font-weight:400;color:var(--text-dark);line-height:1.1;margin-bottom:14px;}
+.hero h1 em{font-style:italic;color:var(--rose-deep);}
+.hero-desc{font-size:15px;color:var(--text-mid);font-weight:300;line-height:1.7;max-width:560px;}
+.page-layout{display:grid;grid-template-columns:260px 1fr;max-width:1200px;margin:0 auto;padding:48px 24px 80px;gap:40px;}
+.side-nav{position:sticky;top:82px;height:fit-content;}
+.side-nav-title{font-size:10px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;padding-left:4px;}
+.side-nav-section{margin-bottom:20px;}
+.side-nav-section-label{font-size:10px;font-weight:700;color:var(--rose-deep);text-transform:uppercase;letter-spacing:.08em;padding:0 10px 7px;}
+.side-nav-item{display:block;text-decoration:none;font-size:13px;color:var(--text-mid);padding:8px 10px;border-radius:9px;transition:all .15s;margin-bottom:2px;border-left:2px solid transparent;}
+.side-nav-item:hover{background:var(--cream-dark);color:var(--text-dark);}
+.side-nav-item.active{background:var(--rose-pale);color:var(--rose-deep);border-left-color:var(--rose-deep);font-weight:500;}
+.content-section{margin-bottom:64px;}
+.section-anchor{display:block;height:80px;margin-top:-80px;visibility:hidden;}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--cream-dark);}
+.section-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;background:linear-gradient(135deg,var(--rose-pale),var(--rose));}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:var(--text-dark);}
+.section-sub{font-size:13px;color:var(--text-light);font-weight:300;margin-top:2px;}
+.articles-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.article-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:18px;padding:24px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;text-decoration:none;display:block;}
+.article-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--rose);}
+.article-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rose),var(--rose-deep));opacity:0;transition:opacity .2s;}
+.article-card:hover::after{opacity:1;}
+.article-card-icon{font-size:24px;margin-bottom:12px;display:block;}
+.article-card-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--text-dark);margin-bottom:6px;line-height:1.3;}
+.article-card-desc{font-size:12.5px;color:var(--text-mid);line-height:1.6;font-weight:300;}
+.article-card-tag{display:inline-flex;align-items:center;margin-top:12px;padding:3px 10px;background:var(--rose-pale);border-radius:8px;font-size:10.5px;color:var(--rose-deep);font-weight:500;}
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(44,36,32,.5);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--white);border-radius:24px;width:860px;max-width:100%;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);transform:scale(.96);transition:transform .3s;}
+.modal-overlay.open .modal{transform:scale(1);}
+.modal-header{padding:28px 36px 22px;border-bottom:1px solid var(--cream-dark);display:flex;align-items:flex-start;justify-content:space-between;gap:20px;}
+.modal-badge{display:inline-flex;align-items:center;background:var(--rose-pale);border-radius:10px;padding:3px 12px;margin-bottom:10px;font-size:11px;color:var(--rose-deep);font-weight:500;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:var(--text-dark);}
+.modal-close{background:var(--cream);border:none;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-mid);flex-shrink:0;transition:all .2s;}
+.modal-close:hover{background:var(--rose);}
+.modal-body{flex:1;overflow-y:auto;padding:28px 36px;}
+.modal-body h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;color:var(--text-dark);margin:24px 0 10px;}
+.modal-body h3:first-child{margin-top:0;}
+.modal-body p{font-size:14px;color:var(--text-mid);line-height:1.75;font-weight:300;margin-bottom:12px;}
+.modal-body ul{list-style:none;margin:8px 0 16px;padding:0;}
+.modal-body ul li{font-size:14px;color:var(--text-mid);font-weight:300;padding:6px 0 6px 18px;position:relative;line-height:1.6;}
+.modal-body ul li::before{content:'';position:absolute;left:0;top:13px;width:5px;height:5px;border-radius:50%;background:var(--rose-deep);}
+.info-box{background:var(--gold-light);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;}
+.info-box-title{font-size:11px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.urgent-box{background:#FDECEA;border-left:3px solid #C0392B;border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0;}
+.urgent-box-title{font-size:11px;font-weight:600;color:#C0392B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.urgent-box p{color:#8B2020;}
+@media(max-width:900px){.page-layout{grid-template-columns:1fr;}.side-nav{display:none;}.articles-grid{grid-template-columns:1fr;}nav{padding:0 20px;}.nav-links{display:none;}.hero{padding:90px 24px 48px;}.hero::after{display:none;}}
+</style>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'fr',
+    includedLanguages: 'fr,nl,en,ar,pt',
+    autoDisplay: false,
+  }, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<style>
+.goog-te-banner-frame{display:none !important;}
+body{top:0 !important;}
+.goog-te-gadget{font-size:0 !important;}
+.goog-te-gadget .goog-te-combo{
+  padding:6px 14px;border-radius:20px;
+  border:1px solid var(--cream-dark);
+  background:var(--white);font-size:13px;
+  font-family:'DM Sans',sans-serif;
+  color:var(--text-mid);cursor:pointer;outline:none;
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">Santé <span>Féminine</span></a>
+  <div style="width:1px;height:18px;background:var(--cream-dark)"></div>
+  <div class="nav-links">
+    <a href="grossesse.html" class="nav-link active">🤰 Grossesse</a>
+    <a href="postpartum.html" class="nav-link">👶 Post-partum</a>
+    <a href="gynecologie.html" class="nav-link">🌸 Gynécologie</a>
+    <a href="infos-generales.html" class="nav-link">📋 Infos pratiques</a>
+  </div>
+  <div id="google_translate_element" style="margin-left:auto;"></div>
+  <a href="index.html" class="nav-back">← Accueil</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">🤰 Grossesse</div>
+  <h1>La <em>grossesse</em><br>expliquée</h1>
+  <p class="hero-desc">Suivi trimestre par trimestre et pathologies de la grossesse — des informations médicales fiables rédigées et validées par votre sage-femme.</p>
+</div>
+
+<div class="page-layout">
+  <nav class="side-nav">
+    <div class="side-nav-title">Sur cette page</div>
+    <div class="side-nav-section">
+      <div class="side-nav-section-label">Trimestres</div>
+      <a href="#t1" class="side-nav-item active">1er trimestre</a>
+      <a href="#t2" class="side-nav-item">2e trimestre</a>
+      <a href="#t3" class="side-nav-item">3e trimestre</a>
+    </div>
+    <div class="side-nav-section">
+      <div class="side-nav-section-label">Pathologies</div>
+      <a href="#pathologies" class="side-nav-item">Pathologies de la grossesse</a>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <!-- 1ER TRIMESTRE -->
+    <div class="content-section">
+      <span class="section-anchor" id="t1"></span>
+      <div class="section-header">
+        <div class="section-icon">🌱</div>
+        <div><div class="section-title">1er Trimestre</div><div class="section-sub">Semaines 1 à 13</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('suivi-t1')">
+          <span class="article-card-icon">🩺</span>
+          <div class="article-card-title">Suivi médical et premiers examens</div>
+          <p class="article-card-desc">Première consultation, datation, prises de sang, échographie du 1er trimestre, dépistage trisomie 21, groupe sanguin et RAI.</p>
+          <span class="article-card-tag">Suivi</span>
+        </a>
+        <a class="article-card" onclick="openModal('toxoplasmose')">
+          <span class="article-card-icon">🐱</span>
+          <div class="article-card-title">Toxoplasmose</div>
+          <p class="article-card-desc">Transmission, aliments à éviter, prévention et suivi biologique.</p>
+          <span class="article-card-tag">Infection</span>
+        </a>
+        <a class="article-card" onclick="openModal('cmv')">
+          <span class="article-card-icon">🦠</span>
+          <div class="article-card-title">CMV</div>
+          <p class="article-card-desc">Modes de transmission, prévention au quotidien et risques pendant la grossesse.</p>
+          <span class="article-card-tag">Infection</span>
+        </a>
+        <a class="article-card" onclick="openModal('listeriose')">
+          <span class="article-card-icon">🥗</span>
+          <div class="article-card-title">Listériose</div>
+          <p class="article-card-desc">Aliments à risque, conseils alimentaires et symptômes d'alerte.</p>
+          <span class="article-card-tag">Alimentation</span>
+        </a>
+        <a class="article-card" onclick="openModal('symptomes-t1')">
+          <span class="article-card-icon">💤</span>
+          <div class="article-card-title">Symptômes et désagréments</div>
+          <p class="article-card-desc">Nausées, vomissements, fatigue, douleurs ligamentaires, ballonnements, sensibilité mammaire.</p>
+          <span class="article-card-tag">Symptômes</span>
+        </a>
+        <a class="article-card" onclick="openModal('risques-t1')">
+          <span class="article-card-icon">⚠️</span>
+          <div class="article-card-title">Risques et précautions</div>
+          <p class="article-card-desc">Médicaments autorisés et interdits, sport, voyages, rapports sexuels, travail et grossesse.</p>
+          <span class="article-card-tag">Précautions</span>
+        </a>
+        <a class="article-card" onclick="openModal('mode-garde')">
+          <span class="article-card-icon">🏠</span>
+          <div class="article-card-title">Démarches pour le mode de garde</div>
+          <p class="article-card-desc">Quand commencer, crèche, accueillante et documents utiles.</p>
+          <span class="article-card-tag">Démarches</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2E TRIMESTRE -->
+    <div class="content-section">
+      <span class="section-anchor" id="t2"></span>
+      <div class="section-header">
+        <div class="section-icon">🌸</div>
+        <div><div class="section-title">2e Trimestre</div><div class="section-sub">Semaines 14 à 27</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('suivi-t2')">
+          <span class="article-card-icon">🔬</span>
+          <div class="article-card-title">Suivi médical du 2e trimestre</div>
+          <p class="article-card-desc">Consultations, échographie morphologique, prise de poids, mouvements fœtaux, dépistage du diabète gestationnel.</p>
+          <span class="article-card-tag">Suivi</span>
+        </a>
+        <a class="article-card" onclick="openModal('changements-t2')">
+          <span class="article-card-icon">🌷</span>
+          <div class="article-card-title">Changements physiques et conseils</div>
+          <p class="article-card-desc">Douleurs lombaires, vergetures, circulation veineuse, sommeil, sexualité.</p>
+          <span class="article-card-tag">Corps</span>
+        </a>
+        <a class="article-card" onclick="openModal('prep-accouchement')">
+          <span class="article-card-icon">🧘</span>
+          <div class="article-card-title">Préparation à l'accouchement</div>
+          <p class="article-card-desc">Quand commencer, types de préparation, respiration, gestion de la douleur, projet de naissance.</p>
+          <span class="article-card-tag">Préparation</span>
+        </a>
+        <a class="article-card" onclick="openModal('allocations')">
+          <span class="article-card-icon">📄</span>
+          <div class="article-card-title">Démarches pour les allocations de naissance</div>
+          <p class="article-card-desc">Prime de naissance, mutuelle et documents administratifs.</p>
+          <span class="article-card-tag">Démarches</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 3E TRIMESTRE -->
+    <div class="content-section">
+      <span class="section-anchor" id="t3"></span>
+      <div class="section-header">
+        <div class="section-icon">⭐</div>
+        <div><div class="section-title">3e Trimestre</div><div class="section-sub">Semaines 28 à 40</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('suivi-t3')">
+          <span class="article-card-icon">📋</span>
+          <div class="article-card-title">Suivi médical et examens de fin de grossesse</div>
+          <p class="article-card-desc">Monitoring, échographies de croissance, prélèvement streptocoque B, surveillance tensionnelle, signes de travail.</p>
+          <span class="article-card-tag">Suivi</span>
+        </a>
+        <a class="article-card" onclick="openModal('valise')">
+          <span class="article-card-icon">🧳</span>
+          <div class="article-card-title">Valise maternité</div>
+          <p class="article-card-desc">Pour la maman, pour le bébé, documents administratifs et conseils pratiques.</p>
+          <span class="article-card-tag">Pratique</span>
+        </a>
+        <a class="article-card" onclick="openModal('symptomes-t3')">
+          <span class="article-card-icon">💬</span>
+          <div class="article-card-title">Symptômes et conseils</div>
+          <p class="article-card-desc">Contractions de Braxton Hicks, essoufflement, troubles du sommeil, œdèmes, douleurs pelviennes.</p>
+          <span class="article-card-tag">Symptômes</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- PATHOLOGIES -->
+    <div class="content-section">
+      <span class="section-anchor" id="pathologies"></span>
+      <div class="section-header">
+        <div class="section-icon">🩺</div>
+        <div><div class="section-title">Pathologies de la grossesse</div><div class="section-sub">Complications pouvant survenir pendant la grossesse</div></div>
+      </div>
+      <div class="articles-grid">
+        <a class="article-card" onclick="openModal('diabete')">
+          <span class="article-card-icon">🍬</span>
+          <div class="article-card-title">Diabète gestationnel</div>
+          <p class="article-card-desc">Facteurs de risque, diagnostic, surveillance et conseils alimentaires.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('preeclampsie')">
+          <span class="article-card-icon">⚡</span>
+          <div class="article-card-title">Prééclampsie</div>
+          <p class="article-card-desc">Symptômes d'alerte, surveillance et quand consulter.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('cholestase')">
+          <span class="article-card-icon">🟡</span>
+          <div class="article-card-title">Cholestase gravidique</div>
+          <p class="article-card-desc">Démangeaisons, diagnostic et surveillance.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('map')">
+          <span class="article-card-icon">⏰</span>
+          <div class="article-card-title">Menace d'accouchement prématuré (MAP)</div>
+          <p class="article-card-desc">Symptômes, quand consulter et prise en charge.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('hyperemese')">
+          <span class="article-card-icon">🤢</span>
+          <div class="article-card-title">Hyperémèse gravidique</div>
+          <p class="article-card-desc">Symptômes, risques et traitements.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('fausses-couches')">
+          <span class="article-card-icon">🌿</span>
+          <div class="article-card-title">Fausses couches</div>
+          <p class="article-card-desc">Symptômes, prise en charge et soutien émotionnel.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('decollement')">
+          <span class="article-card-icon">🔴</span>
+          <div class="article-card-title">Décollement du sac gestationnel</div>
+          <p class="article-card-desc">Symptômes, surveillance et recommandations.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('infections-urinaires')">
+          <span class="article-card-icon">💧</span>
+          <div class="article-card-title">Infections urinaires</div>
+          <p class="article-card-desc">Symptômes, prévention et traitement.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('oedemes')">
+          <span class="article-card-icon">🦵</span>
+          <div class="article-card-title">Œdèmes des jambes</div>
+          <p class="article-card-desc">Causes, conseils pratiques et signes d'alerte.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('douleurs-abdominales')">
+          <span class="article-card-icon">🤰</span>
+          <div class="article-card-title">Douleurs abdominales du 1er trimestre</div>
+          <p class="article-card-desc">Causes fréquentes, signes d'urgence et quand consulter.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('anemie')">
+          <span class="article-card-icon">🩸</span>
+          <div class="article-card-title">Anémie</div>
+          <p class="article-card-desc">Symptômes, prévention et traitement.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('streptocoque')">
+          <span class="article-card-icon">🧫</span>
+          <div class="article-card-title">Streptocoque B</div>
+          <p class="article-card-desc">Dépistage, conséquences et antibiotiques pendant le travail.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+        <a class="article-card" onclick="openModal('geu')">
+          <span class="article-card-icon">🚨</span>
+          <div class="article-card-title">Grossesse extra-utérine</div>
+          <p class="article-card-desc">Symptômes, diagnostic et urgence médicale.</p>
+          <span class="article-card-tag">Urgence</span>
+        </a>
+        <a class="article-card" onclick="openModal('canal-carpien')">
+          <span class="article-card-icon">✋</span>
+          <div class="article-card-title">Syndrome du canal carpien</div>
+          <p class="article-card-desc">Symptômes, conseils, attelles et traitements.</p>
+          <span class="article-card-tag">Pathologie</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div><div class="modal-badge" id="modalBadge"></div><div class="modal-title" id="modalTitle"></div></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const MODALS={
+'suivi-t1':{badge:'🌱 1er trimestre',title:'Suivi médical et premiers examens',body:`<h3>Première consultation de grossesse</h3><p>À réaliser avant 10 SA. Interrogatoire médical complet, antécédents personnels et familiaux, prescription des premiers examens.</p><h3>Datation de grossesse</h3><p>Calculée à partir du 1er jour des dernières règles ou précisée par l'échographie de datation.</p><h3>Prises de sang obligatoires</h3><ul><li>Groupe sanguin et RAI</li><li>Numération formule sanguine</li><li>Sérologies : toxoplasmose, rubéole, syphilis, hépatite B</li><li>Glycémie à jeun</li></ul><h3>Échographie du 1er trimestre</h3><p>Entre 11 SA et 13 SA + 6 jours. Vérifie la vitalité, le nombre d'embryons et mesure la clarté nucale.</p><h3>Dépistage de la trisomie 21</h3><p>Combiné clarté nucale + marqueurs sériques maternels. Un résultat positif nécessite une consultation génétique.</p><h3>Groupe sanguin et RAI</h3><p>La recherche d'agglutinines irrégulières est obligatoire et répétée pendant la grossesse pour détecter un conflit fœto-maternel.</p>`},
+'toxoplasmose':{badge:'🌱 1er trimestre',title:'Toxoplasmose',body:`<h3>Transmission</h3><ul><li>Consommation de viande crue ou peu cuite</li><li>Légumes et fruits mal lavés</li><li>Contact avec les selles de chat infecté</li><li>Jardinage sans gants</li></ul><h3>Aliments à éviter</h3><ul><li>Viande crue ou saignante</li><li>Charcuteries non cuites</li><li>Légumes et fruits crus non lavés</li></ul><h3>Prévention</h3><ul><li>Cuire la viande à cœur (> 65°C)</li><li>Laver soigneusement fruits et légumes</li><li>Porter des gants pour jardiner</li><li>Éviter le contact avec la litière du chat</li><li>Se laver les mains régulièrement</li></ul><h3>Suivi biologique</h3><p>Si vous n'êtes pas immunisée, une sérologie est réalisée chaque mois. En cas de séroconversion, un suivi spécialisé est mis en place.</p>`},
+'cmv':{badge:'🌱 1er trimestre',title:'CMV — Cytomégalovirus',body:`<h3>Modes de transmission</h3><ul><li>Salive des jeunes enfants</li><li>Urines des jeunes enfants (surtout ceux en crèche)</li><li>Contact sexuel</li></ul><h3>Prévention au quotidien</h3><ul><li>Se laver les mains après les changes</li><li>Ne pas partager couverts, verres ou biberons avec un enfant</li><li>Éviter les baisers sur la bouche avec de jeunes enfants</li><li>Ne pas finir l'assiette ou le biberon de l'enfant</li></ul><h3>Risques pendant la grossesse</h3><p>Une primo-infection à CMV peut entraîner des séquelles graves : surdité, retard neurologique, troubles visuels. Il n'existe pas de vaccin — la prévention repose uniquement sur l'hygiène.</p>`},
+'listeriose':{badge:'🌱 1er trimestre',title:'Listériose',body:`<h3>Aliments à risque</h3><ul><li>Charcuteries (rillettes, pâtés, foie gras)</li><li>Fromages à pâte molle à croûte fleurie (camembert, brie…)</li><li>Fromages au lait cru</li><li>Poissons fumés, tarama, surimi</li><li>Coquillages et crustacés crus</li><li>Graines germées crues</li></ul><h3>Conseils alimentaires</h3><ul><li>Privilégier les fromages à pâte cuite (emmental, comté)</li><li>Cuire à cœur viandes et poissons</li><li>Nettoyer régulièrement le réfrigérateur</li><li>Respecter les dates de péremption</li></ul><h3>Symptômes d'alerte</h3><p>Fièvre, maux de tête, courbatures après consommation d'un aliment à risque. Consultez rapidement — un traitement antibiotique est efficace.</p>`},
+'symptomes-t1':{badge:'🌱 1er trimestre',title:'Symptômes et désagréments',body:`<h3>Nausées et vomissements</h3><p>Touchent 70 à 80% des femmes. Conseils : petits repas fréquents, éviter les odeurs fortes, privilégier les aliments secs.</p><h3>Fatigue</h3><p>Très fréquente, liée à la progestérone. Écoutez votre corps et reposez-vous.</p><h3>Douleurs ligamentaires</h3><p>Tiraillements dans le bas-ventre liés à l'étirement des ligaments ronds. Normales si brèves et sans saignements.</p><h3>Ballonnements</h3><p>La progestérone ralentit le transit intestinal. Mangez lentement, évitez les aliments fermentescibles.</p><h3>Sensibilité mammaire</h3><p>Seins gonflés, tendus et douloureux. L'un des premiers signes de grossesse, lié à l'augmentation des hormones.</p>`},
+'risques-t1':{badge:'🌱 1er trimestre',title:'Risques et précautions',body:`<h3>Médicaments autorisés et interdits</h3><p>Ne prenez jamais un médicament sans avis médical. Le paracétamol est autorisé en première intention. L'ibuprofène et l'aspirine sont contre-indiqués. Signalez toujours votre grossesse à votre médecin et pharmacien.</p><h3>Sport et activité physique</h3><p>Une activité modérée est bénéfique. Évitez les sports de contact, à risque de chute et la plongée. La natation et la marche sont recommandées.</p><h3>Voyages</h3><p>Possibles jusqu'à 36 SA en avion. Évitez les pays à risque infectieux élevé (paludisme, zika). Bougez lors des longs trajets.</p><h3>Rapports sexuels</h3><p>Possibles en l'absence de contre-indication médicale (placenta praevia, MAP, saignements).</p><h3>Travail et grossesse</h3><p>Informez votre employeur quand vous le souhaitez. Des aménagements de poste peuvent être demandés si votre travail présente des risques.</p>`},
+'mode-garde':{badge:'🌱 1er trimestre',title:'Démarches pour le mode de garde',body:`<h3>Quand commencer les recherches</h3><p>Dès le début de la grossesse — les listes d'attente peuvent être très longues. Plus tôt vous vous inscrivez, mieux c'est.</p><h3>Crèche</h3><p>Crèches communales, privées ou d'entreprise. Inscrivez-vous auprès de votre commune ou de l'ONE (Office de la Naissance et de l'Enfance) en Belgique.</p><h3>Accueillante</h3><p>Accueillante conventionnée ONE ou indépendante. Renseignez-vous auprès de votre commune ou de l'ONE de votre région.</p><h3>Documents utiles</h3><ul><li>Attestation de grossesse</li><li>Justificatif de revenus</li><li>Carte d'identité</li><li>Composition de ménage</li></ul>`},
+'suivi-t2':{badge:'🌸 2e trimestre',title:'Suivi médical du 2e trimestre',body:`<h3>Consultations de suivi</h3><p>Une consultation mensuelle obligatoire. Chaque consultation comprend : tension artérielle, poids, hauteur utérine et contrôle des urines.</p><h3>Échographie morphologique</h3><p>Entre 20 et 25 SA. Vérifie l'anatomie complète du bébé, la localisation du placenta et la quantité de liquide amniotique.</p><h3>Prise de poids</h3><p>Environ 300 à 400g par semaine au 2e trimestre. Votre sage-femme surveille cette évolution à chaque consultation.</p><h3>Mouvements fœtaux</h3><p>Perçus entre 18 et 22 SA. À partir de 28 SA, surveillez leur présence quotidienne — une diminution doit être signalée.</p><h3>Dépistage du diabète gestationnel</h3><p>Test HGPO (75g de glucose) entre 24 et 28 SA chez les femmes à risque.</p>`},
+'changements-t2':{badge:'🌸 2e trimestre',title:'Changements physiques et conseils',body:`<h3>Douleurs lombaires</h3><p>Fréquentes avec l'augmentation du poids de l'utérus. Maintenir une bonne posture, éviter de rester debout trop longtemps, port d'une ceinture de grossesse si nécessaire.</p><h3>Vergetures</h3><p>Liées à l'étirement de la peau. La prédisposition est génétique. Hydratation quotidienne peut limiter leur apparition.</p><h3>Circulation veineuse</h3><p>L'utérus comprime les veines pelviennes. Conseils : surélever les jambes, port de bas de contention, éviter la chaleur excessive.</p><h3>Sommeil</h3><p>Dormir sur le côté gauche est recommandé à partir du 2e trimestre. Un coussin entre les jambes améliore le confort.</p><h3>Sexualité</h3><p>Possible et sans risque pour le bébé en l'absence de contre-indication médicale.</p>`},
+'prep-accouchement':{badge:'🌸 2e trimestre',title:"Préparation à l'accouchement",body:`<h3>Quand commencer</h3><p>En général entre 24 et 32 SA, auprès de votre sage-femme ou de votre maternité.</p><h3>Types de préparation</h3><ul><li>Préparation classique (sage-femme)</li><li>Sophrologie</li><li>Haptonomie</li><li>Yoga prénatal</li><li>Natation prénatale</li><li>Hypnose obstétricale</li></ul><h3>Respiration</h3><p>Maîtriser sa respiration permet de gérer les contractions et de rester calme pendant le travail.</p><h3>Gestion de la douleur</h3><p>Péridurale, TENS, bain chaud, massage, positions… De nombreuses options existent. Discutez-en avec votre sage-femme.</p><h3>Projet de naissance</h3><p>Document remis à la maternité pour exprimer vos souhaits concernant l'accouchement. Permet une communication claire avec l'équipe médicale.</p>`},
+'allocations':{badge:'🌸 2e trimestre',title:'Démarches pour les allocations de naissance',body:`<h3>Prime de naissance</h3><p>En Belgique, la prime de naissance est versée par la caisse d'allocations familiales (Famiwal en Wallonie, Groeipakket en Flandre, Iriscare à Bruxelles). Renseignez-vous dès la grossesse.</p><h3>Mutuelle</h3><p>Contactez votre mutuelle pour les interventions auxquelles vous avez droit : remboursement des consultations prénatales, prime de naissance complémentaire selon les mutuelles.</p><h3>Documents administratifs</h3><ul><li>Attestation de grossesse délivrée par votre médecin</li><li>Carte d'identité</li><li>Composition de ménage</li><li>Numéro de compte bancaire</li></ul>`},
+'suivi-t3':{badge:'⭐ 3e trimestre',title:'Suivi médical et examens de fin de grossesse',body:`<h3>Monitoring</h3><p>Enregistrement du rythme cardiaque fœtal et des contractions utérines, réalisé lors des consultations de fin de grossesse.</p><h3>Échographies de croissance</h3><p>Entre 30 et 35 SA pour vérifier la croissance du bébé, la quantité de liquide amniotique et la localisation du placenta.</p><h3>Prélèvement streptocoque B</h3><p>Entre 34 et 38 SA. Si positif, une antibioprophylaxie sera administrée pendant le travail.</p><h3>Surveillance tensionnelle</h3><p>La tension artérielle est vérifiée à chaque consultation. Une tension élevée peut signaler une prééclampsie.</p><h3>Signes de travail</h3><p>Contractions régulières et douloureuses, perte du bouchon muqueux, rupture de la poche des eaux. Appelez la maternité en cas de doute.</p>`},
+'valise':{badge:'⭐ 3e trimestre',title:'Valise maternité',body:`<h3>Pour la maman</h3><ul><li>Documents d'identité et carte de mutuelle</li><li>Carnet de maternité et résultats d'examens</li><li>Vêtements de nuit confortables</li><li>Articles de toilette</li><li>Slips de maternité</li><li>Soutien-gorge d'allaitement si vous allaitez</li></ul><h3>Pour le bébé</h3><ul><li>Bodies et pyjamas (taille 50 et 56)</li><li>Turbulette</li><li>Bonnet, chaussettes</li><li>Couches newborn</li><li>Lingettes</li></ul><h3>Documents administratifs</h3><ul><li>Carte d'identité des deux parents</li><li>Carte de mutuelle</li><li>Carnet de maternité complet</li></ul><h3>Conseils pratiques</h3><p>Préparez la valise dès 36 SA. Vérifiez que le siège auto est installé avant le terme.</p>`},
+'symptomes-t3':{badge:'⭐ 3e trimestre',title:'Symptômes et conseils',body:`<h3>Contractions de Braxton Hicks</h3><p>Contractions irrégulières et indolores qui préparent l'utérus au travail. Normales au 3e trimestre. Se distinguent des vraies contractions par leur irrégularité et leur disparition au repos.</p><h3>Essoufflement</h3><p>L'utérus appuie sur le diaphragme. Ralentissez le rythme, dormez légèrement surélevée.</p><h3>Troubles du sommeil</h3><p>Difficultés à trouver une position confortable, envies fréquentes d'uriner. Utilisez des coussins de grossesse et dormez sur le côté gauche.</p><h3>Œdèmes</h3><p>Gonflement des chevilles et des pieds en fin de journée. Surélevez les jambes. Des œdèmes soudains du visage peuvent signaler une prééclampsie.</p><h3>Douleurs pelviennes</h3><p>La relaxine assouplit les articulations du bassin. Évitez les positions asymétriques, utilisez une ceinture pelvienne si nécessaire.</p>`},
+'diabete':{badge:'🩺 Pathologie',title:'Diabète gestationnel',body:`<h3>Facteurs de risque</h3><ul><li>IMC supérieur à 25 avant la grossesse</li><li>Antécédents familiaux de diabète type 2</li><li>Antécédents de diabète gestationnel</li><li>Âge supérieur à 35 ans</li><li>Antécédent de macrosomie fœtale</li></ul><h3>Diagnostic</h3><p>Test HGPO (75g de glucose) entre 24 et 28 SA.</p><h3>Surveillance</h3><p>Glycémies capillaires pluriquotidiennes, consultations rapprochées, monitoring fœtal régulier en fin de grossesse.</p><h3>Conseils alimentaires</h3><ul><li>Répartir les glucides sur 3 repas + collations</li><li>Privilégier les glucides à index glycémique bas</li><li>Éviter les sucres rapides et les boissons sucrées</li><li>Associer protéines et fibres à chaque repas</li></ul>`},
+'preeclampsie':{badge:'🩺 Pathologie',title:'Prééclampsie',body:`<h3>Symptômes d'alerte</h3><div class="urgent-box"><div class="urgent-box-title">🚨 Appelez le 112 si vous présentez</div><p>Maux de tête intenses · Troubles visuels · Acouphènes · Douleur en barre sous les côtes · Œdèmes soudains du visage · Prise de poids rapide (> 1 kg/semaine)</p></div><h3>Surveillance</h3><p>Mesure régulière de la tension artérielle, contrôle des urines (protéinurie), surveillance du poids.</p><h3>Quand consulter</h3><p>Tout signe neurologique ou visuel associé à une tension élevée nécessite une consultation en urgence à la maternité sans attendre.</p>`},
+'cholestase':{badge:'🩺 Pathologie',title:'Cholestase gravidique',body:`<h3>Démangeaisons</h3><p>Démangeaisons intenses, surtout nocturnes, surtout aux paumes des mains et plantes des pieds. C'est le signe principal.</p><h3>Diagnostic</h3><p>Bilan hépatique (ASAT, ALAT) et dosage des acides biliaires totaux. Le diagnostic est confirmé par des acides biliaires élevés.</p><h3>Surveillance</h3><p>Surveillance fœtale renforcée. Traitement par acide ursodésoxycholique. L'accouchement est souvent déclenché avant le terme.</p>`},
+'map':{badge:'🩺 Pathologie',title:"Menace d'accouchement prématuré (MAP)",body:`<h3>Symptômes</h3><ul><li>Contractions régulières (plus de 4/heure) avant 37 SA</li><li>Pression pelvienne intense</li><li>Pertes vaginales anormales (liquide, sang)</li><li>Douleurs lombaires basses persistantes</li></ul><h3>Quand consulter</h3><div class="urgent-box"><div class="urgent-box-title">🚨 Appelez la maternité immédiatement</div><p>En cas de contractions régulières avant 37 SA ou de pertes de liquide. Ne conduisez pas seule.</p></div><h3>Prise en charge</h3><p>Repos strict, tocolyse, corticothérapie si accouchement avant 34 SA probable. Hospitalisation souvent nécessaire.</p>`},
+'hyperemese':{badge:'🩺 Pathologie',title:'Hyperémèse gravidique',body:`<h3>Symptômes</h3><p>Nausées et vomissements très sévères et persistants, impossibilité de s'alimenter ou de s'hydrater normalement.</p><h3>Risques</h3><ul><li>Déshydratation</li><li>Perte de poids importante (> 5% du poids corporel)</li><li>Déséquilibres électrolytiques</li><li>Carences nutritionnelles</li></ul><h3>Traitements</h3><p>Antiémétiques sous contrôle médical, vitamine B6, réhydratation intraveineuse si nécessaire. Une hospitalisation peut être nécessaire en cas de déshydratation sévère.</p>`},
+'fausses-couches':{badge:'🩺 Pathologie',title:'Fausses couches',body:`<h3>Symptômes</h3><ul><li>Saignements vaginaux</li><li>Douleurs pelviennes</li><li>Disparition des symptômes de grossesse</li></ul><h3>Prise en charge</h3><p>Selon la situation : expectative, traitement médical ou chirurgical. Suivi biologique par bêta-HCG pour confirmer la fin de la grossesse.</p><h3>Soutien émotionnel</h3><p>Une fausse couche est un deuil. Un accompagnement psychologique est légitime et recommandé. Des examens complémentaires sont réalisés après 3 fausses couches consécutives.</p>`},
+'decollement':{badge:'🩺 Pathologie',title:'Décollement du sac gestationnel',body:`<h3>Symptômes</h3><p>Saignements vaginaux au 1er trimestre, parfois accompagnés de légères douleurs pelviennes. L'hématome est visible à l'échographie.</p><h3>Surveillance</h3><p>Échographies de contrôle. Dans la grande majorité des cas, l'hématome se résorbe spontanément.</p><h3>Recommandations</h3><ul><li>Repos relatif</li><li>Éviter les efforts importants</li><li>Éviter les rapports sexuels jusqu'à résolution</li><li>Consulter en cas d'augmentation des saignements</li></ul>`},
+'infections-urinaires':{badge:'🩺 Pathologie',title:'Infections urinaires',body:`<h3>Symptômes</h3><ul><li>Brûlures lors de la miction</li><li>Envies fréquentes et urgentes d'uriner</li><li>Urines troubles ou malodorantes</li><li>Parfois sans symptômes (bactériurie asymptomatique)</li></ul><h3>Prévention</h3><ul><li>Boire abondamment</li><li>Ne pas se retenir d'uriner</li><li>S'essuyer d'avant en arrière</li></ul><h3>Traitement</h3><p>Antibiothérapie adaptée à l'antibiogramme et compatible avec la grossesse. La bactériurie asymptomatique doit aussi être traitée pendant la grossesse.</p>`},
+'oedemes':{badge:'🩺 Pathologie',title:'Œdèmes des jambes',body:`<h3>Causes</h3><p>L'utérus comprime les veines pelviennes, ralentissant le retour veineux. La rétention hydrique liée aux hormones aggrave le phénomène.</p><h3>Conseils pratiques</h3><ul><li>Surélever les jambes au repos</li><li>Porter des bas de contention dès le matin</li><li>Éviter la station debout prolongée</li><li>Marcher régulièrement</li></ul><h3>Signes d'alerte</h3><p>Des œdèmes soudains et importants du visage ou des mains peuvent être un signe de prééclampsie. Consultez sans attendre.</p>`},
+'douleurs-abdominales':{badge:'🩺 Pathologie',title:'Douleurs abdominales du 1er trimestre',body:`<h3>Causes fréquentes</h3><ul><li>Étirement des ligaments ronds (douleurs ligamentaires)</li><li>Ballonnements et constipation</li><li>Crampes légères liées à l'implantation</li></ul><h3>Signes d'urgence</h3><ul><li>Douleurs intenses et unilatérales + saignements → grossesse extra-utérine possible</li><li>Douleurs avec fièvre → infection</li><li>Douleurs avec saignements abondants → fausse couche possible</li></ul><h3>Quand consulter</h3><p>Toute douleur intense, persistante ou accompagnée de saignements, fièvre ou malaise doit amener à consulter rapidement ou à appeler le 112.</p>`},
+'anemie':{badge:'🩺 Pathologie',title:'Anémie',body:`<h3>Symptômes</h3><ul><li>Fatigue importante</li><li>Pâleur</li><li>Essoufflement à l'effort</li><li>Palpitations</li><li>Maux de tête</li></ul><h3>Prévention</h3><ul><li>Alimentation riche en fer : viande rouge, légumineuses, épinards, fruits secs</li><li>Associer les aliments riches en fer avec de la vitamine C</li><li>Éviter thé et café au moment des repas</li></ul><h3>Traitement</h3><p>Supplémentation en fer par voie orale sur prescription médicale. En cas d'anémie sévère, traitement intraveineux possible.</p>`},
+'streptocoque':{badge:'🩺 Pathologie',title:'Streptocoque B',body:`<h3>Dépistage</h3><p>Prélèvement vaginal systématique entre 34 et 38 SA pour rechercher le Streptococcus agalactiae. Présent chez 10 à 30% des femmes sans les rendre malades.</p><h3>Conséquences</h3><p>Inoffensif pour la mère mais peut contaminer le nouveau-né lors de l'accouchement, provoquant une infection néonatale grave (méningite, septicémie).</p><h3>Antibiotiques pendant le travail</h3><p>Si le prélèvement est positif, une antibioprophylaxie par pénicilline est administrée dès le début du travail pour protéger le nouveau-né.</p>`},
+'geu':{badge:'🚨 Urgence',title:'Grossesse extra-utérine',body:`<div class="urgent-box"><div class="urgent-box-title">🚨 URGENCE ABSOLUE — Appelez le 112</div><p>Si vous suspectez une grossesse extra-utérine, n'attendez pas. Ne conduisez pas seule.</p></div><h3>Symptômes</h3><ul><li>Douleurs pelviennes unilatérales intenses</li><li>Saignements vaginaux en début de grossesse</li><li>Malaise, syncope</li><li>Test de grossesse positif avec douleurs</li></ul><h3>Diagnostic</h3><p>Échographie pelvienne + dosage de la bêta-HCG en urgence.</p><h3>Urgence médicale</h3><p>Peut se rompre et provoquer une hémorragie interne. Traitement médical (méthotrexate) ou chirurgical selon la situation.</p>`},
+'canal-carpien':{badge:'🩺 Pathologie',title:'Syndrome du canal carpien',body:`<h3>Symptômes</h3><ul><li>Fourmillements et engourdissements des mains (surtout pouce, index, majeur)</li><li>Douleurs des poignets, souvent nocturnes</li><li>Sensation de gonflement des mains</li><li>Diminution de la force de préhension</li></ul><h3>Conseils</h3><ul><li>Éviter les mouvements répétitifs des poignets</li><li>Surélever les mains au repos</li><li>Appliquer du froid sur les poignets</li></ul><h3>Attelles et traitements</h3><p>Port d'une attelle de poignet la nuit. Les symptômes régressent généralement après l'accouchement avec la diminution des œdèmes.</p>`},
+};
+function openModal(id){const d=MODALS[id];if(!d)return;document.getElementById('modalBadge').textContent=d.badge;document.getElementById('modalTitle').textContent=d.title;document.getElementById('modalBody').innerHTML=d.body;document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';}
+function closeModalBg(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+const sections=document.querySelectorAll('.section-anchor');
+const navItems=document.querySelectorAll('.side-nav-item');
+window.addEventListener('scroll',()=>{let cur='';sections.forEach(s=>{if(window.scrollY>=s.offsetTop-120)cur=s.id;});navItems.forEach(n=>{n.classList.remove('active');if(n.getAttribute('href')==='#'+cur)n.classList.add('active');});});
+</script>
+</body>
+</html>
