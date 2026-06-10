@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscription Médecin — Santé Féminine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FAF7F2;--cream-dark:#F0EBE1;--rose:#E8C5BB;--rose-deep:#C9957F;--rose-pale:#F7EDE8;--gold:#C8A96E;--gold-light:#F0E4C0;--gold-pale:#FBF5E6;--text-dark:#2C2420;--text-mid:#6B5B52;--text-light:#A09080;--white:#FFFFFF;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh;}
+nav{height:62px;background:rgba(250,247,242,.96);border-bottom:1px solid var(--cream-dark);display:flex;align-items:center;padding:0 36px;}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:var(--text-dark);text-decoration:none;}
+.nav-logo span{color:var(--rose-deep);}
+.page{max-width:1100px;margin:0 auto;padding:48px 24px 80px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+
+/* ─── GAUCHE : OFFRE ─── */
+.offer-side{}
+.offer-badge{display:inline-flex;align-items:center;gap:7px;background:var(--gold-pale);border:1px solid var(--gold-light);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:600;color:var(--gold);text-transform:uppercase;letter-spacing:.07em;margin-bottom:20px;}
+.offer-title{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:400;color:var(--text-dark);line-height:1.2;margin-bottom:16px;}
+.offer-title em{font-style:italic;color:var(--rose-deep);}
+.offer-desc{font-size:15px;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:32px;}
+
+.price-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:20px;padding:28px;margin-bottom:24px;}
+.price-trial{display:inline-flex;align-items:center;gap:6px;background:var(--rose-pale);border-radius:10px;padding:5px 14px;font-size:12px;color:var(--rose-deep);font-weight:600;margin-bottom:14px;}
+.price-amount{font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:400;color:var(--text-dark);line-height:1;}
+.price-amount sup{font-size:24px;vertical-align:top;margin-top:10px;}
+.price-amount span{font-size:18px;color:var(--text-light);font-family:'DM Sans',sans-serif;font-weight:300;}
+.price-desc{font-size:13px;color:var(--text-light);font-weight:300;margin-top:6px;}
+
+.features{list-style:none;margin-bottom:0;}
+.features li{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--cream-dark);font-size:13.5px;color:var(--text-mid);font-weight:300;}
+.features li:last-child{border-bottom:none;}
+.features li::before{content:'✓';color:var(--rose-deep);font-weight:600;flex-shrink:0;margin-top:1px;}
+
+/* ─── DROITE : FORMULAIRE ─── */
+.form-side{}
+.form-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:24px;padding:36px;}
+.form-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--text-dark);margin-bottom:6px;}
+.form-subtitle{font-size:13px;color:var(--text-light);font-weight:300;margin-bottom:28px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{margin-bottom:0;}
+.form-group.full{grid-column:1/-1;}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text-mid);margin-bottom:7px;letter-spacing:.03em;}
+.form-input,.form-select{width:100%;padding:12px 16px;border:1.5px solid var(--cream-dark);border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text-dark);background:var(--cream);outline:none;transition:all .2s;}
+.form-input:focus,.form-select:focus{border-color:var(--rose-deep);background:var(--white);}
+.form-hint{font-size:11.5px;color:var(--text-light);margin-top:5px;font-weight:300;}
+.error{font-size:12px;color:#C0392B;margin-top:5px;display:none;}
+
+.divider{border:none;border-top:1px solid var(--cream-dark);margin:24px 0;}
+
+/* Paiement */
+.payment-title{font-size:13px;font-weight:600;color:var(--text-mid);text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px;}
+.trial-banner{background:var(--gold-pale);border:1px solid var(--gold-light);border-radius:14px;padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+.trial-banner-icon{font-size:28px;flex-shrink:0;}
+.trial-banner-title{font-size:14px;font-weight:500;color:var(--text-dark);margin-bottom:3px;}
+.trial-banner-sub{font-size:12.5px;color:var(--text-mid);font-weight:300;}
+
+.card-field{padding:13px 16px;border:1.5px solid var(--cream-dark);border-radius:12px;background:var(--cream);margin-bottom:16px;font-size:14px;color:var(--text-light);}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+
+.btn-submit{width:100%;padding:15px;background:var(--text-dark);color:white;border:none;border-radius:14px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-submit:hover{background:var(--rose-deep);}
+.btn-submit:disabled{background:var(--cream-dark);cursor:not-allowed;}
+.form-legal{font-size:11px;color:var(--text-light);text-align:center;margin-top:12px;line-height:1.6;}
+.form-legal a{color:var(--rose-deep);}
+
+.step-indicator{display:flex;gap:8px;margin-bottom:28px;}
+.step{flex:1;height:4px;border-radius:2px;background:var(--cream-dark);transition:all .3s;}
+.step.active{background:var(--rose-deep);}
+.step.done{background:var(--rose);}
+
+/* Success */
+.success-section{display:none;text-align:center;padding:20px 0;}
+.success-icon{font-size:64px;margin-bottom:16px;}
+.success-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;color:var(--text-dark);margin-bottom:10px;}
+.success-text{font-size:14px;color:var(--text-mid);font-weight:300;line-height:1.7;margin-bottom:24px;}
+.btn-access{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:var(--text-dark);color:white;border:none;border-radius:12px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;transition:all .2s;}
+.btn-access:hover{background:var(--rose-deep);}
+
+@media(max-width:900px){
+  .page{grid-template-columns:1fr;}
+  .offer-side{display:none;}
+  nav{padding:0 20px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Santé <span>Féminine</span></a>
+</nav>
+
+<div class="page">
+
+  <!-- ─── OFFRE ─── -->
+  <div class="offer-side">
+    <div class="offer-badge">🩺 Pour les praticiens</div>
+    <h1 class="offer-title">La plateforme santé pour vos <em>patientes</em></h1>
+    <p class="offer-desc">Offrez à vos patientes un accès à des informations médicales validées, un chat de recherche intelligent et un espace personnalisé à votre cabinet.</p>
+
+    <div class="price-card">
+      <div class="price-trial">🎁 1 mois gratuit — sans engagement</div>
+      <div class="price-amount"><sup>€</sup>70<span>/mois</span></div>
+      <div class="price-desc">Puis 70€/mois — résiliable à tout moment</div>
+    </div>
+
+    <ul class="features">
+      <li>Espace personnalisé à votre cabinet (profil, photo, horaires)</li>
+      <li>QR code unique pour vos patientes</li>
+      <li>47 articles médicaux validés par sage-femme</li>
+      <li>Chat de recherche intelligent basé sur vos articles</li>
+      <li>Articles "Infos pratiques" personnalisables</li>
+      <li>Disponible en 5 langues (FR, NL, EN, AR, PT)</li>
+      <li>Roulette de grossesse interactive</li>
+      <li>Support technique inclus</li>
+      <li>Mises à jour régulières du contenu médical</li>
+    </ul>
+  </div>
+
+  <!-- ─── FORMULAIRE ─── -->
+  <div class="form-side">
+    <div class="form-card">
+
+      <div class="step-indicator">
+        <div class="step active" id="step1bar"></div>
+        <div class="step" id="step2bar"></div>
+      </div>
+
+      <!-- ÉTAPE 1 — Informations -->
+      <div id="step1">
+        <div class="form-title">Créer votre compte</div>
+        <p class="form-subtitle">Étape 1/2 — Vos informations professionnelles</p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Prénom</label>
+            <input class="form-input" type="text" id="prenom" placeholder="Marie">
+            <div class="error" id="prenomError"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nom</label>
+            <input class="form-input" type="text" id="nom" placeholder="Dupont">
+            <div class="error" id="nomError"></div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Spécialité</label>
+            <select class="form-select" id="specialite">
+              <option value="">— Choisir —</option>
+              <option value="Gynécologue-obstétricienne">Gynécologue-obstétricienne</option>
+              <option value="Sage-femme">Sage-femme</option>
+              <option value="Sage-femme échographiste">Sage-femme échographiste</option>
+              <option value="Médecin généraliste">Médecin généraliste</option>
+              <option value="Autre">Autre</option>
+            </select>
+            <div class="error" id="specialiteError"></div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Email professionnel</label>
+            <input class="form-input" type="email" id="email" placeholder="dr.dupont@cabinet.be">
+            <div class="error" id="emailError"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mot de passe</label>
+            <input class="form-input" type="password" id="password" placeholder="Minimum 8 caractères">
+            <div class="error" id="passwordError"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirmer</label>
+            <input class="form-input" type="password" id="confirmPassword" placeholder="Répéter le mot de passe">
+            <div class="error" id="confirmError"></div>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Numéro INAMI (optionnel)</label>
+            <input class="form-input" type="text" id="inami" placeholder="1-23456-78-901">
+          </div>
+        </div>
+
+        <button class="btn-submit" onclick="goToStep2()" style="margin-top:20px">
+          Continuer → Paiement
+        </button>
+        <div class="form-legal">
+          En créant un compte vous acceptez nos <a href="#">conditions d'utilisation</a> et notre <a href="#">politique de confidentialité</a>.
+        </div>
+      </div>
+
+      <!-- ÉTAPE 2 — Paiement -->
+      <div id="step2" style="display:none">
+        <div class="form-title">Paiement</div>
+        <p class="form-subtitle">Étape 2/2 — Votre abonnement</p>
+
+        <div class="trial-banner">
+          <div class="trial-banner-icon">🎁</div>
+          <div>
+            <div class="trial-banner-title">1 mois gratuit offert !</div>
+            <div class="trial-banner-sub">Aucun paiement aujourd'hui. Votre carte ne sera débitée qu'après 30 jours.</div>
+          </div>
+        </div>
+
+        <div class="payment-title">Informations de paiement</div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">Titulaire de la carte</label>
+          <input class="form-input" type="text" id="cardName" placeholder="Prénom Nom">
+        </div>
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">Numéro de carte</label>
+          <input class="form-input" type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
+          <div class="error" id="cardError"></div>
+        </div>
+        <div class="card-grid">
+          <div class="form-group">
+            <label class="form-label">Date d'expiration</label>
+            <input class="form-input" type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" oninput="formatExpiry(this)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CVV</label>
+            <input class="form-input" type="text" id="cardCvv" placeholder="123" maxlength="3">
+          </div>
+        </div>
+
+        <div style="background:var(--cream-dark);border-radius:12px;padding:14px 16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:14px;font-weight:500;color:var(--text-dark);">Abonnement Santé Féminine</div>
+            <div style="font-size:12px;color:var(--text-light);font-weight:300;">Mensuel — résiliable à tout moment</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:13px;color:var(--text-light);text-decoration:line-through;">70€/mois</div>
+            <div style="font-size:16px;font-weight:600;color:var(--rose-deep);">0€ aujourd'hui</div>
+          </div>
+        </div>
+
+        <div class="error" id="paymentError"></div>
+
+        <button class="btn-submit" onclick="submitInscription()" id="submitBtn">
+          🔒 Démarrer mon essai gratuit
+        </button>
+        <div class="form-legal" style="margin-top:10px;">
+          🔒 Paiement sécurisé. Votre carte sera débitée de 70€ après 30 jours. Résiliation possible à tout moment depuis votre espace médecin.
+        </div>
+
+        <button onclick="backToStep1()" style="width:100%;margin-top:12px;padding:10px;background:none;border:none;color:var(--text-light);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;">
+          ← Retour
+        </button>
+      </div>
+
+      <!-- SUCCÈS -->
+      <div class="success-section" id="successSection">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">Bienvenue sur Santé Féminine !</div>
+        <p class="success-text">
+          Votre compte a été créé avec succès. Vous bénéficiez d'<strong>1 mois gratuit</strong> sans engagement.<br><br>
+          Votre code médecin vous a été envoyé par email. Vous pouvez dès maintenant accéder à votre espace et partager votre QR code avec vos patientes.
+        </p>
+        <a href="espace-medecin.html" class="btn-access">Accéder à mon espace →</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SUPABASE_URL = 'https://kiavvxomyyvwuexjupdf.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpYXZ2eG9teXl2d3VleGp1cGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTEzOTQsImV4cCI6MjA5NjQyNzM5NH0.d1919fG_0HMdKPcNSbrQTvQK4YyYLQSWvw7vYsMYMnU';
+const SB = {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`};
+
+// Générer un code médecin unique
+function generateCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = 'DOC-';
+  for(let i=0;i<5;i++) code += chars[Math.floor(Math.random()*chars.length)];
+  return code;
+}
+
+// Formater numéro de carte
+function formatCard(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+function formatExpiry(el) {
+  let v = el.value.replace(/\D/g,'');
+  if(v.length>=2) v = v.substring(0,2)+'/'+v.substring(2,4);
+  el.value = v;
+}
+
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  if(el){el.textContent=msg;el.style.display='block';}
+}
+function clearErrors() {
+  document.querySelectorAll('.error').forEach(e=>{e.style.display='none';e.textContent='';});
+}
+
+function goToStep2() {
+  clearErrors();
+  let valid = true;
+  if(!document.getElementById('prenom').value.trim()){showError('prenomError','Prénom requis');valid=false;}
+  if(!document.getElementById('nom').value.trim()){showError('nomError','Nom requis');valid=false;}
+  if(!document.getElementById('specialite').value){showError('specialiteError','Choisissez une spécialité');valid=false;}
+  const email = document.getElementById('email').value.trim();
+  if(!email||!email.includes('@')){showError('emailError','Email valide requis');valid=false;}
+  const pwd = document.getElementById('password').value;
+  if(pwd.length<8){showError('passwordError','Minimum 8 caractères');valid=false;}
+  if(pwd!==document.getElementById('confirmPassword').value){showError('confirmError','Les mots de passe ne correspondent pas');valid=false;}
+  if(!valid) return;
+
+  document.getElementById('step1').style.display='none';
+  document.getElementById('step2').style.display='block';
+  document.getElementById('step1bar').classList.add('done');
+  document.getElementById('step2bar').classList.add('active');
+}
+
+function backToStep1() {
+  document.getElementById('step2').style.display='none';
+  document.getElementById('step1').style.display='block';
+  document.getElementById('step2bar').classList.remove('active');
+}
+
+async function submitInscription() {
+  clearErrors();
+  const cardName = document.getElementById('cardName').value.trim();
+  const cardNum = document.getElementById('cardNumber').value.replace(/\s/g,'');
+  const expiry = document.getElementById('cardExpiry').value;
+  const cvv = document.getElementById('cardCvv').value;
+
+  if(!cardName||cardNum.length<16||!expiry||cvv.length<3){
+    showError('cardError','Veuillez remplir toutes les informations de paiement.');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Création du compte...';
+
+  // Créer le médecin dans Supabase
+  const code = generateCode();
+  const prenom = document.getElementById('prenom').value.trim();
+  const nom = document.getElementById('nom').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const specialite = document.getElementById('specialite').value;
+  const inami = document.getElementById('inami').value.trim();
+
+  const trialEnd = new Date();
+  trialEnd.setDate(trialEnd.getDate() + 30);
+
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/medecins`, {
+    method: 'POST',
+    headers: {...SB, 'Prefer':'return=representation'},
+    body: JSON.stringify({
+      code, prenom, nom, email,
+      mot_de_passe: password,
+      specialite, inami: inami||null,
+      trial_end: trialEnd.toISOString(),
+      abonnement_actif: true,
+    })
+  });
+
+  if(res.ok) {
+    document.getElementById('step2').style.display='none';
+    document.getElementById('successSection').style.display='block';
+  } else {
+    const err = await res.json();
+    if(err.code==='23505'){
+      backToStep1();
+      showError('emailError','Cet email est déjà utilisé. Connectez-vous.');
+    } else {
+      showError('paymentError','Une erreur est survenue. Réessayez.');
+    }
+    btn.disabled=false;
+    btn.innerHTML='🔒 Démarrer mon essai gratuit';
+  }
+}
+</script>
+</body>
+</html>
