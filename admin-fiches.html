@@ -534,6 +534,13 @@ body {
       Accès réservé au praticien
     </div>
     <input
+      type="email"
+      id="adminEmail"
+      placeholder="Email administrateur"
+      autocomplete="username"
+      style="width:100%;padding:13px 16px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.07);color:white;font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box;"
+    >
+    <input
       type="password"
       id="adminPassword"
       placeholder="Mot de passe"
@@ -570,18 +577,31 @@ body {
   </div>
 </div>
 
+<script src="assets/session.js"></script>
 <script>
-// Mot de passe admin — changez-le ici
-const ADMIN_PASSWORD = 'eylacare2025';
-
-function checkPassword() {
-  const input = document.getElementById('adminPassword').value;
+async function checkPassword() {
+  const email = document.getElementById('adminEmail').value.trim().toLowerCase();
+  const password = document.getElementById('adminPassword').value;
   const error = document.getElementById('passwordError');
-  if (input === ADMIN_PASSWORD) {
-    document.getElementById('passwordOverlay').style.display = 'none';
-    sessionStorage.setItem('adminAuth', 'true');
-  } else {
+  error.style.display = 'none';
+  try {
+    const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','apikey':SUPABASE_KEY},
+      body: JSON.stringify({email, password})
+    });
+    const auth = await response.json();
+    if (!response.ok) throw new Error('invalid');
+    SFSession.save(auth);
+    const roleResponse = await fetch(`${SUPABASE_URL}/rest/v1/rpc/is_admin`, {
+      method:'POST', headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${auth.access_token}`}, body:'{}'
+    });
+    if (!roleResponse.ok || await roleResponse.json() !== true) throw new Error('forbidden');
+    location.reload();
+  } catch (e) {
+    SFSession.clear();
     error.style.display = 'block';
+    error.textContent = 'Email, mot de passe ou rôle administrateur incorrect.';
     document.getElementById('adminPassword').value = '';
     document.getElementById('adminPassword').focus();
     document.getElementById('adminPassword').style.borderColor = '#E57373';
@@ -591,14 +611,20 @@ function checkPassword() {
   }
 }
 
-// Vérifier si déjà authentifié dans cette session
-if (sessionStorage.getItem('adminAuth') === 'true') {
-  document.getElementById('passwordOverlay').style.display = 'none';
-}
-
-// Focus automatique sur le champ
-window.addEventListener('load', () => {
-  document.getElementById('adminPassword').focus();
+window.addEventListener('load', async () => {
+  const user = await SFSession.user(SUPABASE_URL, SUPABASE_KEY);
+  if (user) {
+    const roleResponse = await fetch(`${SUPABASE_URL}/rest/v1/rpc/is_admin`, {
+      method:'POST', headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SFSession.token()}`}, body:'{}'
+    });
+    if (roleResponse.ok && await roleResponse.json() === true) {
+      document.getElementById('passwordOverlay').style.display = 'none';
+      await loadFiches();
+      return;
+    }
+  }
+  SFSession.clear();
+  document.getElementById('adminEmail').focus();
 });
 </script>
 
@@ -994,29 +1020,36 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const SB = {
   'Content-Type': 'application/json',
   'apikey': SUPABASE_KEY,
-  'Authorization': `Bearer ${SUPABASE_KEY}`
+  'Authorization': `Bearer ${SFSession.token() || SUPABASE_KEY}`
 };
 
 async function sbGet(table, filter='') {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}&select=*`, { headers: SB });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Erreur Supabase');
+  return data;
 }
 async function sbPost(table, body) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
     method: 'POST', headers: { ...SB, 'Prefer': 'return=representation' },
     body: JSON.stringify(body)
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Erreur Supabase');
+  return data;
 }
 async function sbPatch(table, filter, body) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}`, {
     method: 'PATCH', headers: { ...SB, 'Prefer': 'return=representation' },
     body: JSON.stringify(body)
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Erreur Supabase');
+  return data;
 }
 async function sbDelete(table, filter) {
-  await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}`, { method: 'DELETE', headers: SB });
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}`, { method: 'DELETE', headers: SB });
+  if (!res.ok) throw new Error('Erreur Supabase');
 }
 
 // ═══════════════════════════════════
@@ -1364,7 +1397,7 @@ function showToast(msg) {
 // ═══════════════════════════════════
 // INIT — Charger depuis Supabase
 // ═══════════════════════════════════
-loadFiches();
+// Le chargement est lancé uniquement après validation du rôle administrateur.
 </script>
 </body>
 </html>

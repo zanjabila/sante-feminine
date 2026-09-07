@@ -238,6 +238,7 @@ body{top:0 !important;}
 
 </div>
 
+<script src="assets/session.js"></script>
 <script>
 // ═══════════════════════════════
 // SUPABASE CONFIG
@@ -247,7 +248,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const SB_HEADERS = {
   'Content-Type': 'application/json',
   'apikey': SUPABASE_KEY,
-  'Authorization': `Bearer ${SUPABASE_KEY}`
+  'Authorization': `Bearer ${SFSession.token() || SUPABASE_KEY}`
 };
 
 // Cache des articles
@@ -255,6 +256,10 @@ let articlesCache = [];
 
 async function loadArticles() {
   if (articlesCache.length > 0) return articlesCache;
+  if (!SFSession.token()) {
+    window.location.replace('auth-connexion.html');
+    return [];
+  }
   const res = await fetch(`${SUPABASE_URL}/rest/v1/articles?medecin_id=is.null&actif_ia=eq.true&select=*`, { headers: SB_HEADERS });
   articlesCache = await res.json();
   return articlesCache;
@@ -541,7 +546,7 @@ function removeTyping() {
 
 function buildResultsHTML(articles, query) {
   if (articles.length === 0) {
-    return `Je n'ai pas trouvé d'article correspondant à votre question sur "<strong>${query}</strong>".<br><br>
+    return `Je n'ai pas trouvé d'article correspondant à votre question sur "<strong>${escapeHtml(query)}</strong>".<br><br>
     Vous pouvez :<br>
     • Reformuler votre question avec d'autres mots<br>
     • Consulter directement les rubriques du site<br>
@@ -550,9 +555,9 @@ function buildResultsHTML(articles, query) {
 
   const cards = articles.map(a => `
     <a class="article-result-card" href="${CAT_PAGES[a.categorie] || 'index.html'}" target="_blank">
-      <div class="arc-category">${CAT_LABELS[a.categorie] || a.categorie}</div>
-      <div class="arc-title">${a.titre}</div>
-      <div class="arc-excerpt">${getExcerpt(a.contenu)}</div>
+      <div class="arc-category">${escapeHtml(CAT_LABELS[a.categorie] || a.categorie)}</div>
+      <div class="arc-title">${escapeHtml(a.titre)}</div>
+      <div class="arc-excerpt">${escapeHtml(getExcerpt(a.contenu))}</div>
       <div class="arc-arrow">Lire l'article complet →</div>
     </a>
   `).join('');
@@ -562,6 +567,12 @@ function buildResultsHTML(articles, query) {
     : `J'ai trouvé <strong>${articles.length} articles</strong> correspondant à votre question :`;
 
   return `${intro}<div class="article-results">${cards}</div>`;
+}
+
+function escapeHtml(value) {
+  const node = document.createElement('div');
+  node.textContent = value == null ? '' : String(value);
+  return node.innerHTML;
 }
 
 // ═══════════════════════════════

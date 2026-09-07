@@ -100,7 +100,7 @@ nav{height:62px;background:rgba(250,247,242,.96);border-bottom:1px solid var(--c
     <p class="offer-desc">Offrez à vos patientes un accès à des informations médicales validées, un chat de recherche intelligent et un espace personnalisé à votre cabinet.</p>
 
     <div class="price-card">
-      <div class="price-trial">🎁 1 mois gratuit — sans engagement</div>
+      <div class="price-trial">🎁 14 jours gratuits — sans engagement</div>
       <div class="price-amount"><sup>€</sup>70<span>/mois</span></div>
       <div class="price-desc">Puis 70€/mois — résiliable à tout moment</div>
     </div>
@@ -184,45 +184,23 @@ nav{height:62px;background:rgba(250,247,242,.96);border-bottom:1px solid var(--c
         </div>
       </div>
 
-      <!-- ÉTAPE 2 — Paiement -->
+      <!-- ÉTAPE 2 — Confirmation pilote -->
       <div id="step2" style="display:none">
-        <div class="form-title">Paiement</div>
-        <p class="form-subtitle">Étape 2/2 — Votre abonnement</p>
+        <div class="form-title">Confirmation</div>
+        <p class="form-subtitle">Étape 2/2 — Votre accès pilote</p>
 
         <div class="trial-banner">
           <div class="trial-banner-icon">🎁</div>
           <div>
-            <div class="trial-banner-title">1 mois gratuit offert !</div>
-            <div class="trial-banner-sub">Aucun paiement aujourd'hui. Votre carte ne sera débitée qu'après 30 jours.</div>
-          </div>
-        </div>
-
-        <div class="payment-title">Informations de paiement</div>
-
-        <div class="form-group" style="margin-bottom:16px;">
-          <label class="form-label">Titulaire de la carte</label>
-          <input class="form-input" type="text" id="cardName" placeholder="Prénom Nom">
-        </div>
-        <div class="form-group" style="margin-bottom:16px;">
-          <label class="form-label">Numéro de carte</label>
-          <input class="form-input" type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
-          <div class="error" id="cardError"></div>
-        </div>
-        <div class="card-grid">
-          <div class="form-group">
-            <label class="form-label">Date d'expiration</label>
-            <input class="form-input" type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" oninput="formatExpiry(this)">
-          </div>
-          <div class="form-group">
-            <label class="form-label">CVV</label>
-            <input class="form-input" type="text" id="cardCvv" placeholder="123" maxlength="3">
+            <div class="trial-banner-title">14 jours gratuits offerts</div>
+            <div class="trial-banner-sub">Aucune carte bancaire demandée pendant le pilote.</div>
           </div>
         </div>
 
         <div style="background:var(--cream-dark);border-radius:12px;padding:14px 16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
           <div>
             <div style="font-size:14px;font-weight:500;color:var(--text-dark);">Abonnement Santé Féminine</div>
-            <div style="font-size:12px;color:var(--text-light);font-weight:300;">Mensuel — résiliable à tout moment</div>
+            <div style="font-size:12px;color:var(--text-light);font-weight:300;">Pilote — sans engagement</div>
           </div>
           <div style="text-align:right;">
             <div style="font-size:13px;color:var(--text-light);text-decoration:line-through;">70€/mois</div>
@@ -236,7 +214,7 @@ nav{height:62px;background:rgba(250,247,242,.96);border-bottom:1px solid var(--c
           🔒 Démarrer mon essai gratuit
         </button>
         <div class="form-legal" style="margin-top:10px;">
-          🔒 Paiement sécurisé. Votre carte sera débitée de 70€ après 30 jours. Résiliation possible à tout moment depuis votre espace médecin.
+          Aucun paiement et aucune donnée bancaire ne sont collectés pendant le pilote.
         </div>
 
         <button onclick="backToStep1()" style="width:100%;margin-top:12px;padding:10px;background:none;border:none;color:var(--text-light);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;">
@@ -250,7 +228,7 @@ nav{height:62px;background:rgba(250,247,242,.96);border-bottom:1px solid var(--c
         <div class="success-title">Vérifiez votre boîte mail !</div>
         <p class="success-text">
           Votre compte a été créé. Nous venons de vous envoyer un <strong>email de confirmation</strong>.<br><br>
-          Cliquez sur le lien dans cet email pour activer votre compte, puis connectez-vous à votre espace. Votre <strong>mois d'essai gratuit</strong> démarre dès maintenant.<br><br>
+          Cliquez sur le lien dans cet email pour activer votre compte, puis connectez-vous à votre espace. Vos <strong>14 jours d'essai gratuit</strong> démarrent dès maintenant.<br><br>
           <span style="font-size:12px;color:var(--text-light);">Pensez à vérifier vos spams si vous ne voyez rien d'ici 2 minutes.</span>
         </p>
         <a href="espace-medecin.html" class="btn-access">J'ai confirmé — Me connecter →</a>
@@ -320,15 +298,6 @@ function backToStep1() {
 
 async function submitInscription() {
   clearErrors();
-  const cardName = document.getElementById('cardName').value.trim();
-  const cardNum = document.getElementById('cardNumber').value.replace(/\s/g,'');
-  const expiry = document.getElementById('cardExpiry').value;
-  const cvv = document.getElementById('cardCvv').value;
-
-  if(!cardName||cardNum.length<16||!expiry||cvv.length<3){
-    showError('cardError','Veuillez remplir toutes les informations de paiement.');
-    return;
-  }
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;

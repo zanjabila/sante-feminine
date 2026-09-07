@@ -898,7 +898,7 @@ function googleTranslateElementInit() {
   </div>
   <div class="footer-bottom">
     <p class="footer-disclaimer">⚠️ <strong>Avertissement médical :</strong> Les informations présentées sur cette plateforme sont à titre informatif uniquement et ne remplacent pas une consultation médicale personnalisée. Consultez toujours votre professionnel de santé.</p>
-    <p>© 2025 Santé Féminine. Tous droits réservés.</p>
+    <p>© 2026 Santé Féminine. Tous droits réservés.</p>
   </div>
 </footer>
 
@@ -921,6 +921,7 @@ function googleTranslateElementInit() {
   </div>
 </div>
 
+<script src="assets/session.js"></script>
 <script>
 // ─── GESTION SESSION PATIENTE ───
 function renderPatientAccountZone() {
@@ -931,8 +932,8 @@ function renderPatientAccountZone() {
   nameEl.textContent = patiente?.prenom ? `👤 ${patiente.prenom}` : '';
 }
 
-function logoutPatiente() {
-  sessionStorage.removeItem('patiente');
+async function logoutPatiente() {
+  await SFSession.signOut(SF_SUPABASE_URL, SF_SUPABASE_KEY);
   window.location.href = 'auth-connexion.html';
 }
 
@@ -943,35 +944,22 @@ const SF_SUPABASE_URL = 'https://kiavvxomyyvwuexjupdf.supabase.co';
 const SF_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpYXZ2eG9teXl2d3VleGp1cGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTEzOTQsImV4cCI6MjA5NjQyNzM5NH0.d1919fG_0HMdKPcNSbrQTvQK4YyYLQSWvw7vYsMYMnU';
 const SF_SB = {
   'apikey': SF_SUPABASE_KEY,
-  'Authorization': `Bearer ${SF_SUPABASE_KEY}`
+  'Authorization': `Bearer ${SFSession.token() || SF_SUPABASE_KEY}`
 };
 
 // ─── CHARGER LE PROFIL MÉDECIN ───
 async function loadDoctorProfile() {
-  const params = new URLSearchParams(window.location.search);
-  let docRef = params.get('ref');        // depuis QR code (code médecin)
-  let docId = params.get('medecin');      // depuis connexion patiente (id médecin)
-
-  // Si pas de paramètre dans l'URL, essayer la session patiente
-  if (!docRef && !docId) {
-    const saved = sessionStorage.getItem('patiente');
-    if (saved) {
-      try {
-        const patiente = JSON.parse(saved);
-        if (patiente.medecin_id) docId = patiente.medecin_id;
-      } catch(e) {}
-    }
-  }
-
-  if (!docRef && !docId) return; // aucun médecin à charger
-
-  // Charger le médecin depuis Supabase
-  let url = `${SF_SUPABASE_URL}/rest/v1/medecins?select=*&`;
-  url += docId ? `id=eq.${docId}` : `code=eq.${docRef}`;
-
   let medecin = null;
   try {
-    const res = await fetch(url, { headers: SF_SB });
+    const user = await SFSession.user(SF_SUPABASE_URL, SF_SUPABASE_KEY);
+    if (!user) {
+      window.location.replace('auth-connexion.html');
+      return;
+    }
+    const res = await fetch(`${SF_SUPABASE_URL}/rest/v1/rpc/my_medecin_profile`, {
+      method: 'POST', headers: { ...SF_SB, 'Content-Type': 'application/json' }, body: '{}'
+    });
+    if (!res.ok) throw new Error('Profil médecin inaccessible');
     const data = await res.json();
     medecin = data[0] || null;
   } catch(e) { return; }
@@ -1294,7 +1282,7 @@ const modalData = {
     ],
     content: `
       <h3 id="s1">Vos droits en tant que patiente</h3>
-      <p>En France, toute patiente a droit à une information claire et loyale sur son état de santé, les soins proposés et les alternatives disponibles. Vous pouvez poser toutes les questions nécessaires à votre praticien.</p>
+      <p>En Belgique, toute patiente a droit à une information claire et compréhensible sur son état de santé, les soins proposés et les alternatives disponibles. Vous pouvez poser toutes les questions nécessaires à votre praticien.</p>
       <h3 id="s2">Remboursements et prise en charge</h3>
       <p>La grossesse est prise en charge à 100% par l'Assurance Maladie à partir du 6e mois. Les consultations prénatales obligatoires, les échographies et les examens biologiques prescrits sont remboursés.</p>
       <h3 id="s3">Congé maternité</h3>
@@ -1341,7 +1329,7 @@ const modalData = {
         <li>Ordonnances de vos traitements en cours</li>
       </ul>
       <h3 id="s3">Retour en France</h3>
-      <p>Après un accouchement à l'étranger, il est nécessaire de déclarer la naissance à la mairie du lieu de naissance puis de la transcrire à l'état civil français (via le consulat ou le Service central d'état civil de Nantes).</p>
+      <p>Après un accouchement à l'étranger, la naissance doit être déclarée auprès des autorités locales. Contactez ensuite votre commune belge ou le poste consulaire compétent pour connaître les formalités de reconnaissance ou de transcription applicables.</p>
     `
   },
   'map': {
@@ -1364,7 +1352,7 @@ const modalData = {
         <li>Douleurs lombaires basses persistantes</li>
         <li>Sensation que "quelque chose descend"</li>
       </ul>
-      <div class="info-card"><div class="info-card-title">À faire immédiatement</div><p>En cas de doute, appelez votre maternité ou le 15. Ne conduisez pas vous-même aux urgences si les contractions sont rapprochées.</p></div>
+      <div class="info-card"><div class="info-card-title">À faire immédiatement</div><p>En cas de doute, appelez votre maternité ou le 112. Ne conduisez pas vous-même aux urgences si les contractions sont rapprochées.</p></div>
       <h3 id="s3">Prise en charge</h3>
       <p>La prise en charge comprend le repos strict, une tocolyse (médicaments pour arrêter les contractions) si nécessaire, et une corticothérapie pour accélérer la maturité pulmonaire fœtale si l'accouchement avant 34 SA est probable. Une hospitalisation est souvent nécessaire.</p>
     `

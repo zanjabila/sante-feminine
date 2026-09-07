@@ -1,0 +1,7 @@
+{
+  "name": "sante-feminine",
+  "private": true,
+  "scripts": {
+    "test": "node tests/audit.mjs"
+  }
+}

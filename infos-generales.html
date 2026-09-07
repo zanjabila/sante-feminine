@@ -167,6 +167,7 @@ body{top:0 !important;}
   </div>
 </div>
 
+<script src="assets/session.js"></script>
 <script>
 const MODALS={
 'rdv':{badge:'📋 Informations générales',title:'Comment prendre rendez-vous',body:`
@@ -392,22 +393,20 @@ function closeModalBg(e){if(e.target===document.getElementById('modalOverlay'))c
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
 // ─── CHARGER LES ARTICLES DU MÉDECIN DE LA PATIENTE ───
+// session.js est chargé juste avant ce script.
 const SF_SUPABASE_URL='https://kiavvxomyyvwuexjupdf.supabase.co';
 const SF_SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpYXZ2eG9teXl2d3VleGp1cGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTEzOTQsImV4cCI6MjA5NjQyNzM5NH0.d1919fG_0HMdKPcNSbrQTvQK4YyYLQSWvw7vYsMYMnU';
-const SF_SB={'apikey':SF_SUPABASE_KEY,'Authorization':`Bearer ${SF_SUPABASE_KEY}`};
+const SF_SB={'apikey':SF_SUPABASE_KEY,'Authorization':`Bearer ${SFSession.token()||SF_SUPABASE_KEY}`};
 
 let doctorDynamicArticles=[];
 
 async function loadDoctorArticles(){
-  // Trouver le médecin de la patiente
-  let medecinId=null;
-  const params=new URLSearchParams(window.location.search);
-  medecinId=params.get('medecin');
-  if(!medecinId){
-    const saved=sessionStorage.getItem('patiente');
-    if(saved){try{const p=JSON.parse(saved);if(p.medecin_id)medecinId=p.medecin_id;}catch(e){}}
-  }
-  if(!medecinId)return; // pas de médecin → garde les articles par défaut
+  const token=SFSession.token();
+  if(!token){window.location.replace('auth-connexion.html');return;}
+  const pRes=await fetch(`${SF_SUPABASE_URL}/rest/v1/patientes?id=eq.${encodeURIComponent((await SFSession.user(SF_SUPABASE_URL,SF_SUPABASE_KEY))?.id||'')}&select=medecin_id`,{headers:SF_SB});
+  const pData=await pRes.json();
+  const medecinId=pData?.[0]?.medecin_id;
+  if(!medecinId){window.location.replace('auth-connexion.html');return;}
 
   // Charger les articles actifs de ce médecin
   try{

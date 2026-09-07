@@ -539,7 +539,7 @@ body{top:0 !important;}
     <div class="deco-circle"></div>
 
     <div class="auth-left-top">
-      <a href="plateforme-medicale.html" class="auth-logo">
+      <a href="index.html" class="auth-logo">
         <div class="auth-logo-dot"></div>
         Santé <span>Féminine</span>
       </a>
@@ -785,6 +785,7 @@ body{top:0 !important;}
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<script src="assets/session.js"></script>
 <script>
 // ─── DATA MÉDECINS (simulé) ───
 const doctors = {
@@ -836,7 +837,11 @@ window.addEventListener('DOMContentLoaded', async () => {
 // Vérifier un code d'accès médecin
 async function verifyAccessCode(code) {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/medecins?code_acces=eq.${encodeURIComponent(code.toUpperCase())}&select=*`, { headers: SB_HEADERS });
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/resolve_medecin_code`, {
+      method: 'POST', headers: SB_HEADERS,
+      body: JSON.stringify({ invitation_code: code.trim() })
+    });
+    if (!res.ok) return null;
     const data = await res.json();
     return data[0] || null;
   } catch(e) { return null; }
@@ -907,7 +912,7 @@ async function sbLoginPatiente(email, password) {
   }
 
   // Stocker le jeton de session (nécessaire pour lire sa fiche — table patientes privée)
-  sessionStorage.setItem('sb_token', auth.access_token);
+  SFSession.save(auth);
 
   // Charger la fiche patiente
   const pRes = await fetch(`${SUPABASE_URL}/rest/v1/patientes?id=eq.${auth.user.id}&select=*`, {
@@ -918,7 +923,7 @@ async function sbLoginPatiente(email, password) {
   });
   const pData = await pRes.json();
   if (!pData || pData.length === 0) {
-    sessionStorage.removeItem('sb_token');
+    SFSession.clear();
     return { error: 'pas_patiente' };
   }
   return { patiente: pData[0] };
@@ -928,7 +933,10 @@ async function sbCreatePatiente(email, prenom, nom, password, accessCode) {
   // Vérifier le code d'accès et récupérer le médecin
   let medecinId = null;
   if (accessCode) {
-    const mRes = await fetch(`${SUPABASE_URL}/rest/v1/medecins?code_acces=eq.${encodeURIComponent(accessCode.toUpperCase())}&select=id`, { headers: SB_HEADERS });
+    const mRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/resolve_medecin_code`, {
+      method: 'POST', headers: SB_HEADERS,
+      body: JSON.stringify({ invitation_code: accessCode.trim() })
+    });
     const mData = await mRes.json();
     if (mData[0]) medecinId = mData[0].id;
   }
@@ -944,7 +952,7 @@ async function sbCreatePatiente(email, prenom, nom, password, accessCode) {
     headers: {'Content-Type':'application/json','apikey':SUPABASE_KEY},
     body: JSON.stringify({
       email, password,
-      data: { role:'patiente', prenom, nom, medecin_id: medecinId },
+      data: { role:'patiente', prenom, nom, invitation_code: accessCode.trim().toUpperCase() },
       options: { email_redirect_to: 'https://zanjabila.github.io/sante-feminine/email-confirme.html' }
     })
   });
@@ -1108,7 +1116,7 @@ function generateQR() {
   }
 
   const doc = doctors[code];
-  const url = `${window.location.origin}${window.location.pathname}?ref=${code}&mode=signup`;
+  const url = `${window.location.origin}${window.location.pathname}?code=${encodeURIComponent(code)}&mode=signup`;
 
   // Update badge
   document.getElementById('qrDoctorName').textContent = doc.name;

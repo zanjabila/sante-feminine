@@ -606,6 +606,7 @@ body{top:0 !important;}
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="assets/session.js"></script>
 <script>
 
 // ═══════════════════════════════
@@ -616,7 +617,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 // Jeton de session Auth (obligatoire pour que le RLS autorise les écritures)
 function sbHeaders() {
-  const token = sessionStorage.getItem('sb_token') || SUPABASE_KEY;
+  const token = SFSession.token() || SUPABASE_KEY;
   return {
     'Content-Type': 'application/json',
     'apikey': SUPABASE_KEY,
@@ -626,27 +627,40 @@ function sbHeaders() {
 
 async function sbGet(table, filter='') {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}&select=*`, { headers: sbHeaders() });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Erreur Supabase');
+  return data;
 }
 async function sbPatch(table, filter, body) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}`, {
     method: 'PATCH', headers: { ...sbHeaders(), 'Prefer': 'return=representation' },
     body: JSON.stringify(body)
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Erreur Supabase');
+  return data;
 }
 async function sbPost(table, body) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
     method: 'POST', headers: { ...sbHeaders(), 'Prefer': 'return=representation' },
     body: JSON.stringify(body)
   });
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Erreur Supabase');
+  return data;
 }
 
 // ═══════════════════════════════
 // MÉDECINS
 // ═══════════════════════════════
 let currentDoctor = null;
+
+function hasPilotAccess(doctor) {
+  if (doctor?.subscription_status === 'active') return true;
+  return doctor?.subscription_status === 'trial'
+    && doctor?.trial_ends_at
+    && new Date(doctor.trial_ends_at).getTime() > Date.now();
+}
 
 async function checkDoctorPassword() {
   const email = document.getElementById('doctorEmail').value.trim().toLowerCase();
@@ -687,31 +701,31 @@ async function checkDoctorPassword() {
   }
 
   // Stocker le jeton de session (utilisé par toutes les requêtes → RLS)
-  sessionStorage.setItem('sb_token', auth.access_token);
+  SFSession.save(auth);
 
   // Charger la fiche médecin liée à ce compte
   const data = await sbGet('medecins', `id=eq.${auth.user.id}`);
   if (!data || data.length === 0) {
     error.style.display='block';
     error.textContent='Ce compte n\'est pas un compte médecin.';
-    sessionStorage.removeItem('sb_token');
+    SFSession.clear();
     return;
   }
 
   currentDoctor = data[0];
+  if (!hasPilotAccess(currentDoctor)) {
+    error.style.display='block';
+    error.textContent='Votre période d’essai est terminée. Contactez Santé Féminine pour activer votre abonnement.';
+    SFSession.clear();
+    return;
+  }
   sessionStorage.setItem('doctorAuth', JSON.stringify(currentDoctor));
   document.getElementById('passwordOverlay').style.display='none';
   initPage();
 }
 
 async function logout() {
-  try {
-    await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
-      method:'POST', headers: sbHeaders()
-    });
-  } catch(e) {}
-  sessionStorage.removeItem('doctorAuth');
-  sessionStorage.removeItem('sb_token');
+  await SFSession.signOut(SUPABASE_URL, SUPABASE_KEY);
   location.reload();
 }
 
@@ -742,10 +756,26 @@ function initPage() {
   renderArticles();
 }
 
-window.addEventListener('load', () => {
-  const saved = sessionStorage.getItem('doctorAuth');
-  if (saved) { currentDoctor = JSON.parse(saved); document.getElementById('passwordOverlay').style.display='none'; initPage(); }
-  else document.getElementById('doctorEmail').focus();
+window.addEventListener('load', async () => {
+  const user = await SFSession.user(SUPABASE_URL, SUPABASE_KEY);
+  if (user) {
+    const data = await sbGet('medecins', `id=eq.${encodeURIComponent(user.id)}`);
+    if (Array.isArray(data) && data[0]) {
+      currentDoctor = data[0];
+      if (!hasPilotAccess(currentDoctor)) {
+        SFSession.clear();
+        document.getElementById('pwError').style.display='block';
+        document.getElementById('pwError').textContent='Votre période d’essai est terminée. Contactez Santé Féminine pour activer votre abonnement.';
+        return;
+      }
+      sessionStorage.setItem('doctorAuth', JSON.stringify(currentDoctor));
+      document.getElementById('passwordOverlay').style.display='none';
+      initPage();
+      return;
+    }
+  }
+  SFSession.clear();
+  document.getElementById('doctorEmail').focus();
 });
 
 function switchTab(tab) {
@@ -787,6 +817,11 @@ const DEFAULT_ARTICLES = [
 ];
 
 let doctorArticles = [];
+function escapeHtml(value) {
+  const node = document.createElement('div');
+  node.textContent = value == null ? '' : String(value);
+  return node.innerHTML;
+}
 
 async function renderArticles() {
   const data = await sbGet('articles', `medecin_id=eq.${currentDoctor.id}&order=created_at.asc`);
@@ -800,7 +835,7 @@ async function renderArticles() {
     <div class="article-item" style="${actif?'':'opacity:.55;'}">
       <div class="article-item-header">
         <div class="article-item-title">
-          ${a.titre}
+          ${escapeHtml(a.titre)}
           ${actif?'':'<span style="font-size:11px;color:var(--text-light);font-weight:400;margin-left:8px;">(désactivé)</span>'}
         </div>
         <div class="article-item-actions" style="display:flex;gap:6px;flex-wrap:wrap;">
@@ -811,7 +846,7 @@ async function renderArticles() {
           <button class="btn-edit-article" onclick="deleteDoctorArticle('${a.id}')" style="color:#C0392B;border-color:#E8C5BB;">🗑</button>
         </div>
       </div>
-      <div class="article-item-preview">${a.contenu}</div>
+      <div class="article-item-preview">${escapeHtml(a.contenu)}</div>
     </div>`;
   }).join('');
 }
