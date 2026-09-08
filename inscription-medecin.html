@@ -311,13 +311,13 @@ async function submitInscription() {
   const inami = document.getElementById('inami').value.trim();
 
   // Inscription via Supabase Auth (mot de passe haché, email de confirmation envoyé)
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+  const confirmationUrl = 'https://zanjabila.github.io/sante-feminine/email-confirme.html';
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/signup?redirect_to=${encodeURIComponent(confirmationUrl)}`, {
     method: 'POST',
     headers: {'Content-Type':'application/json','apikey':SUPABASE_KEY},
     body: JSON.stringify({
       email, password,
-      data: { role:'medecin', nom, prenom, specialite, inami: inami||null },
-      options: { email_redirect_to: 'https://zanjabila.github.io/sante-feminine/email-confirme.html' }
+      data: { role:'medecin', nom, prenom, specialite, inami: inami||null }
     })
   });
 
