@@ -979,16 +979,14 @@ function showForgotPassword() {
 }
 
 async function sendResetEmail(email) {
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/recover`, {
+  const redirectUrl = 'https://zanjabila.github.io/sante-feminine/reset-password.html';
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/recover?redirect_to=${encodeURIComponent(redirectUrl)}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'apikey': SUPABASE_KEY,
     },
-    body: JSON.stringify({
-      email,
-      redirect_to: 'https://zanjabila.github.io/sante-feminine/reset-password.html'
-    })
+    body: JSON.stringify({ email })
   });
 
   if (res.ok) {
