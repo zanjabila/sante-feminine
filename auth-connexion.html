@@ -947,13 +947,13 @@ async function sbCreatePatiente(email, prenom, nom, password, accessCode) {
   }
 
   // Inscription via Supabase Auth — le trigger crée la fiche patiente liée au médecin
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
+  const confirmationUrl = 'https://zanjabila.github.io/sante-feminine/email-confirme.html';
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/signup?redirect_to=${encodeURIComponent(confirmationUrl)}`, {
     method: 'POST',
     headers: {'Content-Type':'application/json','apikey':SUPABASE_KEY},
     body: JSON.stringify({
       email, password,
-      data: { role:'patiente', prenom, nom, invitation_code: accessCode.trim().toUpperCase() },
-      options: { email_redirect_to: 'https://zanjabila.github.io/sante-feminine/email-confirme.html' }
+      data: { role:'patiente', prenom, nom, invitation_code: accessCode.trim().toUpperCase() }
     })
   });
   const data = await res.json();
