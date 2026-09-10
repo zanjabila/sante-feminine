@@ -655,7 +655,12 @@ async function sbPost(table, body) {
 // ═══════════════════════════════
 let currentDoctor = null;
 
+// Pendant le pilote, tous les médecins confirmés ont accès sans limite de durée.
+// Remettre cette constante à false lors de l'activation des abonnements.
+const PILOT_ACCESS_OPEN = true;
+
 function hasPilotAccess(doctor) {
+  if (PILOT_ACCESS_OPEN) return true;
   if (doctor?.subscription_status === 'active') return true;
   return doctor?.subscription_status === 'trial'
     && doctor?.trial_ends_at

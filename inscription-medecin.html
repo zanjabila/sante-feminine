@@ -100,9 +100,9 @@ nav{height:62px;background:rgba(250,247,242,.96);border-bottom:1px solid var(--c
     <p class="offer-desc">Offrez à vos patientes un accès à des informations médicales validées, un chat de recherche intelligent et un espace personnalisé à votre cabinet.</p>
 
     <div class="price-card">
-      <div class="price-trial">🎁 14 jours gratuits — sans engagement</div>
+      <div class="price-trial">🎁 Accès gratuit pendant la phase pilote</div>
       <div class="price-amount"><sup>€</sup>70<span>/mois</span></div>
-      <div class="price-desc">Puis 70€/mois — résiliable à tout moment</div>
+      <div class="price-desc">Tarif prévu après le pilote — aucun paiement actuellement</div>
     </div>
 
     <ul class="features">
@@ -192,8 +192,8 @@ nav{height:62px;background:rgba(250,247,242,.96);border-bottom:1px solid var(--c
         <div class="trial-banner">
           <div class="trial-banner-icon">🎁</div>
           <div>
-            <div class="trial-banner-title">14 jours gratuits offerts</div>
-            <div class="trial-banner-sub">Aucune carte bancaire demandée pendant le pilote.</div>
+            <div class="trial-banner-title">Accès pilote gratuit</div>
+            <div class="trial-banner-sub">Aucune limite de durée ni carte bancaire pendant les tests.</div>
           </div>
         </div>
 
@@ -211,7 +211,7 @@ nav{height:62px;background:rgba(250,247,242,.96);border-bottom:1px solid var(--c
         <div class="error" id="paymentError"></div>
 
         <button class="btn-submit" onclick="submitInscription()" id="submitBtn">
-          🔒 Démarrer mon essai gratuit
+          🔒 Créer mon compte pilote
         </button>
         <div class="form-legal" style="margin-top:10px;">
           Aucun paiement et aucune donnée bancaire ne sont collectés pendant le pilote.
@@ -228,7 +228,7 @@ nav{height:62px;background:rgba(250,247,242,.96);border-bottom:1px solid var(--c
         <div class="success-title">Vérifiez votre boîte mail !</div>
         <p class="success-text">
           Votre compte a été créé. Nous venons de vous envoyer un <strong>email de confirmation</strong>.<br><br>
-          Cliquez sur le lien dans cet email pour activer votre compte, puis connectez-vous à votre espace. Vos <strong>14 jours d'essai gratuit</strong> démarrent dès maintenant.<br><br>
+          Cliquez sur le lien dans cet email pour activer votre compte, puis connectez-vous à votre espace. Votre <strong>accès pilote gratuit</strong> sera disponible sans limite de durée pendant les tests.<br><br>
           <span style="font-size:12px;color:var(--text-light);">Pensez à vérifier vos spams si vous ne voyez rien d'ici 2 minutes.</span>
         </p>
         <a href="espace-medecin.html" class="btn-access">J'ai confirmé — Me connecter →</a>
@@ -337,7 +337,7 @@ async function submitInscription() {
       showError('paymentError','Une erreur est survenue. Réessayez.');
     }
     btn.disabled=false;
-    btn.innerHTML='🔒 Démarrer mon essai gratuit';
+    btn.innerHTML='🔒 Créer mon compte pilote';
   }
 }
 </script>
