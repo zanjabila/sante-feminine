@@ -678,7 +678,16 @@ body{top:0 !important;}
             <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
               <input type="checkbox" id="acceptTerms" style="margin-top:3px; accent-color:var(--rose-deep);">
               <span style="font-size:13px; color:var(--text-mid); font-weight:300; line-height:1.5;">
-                J'accepte les <a href="#" style="color:var(--rose-deep);">conditions d'utilisation</a> et la <a href="#" style="color:var(--rose-deep);">politique de confidentialité</a>.
+                J'accepte les <a href="conditions-utilisation.html" target="_blank" rel="noopener" style="color:var(--rose-deep);">conditions d'utilisation</a> et j'ai lu la <a href="confidentialite.html" target="_blank" rel="noopener" style="color:var(--rose-deep);">politique de confidentialité</a>.
+              </span>
+            </label>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
+              <input type="checkbox" id="acceptHealthData" style="margin-top:3px; accent-color:var(--rose-deep);">
+              <span style="font-size:13px; color:var(--text-mid); font-weight:300; line-height:1.5;">
+                J'accepte explicitement que mon compte soit relié au professionnel choisi. Je comprends que ce lien peut indirectement révéler une information concernant ma santé.
               </span>
             </label>
           </div>
@@ -953,7 +962,12 @@ async function sbCreatePatiente(email, prenom, nom, password, accessCode) {
     headers: {'Content-Type':'application/json','apikey':SUPABASE_KEY},
     body: JSON.stringify({
       email, password,
-      data: { role:'patiente', prenom, nom, invitation_code: accessCode.trim().toUpperCase() }
+      data: {
+        role:'patiente', prenom, nom,
+        invitation_code: accessCode.trim().toUpperCase(),
+        privacy_version:'2026-09-11',
+        health_data_consent_at:new Date().toISOString()
+      }
     })
   });
   const data = await res.json();
@@ -1049,6 +1063,7 @@ function handleSignup() {
   const password = document.getElementById('signupPassword').value;
   const doctorCode = document.getElementById('signupDoctorCode').value.trim();
   const terms = document.getElementById('acceptTerms').checked;
+  const healthDataConsent = document.getElementById('acceptHealthData').checked;
   let valid = true;
 
   clearError('signupEmailError');
@@ -1069,6 +1084,10 @@ function handleSignup() {
   }
   if (!terms) {
     showToast('⚠️ Veuillez accepter les conditions d\'utilisation.');
+    valid = false;
+  }
+  if (!healthDataConsent) {
+    showToast('⚠️ Votre accord explicite est nécessaire pour vous relier à votre professionnel.');
     valid = false;
   }
   if (!valid) return;
