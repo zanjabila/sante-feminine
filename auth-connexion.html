@@ -1046,7 +1046,7 @@ function handleLogin() {
     } else if (result.error === 'pas_patiente') {
       showError('loginPasswordError', 'Ce compte n\'est pas un compte patiente.');
     } else {
-      showError('loginPasswordError', 'Email ou mot de passe incorrect.');
+      showError('loginPasswordError', 'Compte inexistant ou mot de passe incorrect. Si vous avez supprimé votre compte, vous devez en créer un nouveau.');
     }
   }).catch(() => {
     btn.classList.remove('loading');
