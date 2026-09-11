@@ -361,6 +361,9 @@ body {
   resize:vertical; min-height:260px; line-height:1.7;
   font-size:13px;
 }
+.rich-toolbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px}
+.rich-toolbar button{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);border-radius:7px;padding:6px 10px;font:12px 'DM Sans',sans-serif;cursor:pointer}
+.rich-toolbar button:hover{background:rgba(201,149,127,.22);color:#fff}
 
 .ai-toggle-row {
   display:flex; align-items:center; justify-content:space-between;
@@ -874,6 +877,12 @@ window.addEventListener('load', async () => {
 
         <div class="form-group">
           <label class="form-label">Contenu médical *</label>
+          <div class="rich-toolbar" aria-label="Mise en forme">
+            <button type="button" onclick="formatArticle('heading')">Titre</button>
+            <button type="button" onclick="formatArticle('bold')"><strong>Gras</strong></button>
+            <button type="button" onclick="formatArticle('underline')"><u>Souligné</u></button>
+            <button type="button" onclick="formatArticle('bullet')">• Liste</button>
+          </div>
           <textarea class="form-textarea" id="ficheContent" placeholder="Rédigez ici le contenu médical de la fiche. Soyez claire et structurée — l'IA s'appuiera sur ce texte pour répondre aux patientes.
 
 Exemple de structure :
@@ -1337,6 +1346,15 @@ async function deleteFiche(id) {
 // ═══════════════════════════════════
 // WORD COUNT & PREVIEW
 // ═══════════════════════════════════
+function formatArticle(type){
+  const field=document.getElementById('ficheContent');
+  const start=field.selectionStart,end=field.selectionEnd;
+  const selected=field.value.slice(start,end)||'Votre texte';
+  const wrappers={bold:['**','**'],underline:['__','__'],heading:['## ',''],bullet:['• ','']};
+  const pair=wrappers[type]||['',''];
+  field.setRangeText(pair[0]+selected+pair[1],start,end,'select');
+  field.focus(); updateWordCount(); updatePreview();
+}
 function updateWordCount() {
   const content = document.getElementById('ficheContent').value;
   const words = content.trim() ? content.trim().split(/\s+/).length : 0;
