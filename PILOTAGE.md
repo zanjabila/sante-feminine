@@ -7,6 +7,7 @@
    Puis exécuter `supabase/migrations/20260910_featured_information_categories.sql`.
    Puis exécuter `supabase/migrations/20260911_featured_articles.sql`.
    Puis exécuter `supabase/migrations/20260911_profile_photo.sql`.
+   Puis exécuter `supabase/migrations/20260911_profile_photo_upsert_rls.sql`.
 3. Dans **Authentication > URL Configuration**, autoriser :
    - `https://zanjabila.github.io/sante-feminine/email-confirme.html`
    - `https://zanjabila.github.io/sante-feminine/reset-password.html`
