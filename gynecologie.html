@@ -308,10 +308,11 @@ const MODALS={
 function openModal(id){const d=MODALS[id];if(!d)return;document.getElementById('modalBadge').textContent=d.badge;document.getElementById('modalTitle').textContent=d.title;document.getElementById('modalBody').innerHTML=d.body;document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden';}
 const requestedArticle=new URLSearchParams(window.location.search).get('article');
 const SF_PUBLIC_URL='https://kiavvxomyyvwuexjupdf.supabase.co';
+const SF_PUBLIC_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpYXZ2eG9teXl2d3VleGp1cGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTEzOTQsImV4cCI6MjA5NjQyNzM5NH0.d1919fG_0HMdKPcNSbrQTvQK4YyYLQSWvw7vYsMYMnU';
 function normalizeArticleTitle(value){return (value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
 async function loadManagedArticles(){
   try{
-    const response=await fetch(SF_PUBLIC_URL+'/rest/v1/articles?medecin_id=is.null&actif_ia=eq.true&select=titre,contenu,categorie');
+    const response=await fetch(SF_PUBLIC_URL+'/rest/v1/articles?medecin_id=is.null&actif_ia=eq.true&select=titre,contenu,categorie',{headers:{apikey:SF_PUBLIC_KEY}});
     if(response.ok){const rows=await response.json();Object.values(MODALS).forEach(modal=>{const match=rows.find(row=>normalizeArticleTitle(row.titre)===normalizeArticleTitle(modal.title));if(match){modal.title=match.titre;modal.body=match.contenu;}});}
   }catch(error){}
   if(requestedArticle&&MODALS[requestedArticle])openModal(requestedArticle);
