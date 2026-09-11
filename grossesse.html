@@ -94,6 +94,8 @@ body{top:0 !important;}
   color:var(--text-mid);cursor:pointer;outline:none;
 }
 </style>
+<link rel="stylesheet" href="assets/article-format.css">
+<script src="assets/article-format.js"></script>
 </head>
 <body>
 <nav>
@@ -388,12 +390,12 @@ const MODALS={
 'geu':{badge:'🚨 Urgence',title:'Grossesse extra-utérine',body:`<div class="urgent-box"><div class="urgent-box-title">🚨 URGENCE ABSOLUE — Appelez le 112</div><p>Si vous suspectez une grossesse extra-utérine, n'attendez pas. Ne conduisez pas seule.</p></div><h3>Symptômes</h3><ul><li>Douleurs pelviennes unilatérales intenses</li><li>Saignements vaginaux en début de grossesse</li><li>Malaise, syncope</li><li>Test de grossesse positif avec douleurs</li></ul><h3>Diagnostic</h3><p>Échographie pelvienne + dosage de la bêta-HCG en urgence.</p><h3>Urgence médicale</h3><p>Peut se rompre et provoquer une hémorragie interne. Traitement médical (méthotrexate) ou chirurgical selon la situation.</p>`},
 'canal-carpien':{badge:'🩺 Pathologie',title:'Syndrome du canal carpien',body:`<h3>Symptômes</h3><ul><li>Fourmillements et engourdissements des mains (surtout pouce, index, majeur)</li><li>Douleurs des poignets, souvent nocturnes</li><li>Sensation de gonflement des mains</li><li>Diminution de la force de préhension</li></ul><h3>Conseils</h3><ul><li>Éviter les mouvements répétitifs des poignets</li><li>Surélever les mains au repos</li><li>Appliquer du froid sur les poignets</li></ul><h3>Attelles et traitements</h3><p>Port d'une attelle de poignet la nuit. Les symptômes régressent généralement après l'accouchement avec la diminution des œdèmes.</p>`},
 };
-function openModal(id){const d=MODALS[id];if(!d)return;document.getElementById('modalBadge').textContent=d.badge;document.getElementById('modalTitle').textContent=d.title;document.getElementById('modalBody').innerHTML=d.body;document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function openModal(id){const d=MODALS[id];if(!d)return;document.getElementById('modalBadge').textContent=d.badge;document.getElementById('modalTitle').textContent=d.title;document.getElementById('modalBody').innerHTML=SFArticle.render(d.body);document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden';}
 const requestedArticle=new URLSearchParams(window.location.search).get('article');
 const SF_PUBLIC_URL='https://kiavvxomyyvwuexjupdf.supabase.co';
 const SF_PUBLIC_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpYXZ2eG9teXl2d3VleGp1cGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4NTEzOTQsImV4cCI6MjA5NjQyNzM5NH0.d1919fG_0HMdKPcNSbrQTvQK4YyYLQSWvw7vYsMYMnU';
 function renderManagedCards(rows){const groups={'grossesse-t1':'t1','grossesse-t2':'t2','grossesse-t3':'t3','grossesse-patho':'pathologies'};const esc=s=>{const d=document.createElement('div');d.textContent=s||'';return d.innerHTML};Object.entries(groups).forEach(([cat,id])=>{const grid=document.querySelector('#'+id)?.closest('.content-section')?.querySelector('.articles-grid');const items=rows.filter(r=>r.categorie===cat);if(grid&&items.length)grid.innerHTML=items.map(r=>'<a class="article-card" onclick="openManagedModal('+rows.indexOf(r)+')"><span class="article-card-icon">📄</span><div class="article-card-title">'+esc(r.titre)+'</div><p class="article-card-desc">'+esc((r.contenu||'').replace(/<[^>]+>/g,'').slice(0,150))+'</p></a>').join('')});window.managedRows=rows}
-function escapeArticleText(value){const d=document.createElement('div');d.textContent=value||'';return '<p style=\"line-height:1.85;margin:0;\">'+d.innerHTML.replace(/\r?\n/g,'<br>')+'</p>'}
+function escapeArticleText(value){return SFArticle.render(value)}
 function openManagedModal(i){const r=window.managedRows?.[i];if(!r)return;document.getElementById('modalBadge').textContent='Article';document.getElementById('modalTitle').textContent=r.titre;document.getElementById('modalBody').innerHTML=escapeArticleText(r.contenu);document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden'}
 function normalizeArticleTitle(value){return (value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
 async function loadManagedArticles(){
