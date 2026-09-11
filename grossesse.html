@@ -387,6 +387,8 @@ const MODALS={
 'canal-carpien':{badge:'🩺 Pathologie',title:'Syndrome du canal carpien',body:`<h3>Symptômes</h3><ul><li>Fourmillements et engourdissements des mains (surtout pouce, index, majeur)</li><li>Douleurs des poignets, souvent nocturnes</li><li>Sensation de gonflement des mains</li><li>Diminution de la force de préhension</li></ul><h3>Conseils</h3><ul><li>Éviter les mouvements répétitifs des poignets</li><li>Surélever les mains au repos</li><li>Appliquer du froid sur les poignets</li></ul><h3>Attelles et traitements</h3><p>Port d'une attelle de poignet la nuit. Les symptômes régressent généralement après l'accouchement avec la diminution des œdèmes.</p>`},
 };
 function openModal(id){const d=MODALS[id];if(!d)return;document.getElementById('modalBadge').textContent=d.badge;document.getElementById('modalTitle').textContent=d.title;document.getElementById('modalBody').innerHTML=d.body;document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden';}
+const requestedArticle=new URLSearchParams(window.location.search).get('article');
+if(requestedArticle&&MODALS[requestedArticle])openModal(requestedArticle);
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';}
 function closeModalBg(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
