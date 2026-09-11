@@ -472,7 +472,7 @@ async function loadDoctorArticles(){
 }
 
 function escapeHtml(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}
-function renderArticleText(value){let h=escapeHtml(value||'').replace(/^## (.+)$/gm,'<h3>$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/__(.+?)__/g,'<u>$1</u>').replace(/\r?\n/g,'<br>');return '<div style="line-height:1.85;">'+h+'</div>';}
+function renderArticleText(value){let h=escapeHtml(value||'').replace(/^## (.+)$/gm,'<h3>$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/__(.+?)__/g,'<u>$1</u>').replace(/\*\*/g,'').replace(/__/g,'').replace(/\r?\n/g,'<br>');return '<div style="line-height:1.85;">'+h+'</div>';}
 
 function openDoctorModal(index){
   const a=doctorDynamicArticles[index];if(!a)return;
