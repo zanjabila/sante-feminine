@@ -1005,6 +1005,11 @@ async function loadDoctorProfile() {
     const bioEl = document.querySelector('.doctor-bio');
     if (bioEl && medecin.message_bienvenue) bioEl.textContent = medecin.message_bienvenue;
 
+    const avatarEl = document.querySelector('.doctor-avatar');
+    if (avatarEl && medecin.photo_url) {
+      avatarEl.innerHTML = `<img src="${safeText(medecin.photo_url)}" alt="Photo de ${safeText(fullName)}">`;
+    }
+
     const villeEl = document.querySelector('.doctor-badge-item:last-child');
     if (villeEl && medecin.ville) villeEl.textContent = `📍 ${medecin.ville}`;
 

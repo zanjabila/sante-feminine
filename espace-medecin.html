@@ -812,6 +812,10 @@ function initPage() {
   setVal('hoursWeek', currentDoctor.horaires_semaine);
   setVal('hoursSat', currentDoctor.horaires_samedi);
   setVal('hoursExtra', currentDoctor.horaires_extra);
+  if (currentDoctor.photo_url) {
+    document.getElementById('avatarPreview').innerHTML = `<img src="${escapeHtml(currentDoctor.photo_url)}" alt="Photo de profil">`;
+    document.getElementById('navAvatar').innerHTML = `<img src="${escapeHtml(currentDoctor.photo_url)}" alt="Photo" style="width:100%;height:100%;object-fit:cover;">`;
+  }
   populateCategorySelect();
   // Code d'accès patient
   const accessCode = currentDoctor.code_acces || '';
@@ -868,11 +872,43 @@ function switchTab(tab) {
 
 function previewPhoto(input) {
   if (input.files&&input.files[0]) {
+    const file = input.files[0];
+    if (!['image/jpeg','image/png','image/webp'].includes(file.type)) {
+      showToast('⚠️ Choisissez une image JPG, PNG ou WebP');
+      input.value='';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('⚠️ La photo ne doit pas dépasser 5 Mo');
+      input.value='';
+      return;
+    }
     const r=new FileReader(); r.onload=e=>{document.getElementById('avatarPreview').innerHTML=`<img src="${e.target.result}" alt="Photo">`;}; r.readAsDataURL(input.files[0]);
   }
 }
 
+async function uploadProfilePhoto() {
+  const input=document.getElementById('photoInput');
+  const file=input.files?.[0];
+  if(!file) return currentDoctor.photo_url || '';
+  const extension={ 'image/jpeg':'jpg','image/png':'png','image/webp':'webp' }[file.type];
+  const objectPath=`${currentDoctor.id}/profile.${extension}`;
+  const response=await fetch(`${SUPABASE_URL}/storage/v1/object/doctor-avatars/${objectPath}`,{
+    method:'POST',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SFSession.token()}`,'Content-Type':file.type,'x-upsert':'true'},
+    body:file
+  });
+  if(!response.ok){
+    const error=await response.json().catch(()=>({}));
+    throw new Error(error.message||'Impossible d’enregistrer la photo');
+  }
+  return `${SUPABASE_URL}/storage/v1/object/public/doctor-avatars/${objectPath}?v=${Date.now()}`;
+}
+
 async function saveProfil() {
+  let photoUrl=currentDoctor.photo_url||'';
+  try { photoUrl=await uploadProfilePhoto(); }
+  catch(error){ showToast(`⚠️ ${error.message}`); return; }
   const profil = {
     prenom:document.getElementById('firstName').value, nom:document.getElementById('lastName').value,
     specialite:document.getElementById('specialty').value, message_bienvenue:document.getElementById('welcomeMsg').value,
@@ -880,10 +916,11 @@ async function saveProfil() {
     code_postal:document.getElementById('zip').value, ville:document.getElementById('city').value,
     telephone:document.getElementById('phone').value, email:document.getElementById('email').value,
     horaires_semaine:document.getElementById('hoursWeek').value, horaires_samedi:document.getElementById('hoursSat').value,
-    horaires_extra:document.getElementById('hoursExtra').value,
+    horaires_extra:document.getElementById('hoursExtra').value, photo_url:photoUrl,
   };
   await sbPatch('medecins', `id=eq.${currentDoctor.id}`, profil);
   currentDoctor = { ...currentDoctor, ...profil };
+  document.getElementById('photoInput').value='';
   sessionStorage.setItem('doctorAuth', JSON.stringify(currentDoctor));
   showToast('✓ Profil enregistré');
 }
