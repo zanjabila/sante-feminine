@@ -306,6 +306,8 @@ const MODALS={
 'infections-urinaires-gyneco':{badge:'💧 Infections urinaires',title:'Infections urinaires',body:`<h3>Cystite</h3><p>Infection bactérienne de la vessie, très fréquente chez la femme. Causée dans 80% des cas par Escherichia coli. Symptômes : brûlures lors de la miction, envies fréquentes, urines troubles.</p><h3>Prévention</h3><ul><li>Boire abondamment (au moins 1,5 L/jour)</li><li>Ne pas se retenir d'uriner</li><li>S'essuyer d'avant en arrière</li><li>Uriner après les rapports sexuels</li><li>Éviter les douches vaginales et les savons parfumés</li></ul><h3>Traitements</h3><p>Antibiothérapie courte (3 à 5 jours) adaptée à l'antibiogramme. Boire abondamment pour éliminer les bactéries.</p><h3>Quand consulter</h3><p>Consultez rapidement si : fièvre > 38°C, frissons, douleurs lombaires (signes de pyélonéphrite), ou si les symptômes persistent après traitement.</p>`},
 };
 function openModal(id){const d=MODALS[id];if(!d)return;document.getElementById('modalBadge').textContent=d.badge;document.getElementById('modalTitle').textContent=d.title;document.getElementById('modalBody').innerHTML=d.body;document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden';}
+const requestedArticle=new URLSearchParams(window.location.search).get('article');
+if(requestedArticle&&MODALS[requestedArticle])openModal(requestedArticle);
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';}
 function closeModalBg(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
