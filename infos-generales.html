@@ -475,7 +475,7 @@ function openDoctorModal(index){
   const a=doctorDynamicArticles[index];if(!a)return;
   document.getElementById('modalBadge').textContent='Mon cabinet';
   document.getElementById('modalTitle').textContent=a.titre;
-  document.getElementById('modalBody').innerHTML=`<p style="white-space:pre-wrap;line-height:1.7;">${escapeHtml(a.contenu)}</p>`;
+  document.getElementById('modalBody').innerHTML=`<p style="line-height:1.85;margin:0;">${escapeHtml(a.contenu).replace(/\r?\n/g,'<br>')}</p>`;
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
