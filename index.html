@@ -391,10 +391,11 @@
   }
   .subcats { display: flex; flex-wrap: wrap; gap: 8px; }
   .subcat-tag {
+    display: inline-flex; align-items: center;
     background: var(--cream); border: 1px solid var(--cream-dark);
     border-radius: 20px; padding: 5px 14px;
     font-size: 12.5px; color: var(--text-mid);
-    cursor: pointer; transition: all .2s;
+    cursor: pointer; transition: all .2s; text-decoration: none;
   }
   .subcat-tag:hover { background: var(--rose); border-color: var(--rose); color: var(--text-dark); }
 
@@ -712,7 +713,7 @@ function googleTranslateElementInit() {
   <div class="categories-grid">
 
     <!-- Grossesse -->
-    <div class="cat-card cat-card-1" id="grossesse">
+    <div class="cat-card cat-card-1" id="grossesse" role="link" tabindex="0" aria-label="Ouvrir la rubrique Grossesse" onclick="openCategory(event, 'grossesse.html')" onkeydown="openCategoryKey(event, 'grossesse.html')">
       <div class="cat-icon cat-icon-1">🤰</div>
       <div class="cat-title">Grossesse</div>
       <p class="cat-desc">Suivi trimestre par trimestre et pathologies de grossesse — pour une maternité sereine et bien informée.</p>
@@ -720,29 +721,29 @@ function googleTranslateElementInit() {
       <div class="subcat-group">
         <div class="subcat-group-label">Trimestres</div>
         <div class="subcats">
-          <span class="subcat-tag" onclick="openModal('t1')">1er trimestre</span>
-          <span class="subcat-tag" onclick="openModal('t2')">2e trimestre</span>
-          <span class="subcat-tag" onclick="openModal('t3')">3e trimestre</span>
+          <a class="subcat-tag" href="grossesse.html#t1">1er trimestre</a>
+          <a class="subcat-tag" href="grossesse.html#t2">2e trimestre</a>
+          <a class="subcat-tag" href="grossesse.html#t3">3e trimestre</a>
         </div>
       </div>
 
       <div class="subcat-group">
         <div class="subcat-group-label">Pathologies de la grossesse</div>
         <div class="subcats">
-          <span class="subcat-tag" onclick="openModal('diabete')">Diabète gestationnel</span>
-          <span class="subcat-tag" onclick="openModal('preeclampsie')">Prééclampsie</span>
-          <span class="subcat-tag" onclick="openModal('map')">Menace d'accouchement prématuré</span>
-          <span class="subcat-tag" onclick="openModal('fausses-couches')">Fausses couches</span>
-          <span class="subcat-tag">Cholestase gravidique</span>
-          <span class="subcat-tag">Hyperémèse gravidique</span>
-          <span class="subcat-tag">Décollements du sac gestationnel</span>
-          <span class="subcat-tag">Infections urinaires</span>
-          <span class="subcat-tag">Œdèmes des jambes</span>
-          <span class="subcat-tag">Douleurs abdominales</span>
-          <span class="subcat-tag">Anémie</span>
-          <span class="subcat-tag">Streptocoque B</span>
-          <span class="subcat-tag">Grossesse extra-utérine</span>
-          <span class="subcat-tag">Syndrome du canal carpien</span>
+          <a class="subcat-tag" href="grossesse.html?article=diabete">Diabète gestationnel</a>
+          <a class="subcat-tag" href="grossesse.html?article=preeclampsie">Prééclampsie</a>
+          <a class="subcat-tag" href="grossesse.html?article=map">Menace d'accouchement prématuré</a>
+          <a class="subcat-tag" href="grossesse.html?article=fausses-couches">Fausses couches</a>
+          <a class="subcat-tag" href="grossesse.html?article=cholestase">Cholestase gravidique</a>
+          <a class="subcat-tag" href="grossesse.html?article=hyperemese">Hyperémèse gravidique</a>
+          <a class="subcat-tag" href="grossesse.html?article=decollement">Décollements du sac gestationnel</a>
+          <a class="subcat-tag" href="grossesse.html?article=infections-urinaires">Infections urinaires</a>
+          <a class="subcat-tag" href="grossesse.html?article=oedemes">Œdèmes des jambes</a>
+          <a class="subcat-tag" href="grossesse.html?article=douleurs-abdominales">Douleurs abdominales</a>
+          <a class="subcat-tag" href="grossesse.html?article=anemie">Anémie</a>
+          <a class="subcat-tag" href="grossesse.html?article=streptocoque">Streptocoque B</a>
+          <a class="subcat-tag" href="grossesse.html?article=geu">Grossesse extra-utérine</a>
+          <a class="subcat-tag" href="grossesse.html?article=canal-carpien">Syndrome du canal carpien</a>
         </div>
       </div>
 
@@ -750,18 +751,18 @@ function googleTranslateElementInit() {
     </div>
 
     <!-- Post-partum -->
-    <div class="cat-card cat-card-2" id="postpartum">
+    <div class="cat-card cat-card-2" id="postpartum" role="link" tabindex="0" aria-label="Ouvrir la rubrique Post-partum" onclick="openCategory(event, 'postpartum.html')" onkeydown="openCategoryKey(event, 'postpartum.html')">
       <div class="cat-icon cat-icon-2">👶</div>
       <div class="cat-title">Post-partum</div>
       <p class="cat-desc">Récupération après l'accouchement, allaitement, bien-être émotionnel et rééducation — tout ce dont vous avez besoin après la naissance.</p>
 
       <div class="subcat-group">
         <div class="subcats">
-          <span class="subcat-tag" onclick="openModal('postpartum-gen')">Informations générales</span>
-          <span class="subcat-tag" onclick="openModal('allaitement')">Allaitement</span>
-          <span class="subcat-tag" onclick="openModal('babyblues')">Baby blues</span>
-          <span class="subcat-tag" onclick="openModal('contraception-pp')">Contraception post-partum</span>
-          <span class="subcat-tag" onclick="openModal('reeducation')">Rééducation périnéale</span>
+          <a class="subcat-tag" href="postpartum.html#postpartum">Informations générales</a>
+          <a class="subcat-tag" href="postpartum.html#allaitement">Allaitement</a>
+          <a class="subcat-tag" href="postpartum.html?article=babyblues-info">Baby blues</a>
+          <a class="subcat-tag" href="postpartum.html?article=contraception-pp">Contraception post-partum</a>
+          <a class="subcat-tag" href="postpartum.html?article=reeducation-info">Rééducation périnéale</a>
         </div>
       </div>
 
@@ -769,7 +770,7 @@ function googleTranslateElementInit() {
     </div>
 
     <!-- Gynécologie -->
-    <div class="cat-card cat-card-3" id="gyneco">
+    <div class="cat-card cat-card-3" id="gyneco" role="link" tabindex="0" aria-label="Ouvrir la rubrique Gynécologie" onclick="openCategory(event, 'gynecologie.html')" onkeydown="openCategoryKey(event, 'gynecologie.html')">
       <div class="cat-icon cat-icon-3">🌸</div>
       <div class="cat-title">Gynécologie</div>
       <p class="cat-desc">Contraception, pathologies, HPV, infections vaginales et urinaires — votre santé gynécologique expliquée clairement.</p>
@@ -777,46 +778,46 @@ function googleTranslateElementInit() {
       <div class="subcat-group">
         <div class="subcat-group-label">Contraception</div>
         <div class="subcats">
-          <span class="subcat-tag" onclick="openModal('contraception')">Les différentes méthodes</span>
-          <span class="subcat-tag">Pilule œstroprogestative</span>
+          <a class="subcat-tag" href="gynecologie.html?article=methodes-contraception">Les différentes méthodes</a>
+          <a class="subcat-tag" href="gynecologie.html?article=pilule-conseils">Pilule œstroprogestative</a>
         </div>
       </div>
 
       <div class="subcat-group">
         <div class="subcat-group-label">Pathologies</div>
         <div class="subcats">
-          <span class="subcat-tag">Fibromes</span>
-          <span class="subcat-tag">Polypes</span>
-          <span class="subcat-tag" onclick="openModal('kystes')">Kystes ovariens</span>
-          <span class="subcat-tag">Malformations utérines</span>
-          <span class="subcat-tag" onclick="openModal('endometriose')">Endométriose</span>
-          <span class="subcat-tag">Adénomyose</span>
+          <a class="subcat-tag" href="gynecologie.html?article=fibromes">Fibromes</a>
+          <a class="subcat-tag" href="gynecologie.html?article=polypes">Polypes</a>
+          <a class="subcat-tag" href="gynecologie.html?article=kystes">Kystes ovariens</a>
+          <a class="subcat-tag" href="gynecologie.html?article=malformations">Malformations utérines</a>
+          <a class="subcat-tag" href="gynecologie.html?article=endometriose">Endométriose</a>
+          <a class="subcat-tag" href="gynecologie.html?article=adenomyose">Adénomyose</a>
         </div>
       </div>
 
       <div class="subcat-group">
         <div class="subcat-group-label">HPV</div>
         <div class="subcats">
-          <span class="subcat-tag" onclick="openModal('hpv')">HPV</span>
-          <span class="subcat-tag">Dépistage</span>
-          <span class="subcat-tag">Lésions du col</span>
+          <a class="subcat-tag" href="gynecologie.html?article=hpv-info">HPV</a>
+          <a class="subcat-tag" href="gynecologie.html?article=depistage">Dépistage</a>
+          <a class="subcat-tag" href="gynecologie.html?article=lesions-col">Lésions du col</a>
         </div>
       </div>
 
       <div class="subcat-group">
         <div class="subcat-group-label">Infections vaginales</div>
         <div class="subcats">
-          <span class="subcat-tag" onclick="openModal('mycose')">Mycoses</span>
-          <span class="subcat-tag">Vaginoses</span>
-          <span class="subcat-tag">MST / IST</span>
-          <span class="subcat-tag">Uréaplasma / Mycoplasma</span>
+          <a class="subcat-tag" href="gynecologie.html?article=mycoses">Mycoses</a>
+          <a class="subcat-tag" href="gynecologie.html?article=vaginoses">Vaginoses</a>
+          <a class="subcat-tag" href="gynecologie.html?article=ist">MST / IST</a>
+          <a class="subcat-tag" href="gynecologie.html?article=ureaplasma">Uréaplasma / Mycoplasma</a>
         </div>
       </div>
 
       <div class="subcat-group">
         <div class="subcat-group-label">Infections urinaires</div>
         <div class="subcats">
-          <span class="subcat-tag">Infections urinaires</span>
+          <a class="subcat-tag" href="gynecologie.html?article=infections-urinaires-gyneco">Infections urinaires</a>
         </div>
       </div>
 
@@ -1394,6 +1395,17 @@ const modalData = {
 // ─── MODAL ───
 let currentModal = null;
 let currentSection = null;
+
+function openCategory(event, url) {
+  if (event.target.closest('a, button')) return;
+  window.location.href = url;
+}
+function openCategoryKey(event, url) {
+  if ((event.key === 'Enter' || event.key === ' ') && event.target === event.currentTarget) {
+    event.preventDefault();
+    window.location.href = url;
+  }
+}
 
 function openModal(id) {
   const data = modalData[id];
