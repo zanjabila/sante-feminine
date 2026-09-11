@@ -512,6 +512,22 @@ body{top:0 !important;}
       <div class="section-title">Mes informations pratiques</div>
       <p class="section-sub">Personnalisez les informations pratiques spécifiques à votre cabinet. Ces articles sont visibles uniquement par vos patientes. Vous pouvez les modifier, les désactiver ou en créer de nouveaux.</p>
 
+      <div class="form-card">
+        <div class="form-card-title">Rubriques mises en avant</div>
+        <p class="form-hint" style="margin-bottom:16px;">« Informations générales » reste toujours visible. Choisissez jusqu’à deux autres rubriques à afficher directement. Les articles restants seront rangés dans « Autres informations ».</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="featuredCategory1">Rubrique mise en avant 1</label>
+            <select class="form-input" id="featuredCategory1"></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="featuredCategory2">Rubrique mise en avant 2</label>
+            <select class="form-input" id="featuredCategory2"></select>
+          </div>
+        </div>
+        <button class="btn-save" type="button" onclick="saveFeaturedCategories()">✓ Enregistrer mes rubriques</button>
+      </div>
+
       <button class="btn-primary-full" onclick="createNewArticle()" style="margin-bottom:20px;background:var(--rose-deep);">+ Créer un nouvel article</button>
 
       <div class="articles-list" id="articlesList"></div>
@@ -589,6 +605,11 @@ body{top:0 !important;}
         <label class="form-label">Titre de l'article</label>
         <input class="form-input" type="text" id="editTitle">
       </div>
+      <div class="form-group" style="margin-bottom:18px;">
+        <label class="form-label" for="editCategory">Rubrique</label>
+        <select class="form-input" id="editCategory"></select>
+        <div class="form-hint">La rubrique détermine où cet article apparaîtra pour vos patientes.</div>
+      </div>
       <div class="form-group">
         <label class="form-label">Contenu</label>
         <textarea class="form-textarea" id="editContent" style="min-height:200px;"></textarea>
@@ -654,6 +675,38 @@ async function sbPost(table, body) {
 // MÉDECINS
 // ═══════════════════════════════
 let currentDoctor = null;
+
+const INFO_CATEGORIES = [
+  { value:'infos-preop', label:'Informations pré-opératoires' },
+  { value:'infos-etranger', label:"Accouchement à l’étranger" },
+  { value:'grossesse', label:'Grossesse' },
+  { value:'postpartum', label:'Post-partum' },
+  { value:'contraception', label:'Contraception' },
+  { value:'gynecologie', label:'Gynécologie' },
+  { value:'menopause', label:'Ménopause' },
+  { value:'autre', label:'Autre information' }
+];
+
+function categoryLabel(value) {
+  if (value === 'infos-generales') return 'Informations générales';
+  return INFO_CATEGORIES.find(item => item.value === value)?.label || value || 'Autre information';
+}
+
+function populateCategorySelects() {
+  const articleSelect = document.getElementById('editCategory');
+  if (articleSelect) articleSelect.innerHTML = [
+    { value:'infos-generales', label:'Informations générales' },
+    ...INFO_CATEGORIES
+  ].map(item => `<option value="${item.value}">${item.label}</option>`).join('');
+
+  const featuredOptions = '<option value="">— Aucune —</option>' + INFO_CATEGORIES
+    .filter(item => item.value !== 'autre')
+    .map(item => `<option value="${item.value}">${item.label}</option>`).join('');
+  ['featuredCategory1','featuredCategory2'].forEach(id => {
+    const select = document.getElementById(id);
+    if (select) select.innerHTML = featuredOptions;
+  });
+}
 
 // Pendant le pilote, tous les médecins confirmés ont accès sans limite de durée.
 // Remettre cette constante à false lors de l'activation des abonnements.
@@ -752,6 +805,11 @@ function initPage() {
   setVal('hoursWeek', currentDoctor.horaires_semaine);
   setVal('hoursSat', currentDoctor.horaires_samedi);
   setVal('hoursExtra', currentDoctor.horaires_extra);
+  populateCategorySelects();
+  const featured = Array.isArray(currentDoctor.featured_info_categories)
+    ? currentDoctor.featured_info_categories.slice(0, 2) : [];
+  setVal('featuredCategory1', featured[0]);
+  setVal('featuredCategory2', featured[1]);
   // Code d'accès patient
   const accessCode = currentDoctor.code_acces || '';
   const codeDisplay = document.getElementById('accessCodeDisplay');
@@ -759,6 +817,21 @@ function initPage() {
   const link = `https://zanjabila.github.io/sante-feminine/auth-connexion.html?code=${encodeURIComponent(accessCode)}&mode=signup`;
   setVal('shareLinkInput', link);
   renderArticles();
+}
+
+async function saveFeaturedCategories() {
+  const selected = [
+    document.getElementById('featuredCategory1').value,
+    document.getElementById('featuredCategory2').value
+  ].filter(Boolean);
+  if (new Set(selected).size !== selected.length) {
+    showToast('⚠️ Choisissez deux rubriques différentes');
+    return;
+  }
+  await sbPatch('medecins', `id=eq.${currentDoctor.id}`, { featured_info_categories:selected });
+  currentDoctor.featured_info_categories = selected;
+  sessionStorage.setItem('doctorAuth', JSON.stringify(currentDoctor));
+  showToast('✓ Rubriques mises en avant enregistrées');
 }
 
 window.addEventListener('load', async () => {
@@ -852,6 +925,7 @@ async function renderArticles() {
         </div>
       </div>
       <div class="article-item-preview">${escapeHtml(a.contenu)}</div>
+      <div style="font-size:11px;color:var(--rose-deep);margin-top:8px;">${escapeHtml(categoryLabel(a.categorie))}</div>
     </div>`;
   }).join('');
 }
@@ -861,6 +935,7 @@ function editArticle(id) {
   document.getElementById('editingArticleId').value=id;
   document.getElementById('editorModalTitle').textContent=a.titre;
   document.getElementById('editTitle').value=a.titre;
+  document.getElementById('editCategory').value=a.categorie || 'autre';
   document.getElementById('editContent').value=a.contenu;
   document.getElementById('editorOverlay').classList.add('open');
 }
@@ -869,17 +944,18 @@ async function saveArticle() {
   const id=document.getElementById('editingArticleId').value;
   const titre = document.getElementById('editTitle').value.trim();
   const contenu = document.getElementById('editContent').value.trim();
+  const categorie = document.getElementById('editCategory').value;
   if(!titre){ showToast('⚠️ Le titre est obligatoire'); return; }
 
   if (id === 'NEW') {
     // Créer un nouvel article
     await sbPost('articles', {
-      titre, contenu, categorie:'infos-generales',
+      titre, contenu, categorie,
       medecin_id: currentDoctor.id, actif_ia: true
     });
     showToast('✓ Nouvel article créé');
   } else {
-    await sbPatch('articles',`id=eq.${id}`,{titre, contenu, updated_at:new Date().toISOString()});
+    await sbPatch('articles',`id=eq.${id}`,{titre, contenu, categorie, updated_at:new Date().toISOString()});
     showToast('✓ Article mis à jour');
   }
   await renderArticles(); closeEditor();
@@ -889,6 +965,7 @@ function createNewArticle() {
   document.getElementById('editingArticleId').value='NEW';
   document.getElementById('editorModalTitle').textContent='Nouvel article';
   document.getElementById('editTitle').value='';
+  document.getElementById('editCategory').value='infos-generales';
   document.getElementById('editContent').value='';
   document.getElementById('editorOverlay').classList.add('open');
 }

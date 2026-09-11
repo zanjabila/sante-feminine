@@ -47,6 +47,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;background:rgba(
 .article-card-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--text-dark);margin-bottom:6px;line-height:1.3;}
 .article-card-desc{font-size:12.5px;color:var(--text-mid);line-height:1.6;font-weight:300;}
 .article-card-tag{display:inline-flex;align-items:center;margin-top:12px;padding:3px 10px;background:var(--purple-pale);border-radius:8px;font-size:10.5px;color:var(--purple);font-weight:500;}
+.resource-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;}
+.resource-tab{padding:10px 16px;border:1px solid var(--cream-dark);border-radius:999px;background:var(--white);color:var(--text-mid);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;}
+.resource-tab.active{background:var(--text-dark);border-color:var(--text-dark);color:var(--white);}
+.doctor-info-block{margin-top:34px;padding-top:28px;border-top:1px solid var(--cream-dark);}
+.doctor-info-title{font-family:'Cormorant Garamond',serif;font-size:24px;margin-bottom:6px;}
+.doctor-info-sub{font-size:13px;color:var(--text-light);margin-bottom:18px;}
+.category-group{margin-top:26px;}
+.category-group-title{font-size:13px;font-weight:600;color:var(--purple);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em;}
 .modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(44,36,32,.5);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s;}
 .modal-overlay.open{opacity:1;pointer-events:all;}
 .modal{background:var(--white);border-radius:24px;width:860px;max-width:100%;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-lg);transform:scale(.96);transition:transform .3s;}
@@ -114,14 +122,16 @@ body{top:0 !important;}
 
   <div class="content">
 
+    <div class="resource-tabs" id="resourceTabs"></div>
+
     <!-- INFORMATIONS PRATIQUES — articles du médecin (dynamique) -->
     <div class="content-section">
       <span class="section-anchor" id="infos-gen"></span>
       <div class="section-header">
-        <div class="section-icon">📋</div>
-        <div><div class="section-title">Informations pratiques</div><div class="section-sub">Informations et ressources de votre cabinet</div></div>
+        <div class="section-icon" id="resourceSectionIcon">📋</div>
+        <div><div class="section-title" id="resourceSectionTitle">Informations générales</div><div class="section-sub" id="resourceSectionSub">Informations utiles pour toutes les patientes</div></div>
       </div>
-      <div class="articles-grid" id="doctorArticlesGrid">
+      <div class="articles-grid" id="curatedArticlesGrid">
         <!-- Articles du médecin chargés dynamiquement depuis Supabase -->
         <a class="article-card" onclick="openModal('rdv')">
           <span class="article-card-icon">📅</span>
@@ -148,8 +158,13 @@ body{top:0 !important;}
           <span class="article-card-tag">Urgence</span>
         </a>
       </div>
+      <div class="doctor-info-block" id="doctorInfoBlock" style="display:none;">
+        <div class="doctor-info-title">Informations de votre cabinet</div>
+        <div class="doctor-info-sub">Contenus ajoutés et personnalisés par votre praticien.</div>
+        <div class="articles-grid" id="doctorArticlesGrid"></div>
+      </div>
       <div id="noArticlesMsg" style="display:none;text-align:center;padding:40px 20px;color:var(--text-light);font-weight:300;">
-        Aucune information pratique disponible pour le moment.
+        Aucune information disponible dans cette rubrique pour le moment.
       </div>
     </div>
 
@@ -399,42 +414,129 @@ const SF_SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 const SF_SB={'apikey':SF_SUPABASE_KEY,'Authorization':`Bearer ${SFSession.token()||SF_SUPABASE_KEY}`};
 
 let doctorDynamicArticles=[];
+let featuredCategories=[];
+
+const CATEGORY_META={
+  'infos-generales':{icon:'📋',title:'Informations générales',sub:'Informations utiles pour toutes les patientes'},
+  'infos-preop':{icon:'🏥',title:'Informations pré-opératoires',sub:'Préparer une intervention dans de bonnes conditions'},
+  'infos-etranger':{icon:'✈️',title:"Accouchement à l’étranger",sub:'Préparer le dossier, les assurances et le suivi'},
+  'grossesse':{icon:'🤰',title:'Grossesse',sub:'Informations complémentaires de votre praticien'},
+  'postpartum':{icon:'👶',title:'Post-partum',sub:'Informations complémentaires après la naissance'},
+  'contraception':{icon:'💊',title:'Contraception',sub:'Informations complémentaires de votre praticien'},
+  'gynecologie':{icon:'🌸',title:'Gynécologie',sub:'Informations complémentaires de votre praticien'},
+  'menopause':{icon:'🌿',title:'Ménopause',sub:'Informations complémentaires de votre praticien'},
+  'autre':{icon:'📌',title:'Autre information',sub:'Informations complémentaires de votre cabinet'},
+  'autres':{icon:'🗂️',title:'Autres informations',sub:'Autres contenus proposés par votre praticien'}
+};
+
+const STATIC_ARTICLES={
+  'infos-generales':[
+    ['rdv','📅','Comment contacter le cabinet et organiser votre rendez-vous.'],
+    ['documents','🗂️','Les documents utiles à apporter à votre consultation.'],
+    ['resultats','🔬','Comment recevoir et comprendre vos résultats d’examens.'],
+    ['urgences','🚨','Quand consulter rapidement ou contacter les urgences.']
+  ],
+  'infos-preop':[
+    ['consignes-preop','🏥','Les principales consignes avant une intervention.'],
+    ['jeune-preop','🥤','Les règles de jeûne précisées par l’équipe d’anesthésie.'],
+    ['medicaments-preop','💊','Les précautions concernant vos traitements habituels.'],
+    ['retour-domicile','🏠','Organiser votre sortie et votre retour à domicile.']
+  ],
+  'infos-etranger':[
+    ['dossier-medical','📁','Préparer et transmettre votre dossier de grossesse.'],
+    ['assurances','🛡️','Vérifier votre couverture et vos remboursements.'],
+    ['documents-etranger','📄','Les documents nécessaires avant votre départ.'],
+    ['suivi-retour','↩️','Organiser les démarches et le suivi après le retour.']
+  ]
+};
+
+function categoryMeta(category){
+  return CATEGORY_META[category]||{icon:'📌',title:(category||'Autre').replaceAll('-',' '),sub:'Informations proposées par votre praticien'};
+}
+
+function doctorCard(article){
+  const index=doctorDynamicArticles.indexOf(article);
+  return `<a class="article-card" onclick="openDoctorModal(${index})">
+    <span class="article-card-icon">${categoryMeta(article.categorie).icon}</span>
+    <div class="article-card-title">${escapeHtml(article.titre)}</div>
+    <p class="article-card-desc">${escapeHtml((article.contenu||'').substring(0,110))}${(article.contenu||'').length>110?'…':''}</p>
+    <span class="article-card-tag">Mon cabinet</span>
+  </a>`;
+}
+
+function renderCurated(category){
+  const grid=document.getElementById('curatedArticlesGrid');
+  const articles=STATIC_ARTICLES[category]||[];
+  grid.innerHTML=articles.map(([id,icon,desc])=>`<a class="article-card" onclick="openModal('${id}')">
+    <span class="article-card-icon">${icon}</span>
+    <div class="article-card-title">${escapeHtml(MODALS[id].title)}</div>
+    <p class="article-card-desc">${escapeHtml(desc)}</p>
+    <span class="article-card-tag">Information générale</span>
+  </a>`).join('');
+  grid.style.display=articles.length?'grid':'none';
+}
+
+function renderCategory(category){
+  const meta=categoryMeta(category);
+  document.getElementById('resourceSectionIcon').textContent=meta.icon;
+  document.getElementById('resourceSectionTitle').textContent=meta.title;
+  document.getElementById('resourceSectionSub').textContent=meta.sub;
+  renderCurated(category);
+
+  const doctorBlock=document.getElementById('doctorInfoBlock');
+  const doctorGrid=document.getElementById('doctorArticlesGrid');
+  let html='';
+  if(category==='autres'){
+    const excluded=new Set(['infos-generales',...featuredCategories]);
+    const groups={};
+    doctorDynamicArticles.filter(a=>excluded.has(a.categorie)===false).forEach(a=>{
+      (groups[a.categorie]??=[]).push(a);
+    });
+    html=Object.entries(groups).map(([group,items])=>`<div class="category-group" style="grid-column:1/-1">
+      <div class="category-group-title">${escapeHtml(categoryMeta(group).title)}</div>
+      <div class="articles-grid">${items.map(doctorCard).join('')}</div>
+    </div>`).join('');
+  }else{
+    html=doctorDynamicArticles.filter(a=>a.categorie===category).map(doctorCard).join('');
+  }
+  doctorGrid.innerHTML=html;
+  doctorBlock.style.display=html?'block':'none';
+  const hasCurated=(STATIC_ARTICLES[category]||[]).length>0;
+  document.getElementById('noArticlesMsg').style.display=!hasCurated&&!html?'block':'none';
+  document.querySelectorAll('.resource-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.category===category));
+}
+
+function renderTabs(activeCategory){
+  const available=[...new Set(doctorDynamicArticles.map(a=>a.categorie).filter(Boolean))];
+  const curated=new Set(['infos-preop','infos-etranger']);
+  featuredCategories=featuredCategories.filter(category=>available.includes(category)||curated.has(category)).slice(0,2);
+  const others=available.filter(category=>category!=='infos-generales'&&!featuredCategories.includes(category));
+  const tabs=['infos-generales',...featuredCategories,...(others.length?['autres']:[])];
+  if(!tabs.includes(activeCategory)) activeCategory='infos-generales';
+  document.getElementById('resourceTabs').innerHTML=tabs.map(category=>`<button class="resource-tab" data-category="${category}" onclick="selectCategory('${category}')">${categoryMeta(category).icon} ${escapeHtml(categoryMeta(category).title)}</button>`).join('');
+  renderCategory(activeCategory);
+}
+
+function selectCategory(category){
+  const url=new URL(window.location.href);
+  url.searchParams.set('rubrique',category);
+  history.replaceState({},'',url);
+  renderCategory(category);
+}
 
 async function loadDoctorArticles(){
   const token=SFSession.token();
   if(!token){window.location.replace('auth-connexion.html');return;}
-  const pRes=await fetch(`${SF_SUPABASE_URL}/rest/v1/patientes?id=eq.${encodeURIComponent((await SFSession.user(SF_SUPABASE_URL,SF_SUPABASE_KEY))?.id||'')}&select=medecin_id`,{headers:SF_SB});
-  const pData=await pRes.json();
-  const medecinId=pData?.[0]?.medecin_id;
-  if(!medecinId){window.location.replace('auth-connexion.html');return;}
-
-  // Charger les articles actifs de ce médecin
   try{
-    const res=await fetch(`${SF_SUPABASE_URL}/rest/v1/articles?medecin_id=eq.${medecinId}&actif_ia=eq.true&select=*&order=created_at.asc`,{headers:SF_SB});
-    const data=await res.json();
-    const grid=document.getElementById('doctorArticlesGrid');
-    const emptyMsg=document.getElementById('noArticlesMsg');
-
-    if(!data||data.length===0){
-      // Le médecin n'a aucun article actif → afficher message vide
-      if(grid)grid.style.display='none';
-      if(emptyMsg)emptyMsg.style.display='block';
-      return;
-    }
-
-    doctorDynamicArticles=data;
-    if(!grid)return;
-
-    // Remplacer complètement la grille par les articles du médecin
-    grid.innerHTML=data.map((a,i)=>`
-      <a class="article-card" onclick="openDoctorModal(${i})">
-        <span class="article-card-icon">📋</span>
-        <div class="article-card-title">${escapeHtml(a.titre)}</div>
-        <p class="article-card-desc">${escapeHtml(a.contenu.substring(0,110))}${a.contenu.length>110?'…':''}</p>
-        <span class="article-card-tag">Mon cabinet</span>
-      </a>
-    `).join('');
-  }catch(e){}
+    const profileRes=await fetch(`${SF_SUPABASE_URL}/rest/v1/rpc/my_medecin_profile`,{method:'POST',headers:{...SF_SB,'Content-Type':'application/json'},body:'{}'});
+    const profile=(await profileRes.json())?.[0];
+    if(!profile?.id){window.location.replace('auth-connexion.html');return;}
+    featuredCategories=Array.isArray(profile.featured_info_categories)?profile.featured_info_categories:[];
+    const res=await fetch(`${SF_SUPABASE_URL}/rest/v1/articles?medecin_id=eq.${profile.id}&actif_ia=eq.true&select=*&order=created_at.asc`,{headers:SF_SB});
+    doctorDynamicArticles=res.ok?await res.json():[];
+    const legacyHash=window.location.hash==='#preop'?'infos-preop':window.location.hash==='#etranger'?'infos-etranger':null;
+    renderTabs(new URLSearchParams(window.location.search).get('rubrique')||legacyHash||'infos-generales');
+  }catch(e){renderTabs('infos-generales');}
 }
 
 function escapeHtml(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML;}

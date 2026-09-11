@@ -4,6 +4,7 @@
 
 1. Faire une sauvegarde Supabase (schéma + données).
 2. Exécuter `supabase/migrations/20260907_pilot_security.sql` dans le SQL Editor.
+   Puis exécuter `supabase/migrations/20260910_featured_information_categories.sql`.
 3. Dans **Authentication > URL Configuration**, autoriser :
    - `https://zanjabila.github.io/sante-feminine/email-confirme.html`
    - `https://zanjabila.github.io/sante-feminine/reset-password.html`
