@@ -705,7 +705,7 @@ function populateFeaturedArticleSelects() {
   const selected = Array.isArray(currentDoctor.featured_article_ids)
     ? currentDoctor.featured_article_ids.slice(0, 2) : [];
   const options = '<option value="">— Aucun —</option>' + doctorArticles
-    .filter(article => article.actif_ia !== false && article.categorie !== 'infos-generales')
+    .filter(article => article.actif_ia !== false)
     .map(article => `<option value="${article.id}">${escapeHtml(article.titre)}</option>`).join('');
   ['featuredArticle1','featuredArticle2'].forEach((id, index) => {
     const select = document.getElementById(id);
