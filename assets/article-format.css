@@ -1,0 +1,13 @@
+.modal-body,.rich-editor{font-size:16px;line-height:1.8;overflow-wrap:anywhere;white-space:pre-wrap}
+.modal-body p,.rich-editor p{font-size:inherit;line-height:inherit;margin:0 0 1em}
+.modal-body h3,.rich-editor h3{font-size:24px;color:#9c5068;font-weight:600;margin:1.3em 0 .5em;border:0}
+.modal-body h4,.rich-editor h4{font-size:19px;color:#9c5068;margin:1em 0 .4em}
+.modal-body strong,.modal-body b{background:none;padding:0}
+.modal-body ul,.rich-editor ul{list-style:disc;padding-left:1.5em}
+.modal-body ol,.rich-editor ol{list-style:decimal;padding-left:1.5em}
+.modal-body li,.rich-editor li{padding:.2em 0;font-size:inherit}
+.modal-body li::before{content:none}
+.modal-body img,.rich-editor img{display:block;max-width:100%;height:auto;border-radius:12px;margin:1em auto}
+.modal-body blockquote,.rich-editor blockquote{background:#f7edf1;border-left:4px solid #9c5068;padding:16px;margin:1em 0}
+.rich-editor{background:#fff;color:#2c2420;font-weight:400}
+#ficheContent[hidden]{display:none}
