@@ -38,17 +38,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:62px;background:rgba(
 .section-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;background:linear-gradient(135deg,var(--purple-pale),rgba(155,139,181,.3));}
 .section-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:400;color:var(--text-dark);}
 .section-sub{font-size:13px;color:var(--text-light);font-weight:300;margin-top:2px;}
-.articles-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.article-card{background:var(--white);border:1px solid var(--cream-dark);border-radius:18px;padding:24px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;text-decoration:none;display:block;}
+.articles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;}
+.article-card{background:linear-gradient(145deg,var(--white),#FCF8F5);border:1px solid var(--cream-dark);border-radius:26px;padding:32px;min-height:230px;cursor:pointer;transition:all .22s;position:relative;overflow:hidden;text-decoration:none;display:flex;flex-direction:column;}
 .article-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--purple);}
 .article-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple-pale),var(--purple));opacity:0;transition:opacity .2s;}
 .article-card:hover::after{opacity:1;}
-.article-card-icon{font-size:24px;margin-bottom:12px;display:block;}
-.article-card-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--text-dark);margin-bottom:6px;line-height:1.3;}
-.article-card-desc{font-size:12.5px;color:var(--text-mid);line-height:1.6;font-weight:300;}
-.article-card-tag{display:inline-flex;align-items:center;margin-top:12px;padding:3px 10px;background:var(--purple-pale);border-radius:8px;font-size:10.5px;color:var(--purple);font-weight:500;}
+.article-card-icon{font-size:34px;margin-bottom:20px;display:block;}
+.article-card-title{font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:600;color:var(--text-dark);margin-bottom:12px;line-height:1.2;}
+.article-card-desc{font-size:14px;color:var(--text-mid);line-height:1.7;font-weight:300;flex:1;}
+.article-card-tag{display:inline-flex;align-self:flex-start;align-items:center;margin-top:20px;padding:6px 12px;background:var(--purple-pale);border-radius:10px;font-size:11px;color:var(--purple);font-weight:500;}
 .resource-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;}
-.resource-tab{padding:10px 16px;border:1px solid var(--cream-dark);border-radius:999px;background:var(--white);color:var(--text-mid);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;}
+.resource-tab{padding:14px 20px;border:1px solid var(--cream-dark);border-radius:16px;background:var(--white);color:var(--text-mid);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;box-shadow:var(--shadow);}
 .resource-tab.active{background:var(--text-dark);border-color:var(--text-dark);color:var(--white);}
 .doctor-info-block{margin-top:34px;padding-top:28px;border-top:1px solid var(--cream-dark);}
 .doctor-info-title{font-family:'Cormorant Garamond',serif;font-size:24px;margin-bottom:6px;}
@@ -131,38 +131,7 @@ body{top:0 !important;}
         <div class="section-icon" id="resourceSectionIcon">📋</div>
         <div><div class="section-title" id="resourceSectionTitle">Informations générales</div><div class="section-sub" id="resourceSectionSub">Informations utiles pour toutes les patientes</div></div>
       </div>
-      <div class="articles-grid" id="curatedArticlesGrid">
-        <!-- Articles du médecin chargés dynamiquement depuis Supabase -->
-        <a class="article-card" onclick="openModal('rdv')">
-          <span class="article-card-icon">📅</span>
-          <div class="article-card-title">Comment prendre rendez-vous</div>
-          <p class="article-card-desc">Comment contacter le cabinet, les différents types de consultations et les délais habituels.</p>
-          <span class="article-card-tag">Pratique</span>
-        </a>
-        <a class="article-card" onclick="openModal('documents')">
-          <span class="article-card-icon">🗂️</span>
-          <div class="article-card-title">Documents à apporter</div>
-          <p class="article-card-desc">La liste complète des documents à avoir avec soi lors de chaque type de consultation.</p>
-          <span class="article-card-tag">Pratique</span>
-        </a>
-        <a class="article-card" onclick="openModal('resultats')">
-          <span class="article-card-icon">🔬</span>
-          <div class="article-card-title">Résultats d'examens</div>
-          <p class="article-card-desc">Comment recevoir et comprendre vos résultats d'analyses, d'échographies et autres examens.</p>
-          <span class="article-card-tag">Pratique</span>
-        </a>
-        <a class="article-card" onclick="openModal('urgences')">
-          <span class="article-card-icon">🚨</span>
-          <div class="article-card-title">Urgences gynécologiques et obstétricales</div>
-          <p class="article-card-desc">Quand aller aux urgences, quoi faire en cas de saignements, douleurs intenses ou perte de liquide.</p>
-          <span class="article-card-tag">Urgence</span>
-        </a>
-      </div>
-      <div class="doctor-info-block" id="doctorInfoBlock" style="display:none;">
-        <div class="doctor-info-title">Informations de votre cabinet</div>
-        <div class="doctor-info-sub">Contenus ajoutés et personnalisés par votre praticien.</div>
-        <div class="articles-grid" id="doctorArticlesGrid"></div>
-      </div>
+      <div class="articles-grid" id="doctorArticlesGrid"></div>
       <div id="noArticlesMsg" style="display:none;text-align:center;padding:40px 20px;color:var(--text-light);font-weight:300;">
         Aucune information disponible dans cette rubrique pour le moment.
       </div>
@@ -414,7 +383,7 @@ const SF_SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 const SF_SB={'apikey':SF_SUPABASE_KEY,'Authorization':`Bearer ${SFSession.token()||SF_SUPABASE_KEY}`};
 
 let doctorDynamicArticles=[];
-let featuredCategories=[];
+let featuredArticleIds=[];
 
 const CATEGORY_META={
   'infos-generales':{icon:'📋',title:'Informations générales',sub:'Informations utiles pour toutes les patientes'},
@@ -429,27 +398,6 @@ const CATEGORY_META={
   'autres':{icon:'🗂️',title:'Autres informations',sub:'Autres contenus proposés par votre praticien'}
 };
 
-const STATIC_ARTICLES={
-  'infos-generales':[
-    ['rdv','📅','Comment contacter le cabinet et organiser votre rendez-vous.'],
-    ['documents','🗂️','Les documents utiles à apporter à votre consultation.'],
-    ['resultats','🔬','Comment recevoir et comprendre vos résultats d’examens.'],
-    ['urgences','🚨','Quand consulter rapidement ou contacter les urgences.']
-  ],
-  'infos-preop':[
-    ['consignes-preop','🏥','Les principales consignes avant une intervention.'],
-    ['jeune-preop','🥤','Les règles de jeûne précisées par l’équipe d’anesthésie.'],
-    ['medicaments-preop','💊','Les précautions concernant vos traitements habituels.'],
-    ['retour-domicile','🏠','Organiser votre sortie et votre retour à domicile.']
-  ],
-  'infos-etranger':[
-    ['dossier-medical','📁','Préparer et transmettre votre dossier de grossesse.'],
-    ['assurances','🛡️','Vérifier votre couverture et vos remboursements.'],
-    ['documents-etranger','📄','Les documents nécessaires avant votre départ.'],
-    ['suivi-retour','↩️','Organiser les démarches et le suivi après le retour.']
-  ]
-};
-
 function categoryMeta(category){
   return CATEGORY_META[category]||{icon:'📌',title:(category||'Autre').replaceAll('-',' '),sub:'Informations proposées par votre praticien'};
 }
@@ -459,69 +407,52 @@ function doctorCard(article){
   return `<a class="article-card" onclick="openDoctorModal(${index})">
     <span class="article-card-icon">${categoryMeta(article.categorie).icon}</span>
     <div class="article-card-title">${escapeHtml(article.titre)}</div>
-    <p class="article-card-desc">${escapeHtml((article.contenu||'').substring(0,110))}${(article.contenu||'').length>110?'…':''}</p>
+    <p class="article-card-desc">${escapeHtml((article.contenu||'').substring(0,180))}${(article.contenu||'').length>180?'…':''}</p>
     <span class="article-card-tag">Mon cabinet</span>
   </a>`;
 }
 
-function renderCurated(category){
-  const grid=document.getElementById('curatedArticlesGrid');
-  const articles=STATIC_ARTICLES[category]||[];
-  grid.innerHTML=articles.map(([id,icon,desc])=>`<a class="article-card" onclick="openModal('${id}')">
-    <span class="article-card-icon">${icon}</span>
-    <div class="article-card-title">${escapeHtml(MODALS[id].title)}</div>
-    <p class="article-card-desc">${escapeHtml(desc)}</p>
-    <span class="article-card-tag">Information générale</span>
-  </a>`).join('');
-  grid.style.display=articles.length?'grid':'none';
-}
-
-function renderCategory(category){
-  const meta=categoryMeta(category);
+function renderSection(section){
+  const featuredId=section.startsWith('article:')?section.slice(8):null;
+  const featuredArticle=featuredId?doctorDynamicArticles.find(article=>article.id===featuredId):null;
+  const meta=featuredArticle
+    ? {...categoryMeta(featuredArticle.categorie),title:featuredArticle.titre,sub:'Article mis en avant par votre praticien'}
+    : section==='cabinet'
+      ? {icon:'🗂️',title:'Informations sur le cabinet',sub:'Autres contenus proposés par votre praticien'}
+      : CATEGORY_META['infos-generales'];
   document.getElementById('resourceSectionIcon').textContent=meta.icon;
   document.getElementById('resourceSectionTitle').textContent=meta.title;
   document.getElementById('resourceSectionSub').textContent=meta.sub;
-  renderCurated(category);
-
-  const doctorBlock=document.getElementById('doctorInfoBlock');
   const doctorGrid=document.getElementById('doctorArticlesGrid');
-  let html='';
-  if(category==='autres'){
-    const excluded=new Set(['infos-generales',...featuredCategories]);
-    const groups={};
-    doctorDynamicArticles.filter(a=>excluded.has(a.categorie)===false).forEach(a=>{
-      (groups[a.categorie]??=[]).push(a);
-    });
-    html=Object.entries(groups).map(([group,items])=>`<div class="category-group" style="grid-column:1/-1">
-      <div class="category-group-title">${escapeHtml(categoryMeta(group).title)}</div>
-      <div class="articles-grid">${items.map(doctorCard).join('')}</div>
-    </div>`).join('');
-  }else{
-    html=doctorDynamicArticles.filter(a=>a.categorie===category).map(doctorCard).join('');
-  }
-  doctorGrid.innerHTML=html;
-  doctorBlock.style.display=html?'block':'none';
-  const hasCurated=(STATIC_ARTICLES[category]||[]).length>0;
-  document.getElementById('noArticlesMsg').style.display=!hasCurated&&!html?'block':'none';
-  document.querySelectorAll('.resource-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.category===category));
+  let articles=[];
+  if(section==='infos-generales') articles=doctorDynamicArticles.filter(article=>article.categorie==='infos-generales');
+  else if(featuredArticle) articles=[featuredArticle];
+  else if(section==='cabinet') articles=doctorDynamicArticles.filter(article=>
+    article.categorie!=='infos-generales'&&!featuredArticleIds.includes(article.id));
+  doctorGrid.innerHTML=articles.map(doctorCard).join('');
+  document.getElementById('noArticlesMsg').style.display=articles.length?'none':'block';
+  document.querySelectorAll('.resource-tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.section===section));
 }
 
-function renderTabs(activeCategory){
-  const available=[...new Set(doctorDynamicArticles.map(a=>a.categorie).filter(Boolean))];
-  const curated=new Set(['infos-preop','infos-etranger']);
-  featuredCategories=featuredCategories.filter(category=>available.includes(category)||curated.has(category)).slice(0,2);
-  const others=available.filter(category=>category!=='infos-generales'&&!featuredCategories.includes(category));
-  const tabs=['infos-generales',...featuredCategories,...(others.length?['autres']:[])];
-  if(!tabs.includes(activeCategory)) activeCategory='infos-generales';
-  document.getElementById('resourceTabs').innerHTML=tabs.map(category=>`<button class="resource-tab" data-category="${category}" onclick="selectCategory('${category}')">${categoryMeta(category).icon} ${escapeHtml(categoryMeta(category).title)}</button>`).join('');
-  renderCategory(activeCategory);
+function renderTabs(activeSection){
+  const articleIds=new Set(doctorDynamicArticles.map(article=>article.id));
+  featuredArticleIds=featuredArticleIds.filter(id=>articleIds.has(id)).slice(0,2);
+  const remaining=doctorDynamicArticles.some(article=>article.categorie!=='infos-generales'&&!featuredArticleIds.includes(article.id));
+  const sections=['infos-generales',...featuredArticleIds.map(id=>`article:${id}`),...(remaining?['cabinet']:[])];
+  if(!sections.includes(activeSection)) activeSection='infos-generales';
+  document.getElementById('resourceTabs').innerHTML=sections.map(section=>{
+    const article=section.startsWith('article:')?doctorDynamicArticles.find(item=>item.id===section.slice(8)):null;
+    const label=article?`${categoryMeta(article.categorie).icon} ${article.titre}`:section==='cabinet'?'🗂️ Informations sur le cabinet':'📋 Informations générales';
+    return `<button class="resource-tab" data-section="${section}" onclick="selectSection('${section}')">${escapeHtml(label)}</button>`;
+  }).join('');
+  renderSection(activeSection);
 }
 
-function selectCategory(category){
+function selectSection(section){
   const url=new URL(window.location.href);
-  url.searchParams.set('rubrique',category);
+  url.searchParams.set('rubrique',section);
   history.replaceState({},'',url);
-  renderCategory(category);
+  renderSection(section);
 }
 
 async function loadDoctorArticles(){
@@ -531,11 +462,10 @@ async function loadDoctorArticles(){
     const profileRes=await fetch(`${SF_SUPABASE_URL}/rest/v1/rpc/my_medecin_profile`,{method:'POST',headers:{...SF_SB,'Content-Type':'application/json'},body:'{}'});
     const profile=(await profileRes.json())?.[0];
     if(!profile?.id){window.location.replace('auth-connexion.html');return;}
-    featuredCategories=Array.isArray(profile.featured_info_categories)?profile.featured_info_categories:[];
+    featuredArticleIds=Array.isArray(profile.featured_article_ids)?profile.featured_article_ids:[];
     const res=await fetch(`${SF_SUPABASE_URL}/rest/v1/articles?medecin_id=eq.${profile.id}&actif_ia=eq.true&select=*&order=created_at.asc`,{headers:SF_SB});
     doctorDynamicArticles=res.ok?await res.json():[];
-    const legacyHash=window.location.hash==='#preop'?'infos-preop':window.location.hash==='#etranger'?'infos-etranger':null;
-    renderTabs(new URLSearchParams(window.location.search).get('rubrique')||legacyHash||'infos-generales');
+    renderTabs(new URLSearchParams(window.location.search).get('rubrique')||'infos-generales');
   }catch(e){renderTabs('infos-generales');}
 }
 

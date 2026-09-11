@@ -929,8 +929,8 @@ function safeText(value) {
   return node.innerHTML;
 }
 
-function resourceTile(category, meta) {
-  const href = `infos-generales.html?rubrique=${encodeURIComponent(category)}`;
+function resourceTile(section, meta) {
+  const href = `infos-generales.html?rubrique=${encodeURIComponent(section)}`;
   return `<div class="info-tile" onclick="window.location.href='${href}'">
     <span class="info-tile-icon">${meta.icon}</span>
     <div class="info-tile-title">${safeText(meta.title)}</div>
@@ -944,17 +944,14 @@ async function renderResourceTiles(medecin) {
   if (!grid || !medecin) return;
   let articles = [];
   try {
-    const response = await fetch(`${SF_SUPABASE_URL}/rest/v1/articles?medecin_id=eq.${encodeURIComponent(medecin.id)}&actif_ia=eq.true&select=categorie`, { headers:SF_SB });
+    const response = await fetch(`${SF_SUPABASE_URL}/rest/v1/articles?medecin_id=eq.${encodeURIComponent(medecin.id)}&actif_ia=eq.true&select=id,titre,contenu,categorie`, { headers:SF_SB });
     if (response.ok) articles = await response.json();
   } catch (error) {}
 
-  const available = [...new Set(articles.map(article => article.categorie).filter(Boolean))];
-  const featured = (Array.isArray(medecin.featured_info_categories) ? medecin.featured_info_categories : [])
-    .filter(category => category !== 'infos-generales')
-    .slice(0, 2);
-  const curated = new Set(['infos-preop','infos-etranger']);
-  const visibleFeatured = featured.filter(category => available.includes(category) || curated.has(category));
-  const otherCategories = available.filter(category => category !== 'infos-generales' && !visibleFeatured.includes(category));
+  const articleById = new Map(articles.map(article => [article.id, article]));
+  const featuredIds = (Array.isArray(medecin.featured_article_ids) ? medecin.featured_article_ids : [])
+    .filter(id => articleById.has(id)).slice(0, 2);
+  const remaining = articles.filter(article => article.categorie !== 'infos-generales' && !featuredIds.includes(article.id));
 
   const general = `<div class="info-tile" onclick="window.location.href='infos-generales.html?rubrique=infos-generales'">
     <span class="info-tile-icon">📋</span>
@@ -962,11 +959,16 @@ async function renderResourceTiles(medecin) {
     <p class="info-tile-desc">Rendez-vous, documents à apporter, résultats d'examens et urgences.</p>
     <div class="info-tile-arrow">→</div>
   </div>`;
-  const highlighted = visibleFeatured.map(category => resourceTile(category, RESOURCE_CATEGORY_META[category] || {
-    icon:'📌', title:category.replaceAll('-', ' '), desc:'Informations proposées par votre praticien.'
-  })).join('');
-  const other = otherCategories.length ? resourceTile('autres', {
-    icon:'🗂️', title:'Autres informations', desc:`${otherCategories.length} autre${otherCategories.length > 1 ? 's' : ''} rubrique${otherCategories.length > 1 ? 's' : ''} proposée${otherCategories.length > 1 ? 's' : ''} par votre praticien.`
+  const highlighted = featuredIds.map(id => {
+    const article = articleById.get(id);
+    const category = RESOURCE_CATEGORY_META[article.categorie] || { icon:'📌' };
+    return resourceTile(`article:${id}`, {
+      icon:category.icon, title:article.titre,
+      desc:(article.contenu || 'Information proposée par votre praticien.').substring(0, 125)
+    });
+  }).join('');
+  const other = remaining.length ? resourceTile('cabinet', {
+    icon:'🗂️', title:'Informations sur le cabinet', desc:`${remaining.length} article${remaining.length > 1 ? 's' : ''} supplémentaire${remaining.length > 1 ? 's' : ''} proposé${remaining.length > 1 ? 's' : ''} par votre praticien.`
   }) : '';
   grid.innerHTML = general + highlighted + other;
 }

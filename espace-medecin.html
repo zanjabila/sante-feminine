@@ -513,19 +513,19 @@ body{top:0 !important;}
       <p class="section-sub">Personnalisez les informations pratiques spécifiques à votre cabinet. Ces articles sont visibles uniquement par vos patientes. Vous pouvez les modifier, les désactiver ou en créer de nouveaux.</p>
 
       <div class="form-card">
-        <div class="form-card-title">Rubriques mises en avant</div>
-        <p class="form-hint" style="margin-bottom:16px;">« Informations générales » reste toujours visible. Choisissez jusqu’à deux autres rubriques à afficher directement. Les articles restants seront rangés dans « Autres informations ».</p>
+        <div class="form-card-title">Articles mis en avant</div>
+        <p class="form-hint" style="margin-bottom:16px;">« Informations générales » reste toujours visible. Choisissez jusqu’à deux de vos articles actifs. Leur titre exact deviendra une rubrique visible par vos patientes. Tous les autres articles seront regroupés dans « Informations sur le cabinet ».</p>
         <div class="form-grid">
           <div class="form-group">
-            <label class="form-label" for="featuredCategory1">Rubrique mise en avant 1</label>
-            <select class="form-input" id="featuredCategory1"></select>
+            <label class="form-label" for="featuredArticle1">Article mis en avant 1</label>
+            <select class="form-input" id="featuredArticle1"></select>
           </div>
           <div class="form-group">
-            <label class="form-label" for="featuredCategory2">Rubrique mise en avant 2</label>
-            <select class="form-input" id="featuredCategory2"></select>
+            <label class="form-label" for="featuredArticle2">Article mis en avant 2</label>
+            <select class="form-input" id="featuredArticle2"></select>
           </div>
         </div>
-        <button class="btn-save" type="button" onclick="saveFeaturedCategories()">✓ Enregistrer mes rubriques</button>
+        <button class="btn-save" type="button" onclick="saveFeaturedArticles()">✓ Enregistrer mes articles mis en avant</button>
       </div>
 
       <button class="btn-primary-full" onclick="createNewArticle()" style="margin-bottom:20px;background:var(--rose-deep);">+ Créer un nouvel article</button>
@@ -692,19 +692,26 @@ function categoryLabel(value) {
   return INFO_CATEGORIES.find(item => item.value === value)?.label || value || 'Autre information';
 }
 
-function populateCategorySelects() {
+function populateCategorySelect() {
   const articleSelect = document.getElementById('editCategory');
   if (articleSelect) articleSelect.innerHTML = [
     { value:'infos-generales', label:'Informations générales' },
     ...INFO_CATEGORIES
   ].map(item => `<option value="${item.value}">${item.label}</option>`).join('');
 
-  const featuredOptions = '<option value="">— Aucune —</option>' + INFO_CATEGORIES
-    .filter(item => item.value !== 'autre')
-    .map(item => `<option value="${item.value}">${item.label}</option>`).join('');
-  ['featuredCategory1','featuredCategory2'].forEach(id => {
+}
+
+function populateFeaturedArticleSelects() {
+  const selected = Array.isArray(currentDoctor.featured_article_ids)
+    ? currentDoctor.featured_article_ids.slice(0, 2) : [];
+  const options = '<option value="">— Aucun —</option>' + doctorArticles
+    .filter(article => article.actif_ia !== false && article.categorie !== 'infos-generales')
+    .map(article => `<option value="${article.id}">${escapeHtml(article.titre)}</option>`).join('');
+  ['featuredArticle1','featuredArticle2'].forEach((id, index) => {
     const select = document.getElementById(id);
-    if (select) select.innerHTML = featuredOptions;
+    if (!select) return;
+    select.innerHTML = options;
+    select.value = selected[index] || '';
   });
 }
 
@@ -805,11 +812,7 @@ function initPage() {
   setVal('hoursWeek', currentDoctor.horaires_semaine);
   setVal('hoursSat', currentDoctor.horaires_samedi);
   setVal('hoursExtra', currentDoctor.horaires_extra);
-  populateCategorySelects();
-  const featured = Array.isArray(currentDoctor.featured_info_categories)
-    ? currentDoctor.featured_info_categories.slice(0, 2) : [];
-  setVal('featuredCategory1', featured[0]);
-  setVal('featuredCategory2', featured[1]);
+  populateCategorySelect();
   // Code d'accès patient
   const accessCode = currentDoctor.code_acces || '';
   const codeDisplay = document.getElementById('accessCodeDisplay');
@@ -819,19 +822,19 @@ function initPage() {
   renderArticles();
 }
 
-async function saveFeaturedCategories() {
+async function saveFeaturedArticles() {
   const selected = [
-    document.getElementById('featuredCategory1').value,
-    document.getElementById('featuredCategory2').value
+    document.getElementById('featuredArticle1').value,
+    document.getElementById('featuredArticle2').value
   ].filter(Boolean);
   if (new Set(selected).size !== selected.length) {
-    showToast('⚠️ Choisissez deux rubriques différentes');
+    showToast('⚠️ Choisissez deux articles différents');
     return;
   }
-  await sbPatch('medecins', `id=eq.${currentDoctor.id}`, { featured_info_categories:selected });
-  currentDoctor.featured_info_categories = selected;
+  await sbPatch('medecins', `id=eq.${currentDoctor.id}`, { featured_article_ids:selected });
+  currentDoctor.featured_article_ids = selected;
   sessionStorage.setItem('doctorAuth', JSON.stringify(currentDoctor));
-  showToast('✓ Rubriques mises en avant enregistrées');
+  showToast('✓ Articles mis en avant enregistrés');
 }
 
 window.addEventListener('load', async () => {
@@ -890,8 +893,6 @@ const DEFAULT_ARTICLES = [
   { titre:'Documents à apporter', contenu:'Listez les documents nécessaires pour chaque consultation.', categorie:'infos-generales' },
   { titre:"Résultats d'examens", contenu:"Expliquez comment vos patientes reçoivent leurs résultats.", categorie:'infos-generales' },
   { titre:'Urgences gynécologiques et obstétricales', contenu:"Précisez vos consignes en cas d'urgence.", categorie:'infos-generales' },
-  { titre:'Informations pré-opératoires', contenu:'Détaillez vos consignes avant une intervention.', categorie:'infos-preop' },
-  { titre:"Accouchement à l'étranger", contenu:"Informations pour vos patientes accouchant à l'étranger.", categorie:'infos-etranger' },
 ];
 
 let doctorArticles = [];
@@ -907,6 +908,7 @@ async function renderArticles() {
     for (const a of DEFAULT_ARTICLES) await sbPost('articles', {...a, medecin_id:currentDoctor.id, actif_ia:true});
     doctorArticles = await sbGet('articles', `medecin_id=eq.${currentDoctor.id}&order=created_at.asc`);
   } else { doctorArticles = data; }
+  populateFeaturedArticleSelects();
   document.getElementById('articlesList').innerHTML = doctorArticles.map(a=>{
     const actif = a.actif_ia !== false;
     return `
