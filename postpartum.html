@@ -287,7 +287,7 @@ function renderManagedCards(rows){
   Object.entries(groups).forEach(([category,anchor])=>{
     const grid=document.querySelector('#'+anchor)?.closest('.content-section')?.querySelector('.articles-grid'); if(!grid)return;
     const items=rows.filter(r=>r.categorie===category); if(!items.length)return;
-    grid.innerHTML=items.map((r,i)=>'<a class="article-card" onclick="openManagedModal('+i+')"><span class="article-card-icon">📄</span><div class="article-card-title">'+esc(r.titre)+'</div><p class="article-card-desc">'+esc((r.contenu||'').replace(/<[^>]+>/g,'').slice(0,150))+'</p><span class="article-card-tag">Post-partum</span></a>').join('');
+    grid.innerHTML=items.map(r=>'<a class="article-card" onclick="openManagedModal('+rows.indexOf(r)+')"><span class="article-card-icon">📄</span><div class="article-card-title">'+esc(r.titre)+'</div><p class="article-card-desc">'+esc((r.contenu||'').replace(/<[^>]+>/g,'').slice(0,150))+'</p><span class="article-card-tag">Post-partum</span></a>').join('');
   });
   window.managedRows=rows;
 }
