@@ -364,6 +364,10 @@ body {
 .rich-toolbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px}
 .rich-toolbar button{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);border-radius:7px;padding:6px 10px;font:12px 'DM Sans',sans-serif;cursor:pointer}
 .rich-toolbar button:hover{background:rgba(201,149,127,.22);color:#fff}
+.rich-toolbar select,.rich-toolbar input{height:30px;border:1px solid rgba(255,255,255,.12);border-radius:7px;background:rgba(255,255,255,.06);color:#fff}
+.rich-editor{min-height:260px;overflow:auto;white-space:pre-wrap}
+.rich-editor:empty:before{content:attr(data-placeholder);color:rgba(255,255,255,.2)}
+.rich-editor h3{color:#E8C5BB;margin:18px 0 8px}
 
 .ai-toggle-row {
   display:flex; align-items:center; justify-content:space-between;
@@ -878,12 +882,15 @@ window.addEventListener('load', async () => {
         <div class="form-group">
           <label class="form-label">Contenu médical *</label>
           <div class="rich-toolbar" aria-label="Mise en forme">
-            <button type="button" onclick="formatArticle('heading')">Titre</button>
-            <button type="button" onclick="formatArticle('bold')"><strong>Gras</strong></button>
-            <button type="button" onclick="formatArticle('underline')"><u>Souligné</u></button>
-            <button type="button" onclick="formatArticle('bullet')">• Liste</button>
+            <button type="button" onclick="richCommand('formatBlock','H3')">Titre</button>
+            <button type="button" onclick="richCommand('bold')"><strong>Gras</strong></button>
+            <button type="button" onclick="richCommand('underline')"><u>Souligné</u></button>
+            <button type="button" onclick="richCommand('insertUnorderedList')">• Liste</button>
+            <select onchange="richCommand('fontSize',this.value);this.value=''" aria-label="Taille"><option value="">Taille</option><option value="2">Petite</option><option value="3">Normale</option><option value="5">Grande</option></select>
+            <input type="color" value="#2C2420" onchange="richCommand('foreColor',this.value)" aria-label="Couleur">
           </div>
-          <textarea class="form-textarea" id="ficheContent" placeholder="Rédigez ici le contenu médical de la fiche. Soyez claire et structurée — l'IA s'appuiera sur ce texte pour répondre aux patientes.
+          <div class="form-textarea rich-editor" id="ficheEditor" contenteditable="true" oninput="syncRichEditor(); updateWordCount(); updatePreview()" data-placeholder="Rédigez ici le contenu médical de la fiche."></div>
+          <textarea class="form-textarea" id="ficheContent" hidden placeholder="Rédigez ici le contenu médical de la fiche. Soyez claire et structurée — l'IA s'appuiera sur ce texte pour répondre aux patientes.
 
 Exemple de structure :
 Définition : ...
@@ -1270,6 +1277,7 @@ function openNewFiche() {
   document.getElementById('ficheCategory').value = '';
   document.getElementById('ficheKeywords').value = '';
   document.getElementById('ficheContent').value = '';
+  document.getElementById('ficheEditor').innerHTML = '';
   document.getElementById('ficheAiActive').checked = true;
   document.getElementById('editorTitle').textContent = 'Nouvelle fiche';
   document.getElementById('previewCard').style.display = 'none';
@@ -1287,6 +1295,7 @@ function editFiche(id) {
   document.getElementById('ficheCategory').value = f.category;
   document.getElementById('ficheKeywords').value = f.keywords || '';
   document.getElementById('ficheContent').value = f.content;
+  document.getElementById('ficheEditor').innerHTML = f.content;
   document.getElementById('ficheAiActive').checked = f.aiActive;
   document.getElementById('editorTitle').textContent = 'Modifier la fiche';
   document.getElementById('editorPanel').classList.remove('hidden');
@@ -1302,6 +1311,7 @@ function closeEditor() {
 }
 
 async function saveFiche() {
+  syncRichEditor();
   const title = document.getElementById('ficheTitle').value.trim();
   const category = document.getElementById('ficheCategory').value;
   const keywords = document.getElementById('ficheKeywords').value.trim();
@@ -1346,6 +1356,8 @@ async function deleteFiche(id) {
 // ═══════════════════════════════════
 // WORD COUNT & PREVIEW
 // ═══════════════════════════════════
+function syncRichEditor(){document.getElementById('ficheContent').value=document.getElementById('ficheEditor').innerHTML}
+function richCommand(command,value=null){document.getElementById('ficheEditor').focus();document.execCommand(command,false,value);syncRichEditor();updateWordCount();updatePreview()}
 function formatArticle(type){
   const field=document.getElementById('ficheContent');
   const start=field.selectionStart,end=field.selectionEnd;
