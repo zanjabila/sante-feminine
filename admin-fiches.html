@@ -515,6 +515,8 @@ body {
   .editor-panel { width:420px; }
 }
 </style>
+<link rel="stylesheet" href="assets/article-format.css">
+<script src="assets/article-format.js"></script>
 </head>
 <body>
 
@@ -883,11 +885,17 @@ window.addEventListener('load', async () => {
           <label class="form-label">Contenu médical *</label>
           <div class="rich-toolbar" aria-label="Mise en forme">
             <button type="button" onclick="richCommand('formatBlock','H3')">Titre</button>
+            <button type="button" onclick="richCommand('formatBlock','H4')">Sous-titre</button>
+            <button type="button" onclick="richCommand('formatBlock','P')">Paragraphe</button>
+            <button type="button" onclick="richCommand('italic')">Italique</button>
+            <button type="button" onclick="richCommand('formatBlock','BLOCKQUOTE')">À retenir</button>
             <button type="button" onclick="richCommand('bold')"><strong>Gras</strong></button>
             <button type="button" onclick="richCommand('underline')"><u>Souligné</u></button>
             <button type="button" onclick="richCommand('insertUnorderedList')">• Liste</button>
             <select onchange="richCommand('fontSize',this.value);this.value=''" aria-label="Taille"><option value="">Taille</option><option value="2">Petite</option><option value="3">Normale</option><option value="5">Grande</option></select>
             <input type="color" value="#2C2420" onchange="richCommand('foreColor',this.value)" aria-label="Couleur">
+<button type="button" onclick="chooseArticleImage()">Image</button>
+<input id="articleImageFile" type="file" accept="image/jpeg,image/png,image/webp" hidden onchange="uploadArticleImage(this)">
           </div>
           <div class="form-textarea rich-editor" id="ficheEditor" contenteditable="true" oninput="syncRichEditor(); updateWordCount(); updatePreview()" data-placeholder="Rédigez ici le contenu médical de la fiche."></div>
           <textarea class="form-textarea" id="ficheContent" hidden placeholder="Rédigez ici le contenu médical de la fiche. Soyez claire et structurée — l'IA s'appuiera sur ce texte pour répondre aux patientes.
@@ -907,7 +915,7 @@ Conseils pratiques : ..." oninput="updateWordCount(); updatePreview()"></textare
 
         <!-- Preview -->
         <div class="preview-card" id="previewCard" style="display:none">
-          <div class="preview-card-title">👁 Aperçu — Ce que l'IA verra</div>
+          <div class="preview-card-title">👁 Aperçu de l’article</div>
           <div class="preview-text" id="previewText"></div>
         </div>
 
@@ -1295,7 +1303,7 @@ function editFiche(id) {
   document.getElementById('ficheCategory').value = f.category;
   document.getElementById('ficheKeywords').value = f.keywords || '';
   document.getElementById('ficheContent').value = f.content;
-  document.getElementById('ficheEditor').innerHTML = f.content;
+  document.getElementById('ficheEditor').innerHTML = SFArticle.render(f.content);
   document.getElementById('ficheAiActive').checked = f.aiActive;
   document.getElementById('editorTitle').textContent = 'Modifier la fiche';
   document.getElementById('editorPanel').classList.remove('hidden');
@@ -1356,8 +1364,8 @@ async function deleteFiche(id) {
 // ═══════════════════════════════════
 // WORD COUNT & PREVIEW
 // ═══════════════════════════════════
-function syncRichEditor(){document.getElementById('ficheContent').value=document.getElementById('ficheEditor').innerHTML}
-function richCommand(command,value=null){document.getElementById('ficheEditor').focus();document.execCommand(command,false,value);syncRichEditor();updateWordCount();updatePreview()}
+function syncRichEditor(){document.getElementById('ficheContent').value=SFArticle.render(document.getElementById('ficheEditor').innerHTML)}
+function richCommand(command,value=null){restoreArticleSelection();document.execCommand(command,false,value);syncRichEditor();updateWordCount();updatePreview()}
 function formatArticle(type){
   const field=document.getElementById('ficheContent');
   const start=field.selectionStart,end=field.selectionEnd;
@@ -1388,7 +1396,7 @@ function updatePreview() {
 
   const cat = CAT_META[category] || {};
   const preview = `=== FICHE : ${title.toUpperCase()} ===\n${keywords ? `Mots-clés : ${keywords}\n` : ''}${content.substring(0, 200)}${content.length > 200 ? '…' : ''}`;
-  document.getElementById('previewText').textContent = preview;
+  document.getElementById('previewText').innerHTML = SFArticle.render(content);
   document.getElementById('previewCard').style.display = 'block';
 }
 
@@ -1429,5 +1437,6 @@ function showToast(msg) {
 // ═══════════════════════════════════
 // Le chargement est lancé uniquement après validation du rôle administrateur.
 </script>
+<script src="assets/article-editor.js"></script>
 </body>
 </html>
