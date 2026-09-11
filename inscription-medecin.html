@@ -180,7 +180,11 @@ nav{height:62px;background:rgba(250,247,242,.96);border-bottom:1px solid var(--c
           Continuer → Paiement
         </button>
         <div class="form-legal">
-          En créant un compte vous acceptez nos <a href="#">conditions d'utilisation</a> et notre <a href="#">politique de confidentialité</a>.
+          <label style="display:flex;align-items:flex-start;gap:8px;text-align:left;cursor:pointer;">
+            <input type="checkbox" id="acceptLegal" style="margin-top:3px;accent-color:var(--rose-deep);">
+            <span>J'accepte les <a href="conditions-utilisation.html" target="_blank" rel="noopener">conditions d'utilisation</a> et j'ai lu la <a href="confidentialite.html" target="_blank" rel="noopener">politique de confidentialité</a>.</span>
+          </label>
+          <div class="error" id="legalError"></div>
         </div>
       </div>
 
@@ -282,6 +286,7 @@ function goToStep2() {
   const pwd = document.getElementById('password').value;
   if(pwd.length<8){showError('passwordError','Minimum 8 caractères');valid=false;}
   if(pwd!==document.getElementById('confirmPassword').value){showError('confirmError','Les mots de passe ne correspondent pas');valid=false;}
+  if(!document.getElementById('acceptLegal').checked){showError('legalError','Vous devez accepter les conditions d’utilisation');valid=false;}
   if(!valid) return;
 
   document.getElementById('step1').style.display='none';
