@@ -291,7 +291,8 @@ function renderManagedCards(rows){
   });
   window.managedRows=rows;
 }
-function openManagedModal(index){const r=window.managedRows?.[index];if(!r)return;document.getElementById('modalBadge').textContent='Article';document.getElementById('modalTitle').textContent=r.titre;document.getElementById('modalBody').textContent=r.contenu;document.getElementById('modalBody').style.whiteSpace='pre-wrap';document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function escapeArticleText(value){const d=document.createElement('div');d.textContent=value||'';return '<p style="line-height:1.85;margin:0;">'+d.innerHTML.replace(/\r?\n/g,'<br>')+'</p>'}
+function openManagedModal(index){const r=window.managedRows?.[index];if(!r)return;document.getElementById('modalBadge').textContent='Article';document.getElementById('modalTitle').textContent=r.titre;document.getElementById('modalBody').innerHTML=escapeArticleText(r.contenu);document.getElementById('modalOverlay').classList.add('open');document.body.style.overflow='hidden';}
 function normalizeArticleTitle(value){return (value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
 async function loadManagedArticles(){
   try{
