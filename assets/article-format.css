@@ -29,5 +29,6 @@
 .article-content{background:#fff;padding:20px;border-radius:12px;font-size:16px;white-space:pre-wrap}
 @media(max-width:600px){:is(.modal-body,.rich-editor,.article-content) blockquote{padding:16px}.article-content{padding:14px}}
 
-/* Article title uses the same rose as subheadings. */
-.modal-title{color:#803550}
+/* Black heading defaults; explicit editor colours remain selectable. */
+.modal-title{color:#000000}
+:is(.modal-body,.rich-editor,.article-content) :is(h2,h3,h4){color:#000000}
