@@ -11,3 +11,20 @@
 .modal-body blockquote,.rich-editor blockquote{background:#f7edf1;border-left:4px solid #9c5068;padding:16px;margin:1em 0}
 .rich-editor{background:#fff;color:#2c2420;font-weight:400}
 #ficheContent[hidden]{display:none}
+
+/* Shared article typography: editing, preview and patient reading. */
+:is(.modal-body,.rich-editor,.article-content){color:#292429;line-height:1.8;overflow-wrap:anywhere}
+:is(.modal-body,.rich-editor,.article-content) :is(h2,h3){font-family:inherit;font-size:clamp(21px,3vw,25px);font-weight:700;line-height:1.35;color:#292429;border:0;border-left:4px solid #803550;padding:0 0 0 14px;margin:1.6em 0 .8em}
+:is(.modal-body,.rich-editor,.article-content) h4{font-family:inherit;font-size:20px;font-weight:700;line-height:1.4;color:#803550;margin:1.3em 0 .4em}
+:is(.modal-body,.rich-editor,.article-content) p{font-size:inherit;line-height:inherit;margin:0 0 1em}
+:is(.modal-body,.rich-editor,.article-content) :is(strong,b){font-weight:700;background:none;padding:0}
+:is(.modal-body,.rich-editor,.article-content) ul{list-style:disc;padding-left:1.4em;margin:.5em 0 1.4em}
+:is(.modal-body,.rich-editor,.article-content) ol{list-style:decimal;padding-left:1.4em;margin:.5em 0 1.4em}
+:is(.modal-body,.rich-editor,.article-content) li{display:list-item;padding:.15em 0;font-size:inherit;line-height:inherit}
+:is(.modal-body,.rich-editor,.article-content) li::before{content:none}
+:is(.modal-body,.rich-editor,.article-content) blockquote{font-style:normal;color:#593647;background:#f8edf2;border:0;border-left:4px solid #803550;border-radius:0 14px 14px 0;padding:20px 24px;margin:1.6em 0;white-space:normal}
+:is(.modal-body,.rich-editor,.article-content) blockquote[data-callout="warning"]{background:#fbe3e3;border-left-color:#d98b91;color:#80343a}
+:is(.modal-body,.rich-editor,.article-content) blockquote p:last-child{margin-bottom:0}
+:is(.modal-body,.rich-editor,.article-content) img{display:block;max-width:100%;height:auto;border-radius:12px;margin:1.2em auto}
+.article-content{background:#fff;padding:20px;border-radius:12px;font-size:16px;white-space:pre-wrap}
+@media(max-width:600px){:is(.modal-body,.rich-editor,.article-content) blockquote{padding:16px}.article-content{padding:14px}}
