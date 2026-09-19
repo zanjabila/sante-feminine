@@ -28,3 +28,7 @@
 :is(.modal-body,.rich-editor,.article-content) img{display:block;max-width:100%;height:auto;border-radius:12px;margin:1.2em auto}
 .article-content{background:#fff;padding:20px;border-radius:12px;font-size:16px;white-space:pre-wrap}
 @media(max-width:600px){:is(.modal-body,.rich-editor,.article-content) blockquote{padding:16px}.article-content{padding:14px}}
+
+/* Article title uses the same rose as subheadings. */
+.modal-title{color:#803550}
+:is(.modal-body,.rich-editor,.article-content) :is(h2,h3){color:#803550}
