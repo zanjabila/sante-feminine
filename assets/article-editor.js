@@ -9,9 +9,12 @@ document.querySelector('.rich-toolbar').addEventListener('mousedown', e => {
   if (e.target.closest('button')) e.preventDefault();
 });
 function restoreArticleSelection() {
+  // Focusing the editor can collapse selection; retain it before focus changes.
+  const saved = articleSelection?.cloneRange();
   articleEditor.focus();
-  if (articleSelection && articleEditor.contains(articleSelection.commonAncestorContainer)) {
-    const s=getSelection();s.removeAllRanges();s.addRange(articleSelection);
+  if (saved && articleEditor.contains(saved.commonAncestorContainer)) {
+    const s=getSelection();s.removeAllRanges();s.addRange(saved);
+    articleSelection = saved.cloneRange();
   }
 }
 articleEditor.addEventListener('paste', e => {
@@ -74,3 +77,13 @@ async function uploadArticleImage(input) {
     syncRichEditor();updatePreview();showToast('Image insérée. Enregistrez la fiche pour la publier.');
   } catch(error){showToast(error.message)}
 }
+
+const articleColorInput = document.querySelector('.rich-toolbar input[type="color"]');
+let articleColorRange = null;
+articleColorInput.addEventListener('pointerdown', () => {
+  articleColorRange = articleSelection?.cloneRange() || null;
+});
+articleColorInput.addEventListener('change', () => {
+  if (articleColorRange && articleEditor.contains(articleColorRange.commonAncestorContainer))
+    articleSelection = articleColorRange.cloneRange();
+}, true);
