@@ -31,4 +31,3 @@
 
 /* Article title uses the same rose as subheadings. */
 .modal-title{color:#803550}
-:is(.modal-body,.rich-editor,.article-content) :is(h2,h3){color:#803550}
