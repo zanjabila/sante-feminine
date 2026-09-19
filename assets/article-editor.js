@@ -22,6 +22,25 @@ articleEditor.addEventListener('paste', e => {
   syncRichEditor();updatePreview();
 });
 function chooseArticleImage(){document.getElementById('articleImageFile').click()}
+function articleCallout(kind) {
+  if (!['warning','note'].includes(kind)) return;
+  restoreArticleSelection();
+  const selection = getSelection();
+  const holder = document.createElement('div');
+  if (selection.rangeCount && articleEditor.contains(selection.getRangeAt(0).commonAncestorContainer))
+    holder.append(selection.getRangeAt(0).cloneContents());
+  const box = document.createElement('blockquote');
+  box.dataset.callout = kind;
+  const title = document.createElement('p');
+  const strong = document.createElement('strong');
+  strong.textContent = kind === 'warning' ? '⚠ Quand consulter en urgence' : 'À retenir';
+  title.append(strong);box.append(title);
+  const body = document.createElement('div');
+  body.innerHTML = SFArticle.render(holder.innerHTML || 'Votre texte ici.');
+  box.append(body);
+  document.execCommand('insertHTML', false, box.outerHTML + '<p><br></p>');
+  syncRichEditor();updateWordCount();updatePreview();
+}
 async function uploadArticleImage(input) {
   const file=input.files[0];input.value='';if(!file)return;
   if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024){
