@@ -894,6 +894,8 @@ window.addEventListener('load', async () => {
             <button type="button" onclick="richCommand('underline')"><u>Souligné</u></button>
             <button type="button" onclick="richCommand('insertUnorderedList')">• Liste</button>
             <select onchange="richCommand('fontSize',this.value);this.value=''" aria-label="Taille"><option value="">Taille</option><option value="2">Petite</option><option value="3">Normale</option><option value="5">Grande</option></select>
+            <button type="button" onclick="richCommand('foreColor','#000000')" title="Mettre le texte sélectionné en noir"><span aria-hidden="true" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#000000;border:1px solid #bbb"></span> Noir</button>
+            <button type="button" onclick="richCommand('foreColor','#803550')" title="Mettre le texte sélectionné en prune"><span aria-hidden="true" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#803550;border:1px solid #bbb"></span> Prune</button>
             <input type="color" value="#2C2420" onchange="richCommand('foreColor',this.value)" aria-label="Couleur">
 <button type="button" onclick="chooseArticleImage()">Image</button>
 <input id="articleImageFile" type="file" accept="image/jpeg,image/png,image/webp" hidden onchange="uploadArticleImage(this)">
