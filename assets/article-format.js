@@ -29,6 +29,8 @@ window.SFArticle = (() => {
       }
       if (!tags.has(node.tagName)) { [...node.childNodes].forEach(child => copy(child,parent)); return; }
       const el = document.createElement(node.tagName === 'FONT' ? 'span' : node.tagName.toLowerCase());
+      if (node.tagName === 'BLOCKQUOTE' && ['warning','note'].includes(node.getAttribute('data-callout')))
+        el.setAttribute('data-callout', node.getAttribute('data-callout'));
       const color = node.getAttribute('color') || node.style.color;
       if (/^(#[a-f0-9]{3,8}|rgba?\([\d.,%\s]+\)|[a-z]+)$/i.test(color || '')) el.style.color = color;
       const sizes = {1:'12px',2:'14px',3:'16px',4:'18px',5:'24px',6:'30px',7:'36px'};
