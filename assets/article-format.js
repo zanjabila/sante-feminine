@@ -32,7 +32,12 @@ window.SFArticle = (() => {
       if (node.tagName === 'BLOCKQUOTE' && ['warning','note'].includes(node.getAttribute('data-callout')))
         el.setAttribute('data-callout', node.getAttribute('data-callout'));
       const color = node.getAttribute('color') || node.style.color;
-      if (/^(#[a-f0-9]{3,8}|rgba?\([\d.,%\s]+\)|[a-z]+)$/i.test(color || '')) el.style.color = color;
+      if (/^(#[a-f0-9]{3,8}|rgba?\([\d.,%\s]+\)|[a-z]+)$/i.test(color || '')) {
+        el.style.color = color;
+        // Replace the old fuchsia heading preset; other custom colours remain editable.
+        if (node.closest('h2,h3,h4') && ['rgb(244, 98, 161)', 'rgb(255, 0, 255)'].includes(el.style.color))
+          el.style.color = '#803550';
+      }
       const sizes = {1:'12px',2:'14px',3:'16px',4:'18px',5:'24px',6:'30px',7:'36px'};
       const size = sizes[node.getAttribute('size')] || node.style.fontSize;
       if (/^(1[2-9]|2[0-9]|3[0-6])px$/.test(size || '')) el.style.fontSize = size;
