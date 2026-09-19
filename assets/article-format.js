@@ -36,7 +36,7 @@ window.SFArticle = (() => {
         el.style.color = color;
         // Replace the old fuchsia heading preset; other custom colours remain editable.
         if (node.closest('h2,h3,h4') && ['rgb(244, 98, 161)', 'rgb(255, 0, 255)'].includes(el.style.color))
-          el.style.color = '#803550';
+          el.style.color = node.closest('h4') ? '#803550' : '#292429';
       }
       const sizes = {1:'12px',2:'14px',3:'16px',4:'18px',5:'24px',6:'30px',7:'36px'};
       const size = sizes[node.getAttribute('size')] || node.style.fontSize;
