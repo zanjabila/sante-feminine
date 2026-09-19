@@ -888,7 +888,8 @@ window.addEventListener('load', async () => {
             <button type="button" onclick="richCommand('formatBlock','H4')">Sous-titre</button>
             <button type="button" onclick="richCommand('formatBlock','P')">Paragraphe</button>
             <button type="button" onclick="richCommand('italic')">Italique</button>
-            <button type="button" onclick="richCommand('formatBlock','BLOCKQUOTE')">À retenir</button>
+            <button type="button" onclick="articleCallout('note')">À retenir</button>
+            <button type="button" onclick="articleCallout('warning')">⚠ Encadré urgence</button>
             <button type="button" onclick="richCommand('bold')"><strong>Gras</strong></button>
             <button type="button" onclick="richCommand('underline')"><u>Souligné</u></button>
             <button type="button" onclick="richCommand('insertUnorderedList')">• Liste</button>
@@ -916,7 +917,7 @@ Conseils pratiques : ..." oninput="updateWordCount(); updatePreview()"></textare
         <!-- Preview -->
         <div class="preview-card" id="previewCard" style="display:none">
           <div class="preview-card-title">👁 Aperçu de l’article</div>
-          <div class="preview-text" id="previewText"></div>
+          <div class="preview-text article-content" id="previewText"></div>
         </div>
 
         <!-- AI Toggle -->
