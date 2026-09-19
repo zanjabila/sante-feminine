@@ -31,4 +31,5 @@
 
 /* Black heading defaults; explicit editor colours remain selectable. */
 .modal-title{color:#000000}
-:is(.modal-body,.rich-editor,.article-content) :is(h2,h3,h4){color:#000000}
+:is(.modal-body,.rich-editor,.article-content) :is(h2,h3){color:#000000}
+:is(.modal-body,.rich-editor,.article-content) h4{color:#803550}
